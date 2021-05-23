@@ -1,0 +1,144 @@
+<?xml version="1.0"?>
+<!--
+Copyright (c) 2006 Erik Bengtson and others. All rights reserved. 
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+
+Contributors:
+2006 Andy Jefferson - added annotations, persistence props
+    ...
+-->
+<plugin id="org.datanucleus.api.jakarta" name="DataNucleus Jakarta" provider-name="DataNucleus">
+    <!-- PERSISTENCE PROPERTIES -->
+    <extension point="org.datanucleus.persistence_properties">
+        <!-- Map JPA properties to internal DataNucleus properties -->
+        <persistence-property name="jakarta.persistence.jdbc.driver" internal-name="datanucleus.ConnectionDriverName"/>
+        <persistence-property name="jakarta.persistence.jdbc.url" internal-name="datanucleus.ConnectionURL"/>
+        <persistence-property name="jakarta.persistence.jdbc.user" internal-name="datanucleus.ConnectionUserName"/>
+        <persistence-property name="jakarta.persistence.jdbc.password" internal-name="datanucleus.ConnectionPassword"/>
+
+        <persistence-property name="jakarta.persistence.query.timeout" internal-name="datanucleus.datastoreReadTimeout" value="0" validator="org.datanucleus.properties.IntegerPropertyValidator"/>
+        <persistence-property name="jakarta.persistence.lock.timeout" internal-name="datanucleus.datastoreReadTimeout" value="0" validator="org.datanucleus.properties.IntegerPropertyValidator"/>
+
+        <persistence-property name="jakarta.persistence.transactionType" internal-name="datanucleus.transaction.type" validator="org.datanucleus.properties.CorePropertyValidator"/>
+        <persistence-property name="jakarta.persistence.jtaDataSource" internal-name="datanucleus.ConnectionFactoryName"/>
+        <persistence-property name="jakarta.persistence.nonJtaDataSource" internal-name="datanucleus.ConnectionFactory2Name"/>
+
+        <persistence-property name="jakarta.persistence.provider"/> <!-- Unused -->
+        <persistence-property name="jakarta.persistence.sharedCache.mode" internal-name="datanucleus.cache.level2.mode"/>
+        <persistence-property name="jakarta.persistence.cache.retrieveMode" internal-name="datanucleus.cache.level2.retrieveMode"/>
+        <persistence-property name="jakarta.persistence.cache.storeMode" internal-name="datanucleus.cache.level2.storeMode"/>
+
+        <persistence-property name="jakarta.persistence.validation.mode" internal-name="datanucleus.validation.mode"/>
+        <persistence-property name="jakarta.persistence.validation.group.pre-persist" internal-name="datanucleus.validation.group.pre-persist"/>
+        <persistence-property name="jakarta.persistence.validation.group.pre-update" internal-name="datanucleus.validation.group.pre-update"/>
+        <persistence-property name="jakarta.persistence.validation.group.pre-remove" internal-name="datanucleus.validation.group.pre-remove"/>
+        <persistence-property name="jakarta.persistence.validation.factory" internal-name="datanucleus.validation.factory"/>
+
+        <persistence-property name="jakarta.persistence.bean.manager" internal-name="datanucleus.cdi.bean.manager"/>
+
+        <persistence-property name="jakarta.persistence.schema-generation.create-database-schemas" internal-name="datanucleus.generateSchema.create-schemas"/>
+        <persistence-property name="jakarta.persistence.schema-generation.database.action" internal-name="datanucleus.schema.generateDatabase.mode"/>
+        <persistence-property name="jakarta.persistence.schema-generation.create-source" internal-name="datanucleus.schema.generateDatabase.create.order"/>
+        <persistence-property name="jakarta.persistence.schema-generation.drop-source" internal-name="datanucleus.schema.generateDatabase.drop.order"/>
+        <persistence-property name="jakarta.persistence.schema-generation.create-script-source" internal-name="datanucleus.schema.generateDatabase.createScript"/>
+        <persistence-property name="jakarta.persistence.schema-generation.drop-script-source" internal-name="datanucleus.schema.generateDatabase.dropScript"/>
+        <persistence-property name="jakarta.persistence.schema-generation.scripts.action" internal-name="datanucleus.schema.generateScripts.mode"/>
+        <persistence-property name="jakarta.persistence.schema-generation.scripts.create-target" internal-name="datanucleus.schema.generateScripts.create"/>
+        <persistence-property name="jakarta.persistence.schema-generation.scripts.drop-target" internal-name="datanucleus.schema.generateScripts.drop"/>
+        <persistence-property name="jakarta.persistence.sql-load-script-source" internal-name="datanucleus.schema.loadScript"/>
+
+        <!-- DataNucleus JPA own properties -->
+        <persistence-property name="datanucleus.jpa.addClassTransformer" value="false" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
+        <persistence-property name="datanucleus.jpa.persistenceContextType" validator="org.datanucleus.api.jpa.JPAPropertyValidator"/>
+        <persistence-property name="datanucleus.jpa.txnMarkForRollbackOnException" value="true" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
+        <persistence-property name="datanucleus.jpa.findTypeConversion" value="true" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
+
+        <persistence-property name="datanucleus.singletonEMFForName" value="false" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
+    </extension>
+
+    <!-- ANNOTATIONS -->
+    <extension point="org.datanucleus.annotations">
+        <annotations annotation-class="jakarta.persistence.Entity" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.MappedSuperclass" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.Embeddable" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedQuery" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedQueries" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedNativeQuery" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedNativeQueries" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedStoredProcedureQuery" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedStoredProcedureQueries" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="org.datanucleus.api.jpa.annotations.PersistenceAware" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.Converter" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+    </extension>
+
+    <!-- EXTENSION CLASS ANNOTATIONS -->
+    <extension point="org.datanucleus.class_annotation_handler">
+        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ReadOnly" handler="org.datanucleus.api.jpa.annotations.ReadOnlyHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateTimestamp" handler="org.datanucleus.api.jpa.annotations.CreateTimestampHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateTimestamp" handler="org.datanucleus.api.jpa.annotations.UpdateTimestampHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateUser" handler="org.datanucleus.api.jpa.annotations.CreateUserHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateUser" handler="org.datanucleus.api.jpa.annotations.UpdateUserHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.MultiTenant" handler="org.datanucleus.api.jpa.annotations.MultiTenantHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.SoftDelete" handler="org.datanucleus.api.jpa.annotations.SoftDeleteHandler"/>
+    </extension>
+
+    <!-- EXTENSION MEMBER ANNOTATIONS -->
+    <extension point="org.datanucleus.member_annotation_handler">
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ReadOnly" handler="org.datanucleus.api.jpa.annotations.ReadOnlyHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.Index" handler="org.datanucleus.api.jpa.annotations.IndexHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.JdbcType" handler="org.datanucleus.api.jpa.annotations.JdbcTypeHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.SqlType" handler="org.datanucleus.api.jpa.annotations.SqlTypeHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ColumnPosition" handler="org.datanucleus.api.jpa.annotations.ColumnPositionHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ValueGenerator" handler="org.datanucleus.api.jpa.annotations.ValueGeneratorHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.SharedRelation" handler="org.datanucleus.api.jpa.annotations.SharedRelationHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateTimestamp" handler="org.datanucleus.api.jpa.annotations.CreateTimestampHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateTimestamp" handler="org.datanucleus.api.jpa.annotations.UpdateTimestampHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateUser" handler="org.datanucleus.api.jpa.annotations.CreateUserHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateUser" handler="org.datanucleus.api.jpa.annotations.UpdateUserHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ComparatorClass" handler="org.datanucleus.api.jpa.annotations.ComparatorClassHandler"/>
+    </extension>
+
+    <!-- PERSISTENCE API -->
+    <extension point="org.datanucleus.api_adapter">
+        <api-adapter name="JPA" class-name="org.datanucleus.api.jpa.JPAAdapter"/>
+    </extension>
+
+    <!-- CALLBACK HANDLER -->
+    <extension point="org.datanucleus.callbackhandler">
+        <callback-handler name="JPA" class-name="org.datanucleus.api.jpa.JPACallbackHandler"/>
+    </extension>
+
+    <!-- METADATA MANAGER -->
+    <extension point="org.datanucleus.metadata_manager">
+       <metadata-manager name="JPA" class="org.datanucleus.api.jpa.metadata.JPAMetaDataManager"/>
+    </extension>
+
+    <!-- METADATA HANDLER -->
+    <extension point="org.datanucleus.metadata_handler">
+        <handler name="JPA" class-name="org.datanucleus.api.jpa.metadata.JPAMetaDataHandler"/>
+    </extension>
+
+    <!-- METADATA ENTITY RESOLVERS -->
+    <extension point="org.datanucleus.metadata_entityresolver">
+        <!-- JPA ORM XML -->
+        <entityresolver identity="http://java.sun.com/xml/ns/persistence/orm_1_0.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+        <entityresolver identity="http://xmlns.jcp.org/xml/ns/persistence/orm_1_0.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+        <entityresolver identity="http://java.sun.com/xml/ns/persistence/orm_2_0.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+        <entityresolver identity="http://xmlns.jcp.org/xml/ns/persistence/orm_2_0.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+        <entityresolver identity="http://java.sun.com/xml/ns/persistence/orm_2_1.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+        <entityresolver identity="http://xmlns.jcp.org/xml/ns/persistence/orm_2_1.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+        <entityresolver identity="http://xmlns.jcp.org/xml/ns/persistence/orm_2_2.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+        <entityresolver identity="http://www.datanucleus.org/xsd/jpa/orm_2_2.xsd" type="SYSTEM" url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/> <!-- DN variant -->
+        <entityresolver url="/org/datanucleus/api/jpa/jpa_orm_2_2.xsd"/>
+    </extension>
+</plugin>
