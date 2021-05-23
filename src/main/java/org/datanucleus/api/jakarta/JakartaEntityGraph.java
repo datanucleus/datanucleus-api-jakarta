@@ -47,10 +47,10 @@ import org.datanucleus.metadata.MetaDataManager;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Implementation of JPA2.1 EntityGraph.
+ * Implementation of Jakarta Persistence EntityGraph.
  * @param <T> Type of the entity
  */
-public class JPAEntityGraph<T> extends AbstractJPAGraph<T> implements EntityGraph<T>
+public class JakartaEntityGraph<T> extends AbstractJakartaGraph<T> implements EntityGraph<T>
 {
     public static final String LOADGRAPH_PROPERTY = "jakarta.persistence.loadgraph";
     public static final String FETCHGRAPH_PROPERTY = "jakarta.persistence.fetchgraph";
@@ -61,7 +61,7 @@ public class JPAEntityGraph<T> extends AbstractJPAGraph<T> implements EntityGrap
 
     Map<Class, Subgraph> subclassSubgraphsByType = null;
 
-    public JPAEntityGraph(MetaDataManager mmgr, String name, Class clsType)
+    public JakartaEntityGraph(MetaDataManager mmgr, String name, Class clsType)
     {
         super(mmgr, clsType);
         this.name = name;
@@ -95,12 +95,12 @@ public class JPAEntityGraph<T> extends AbstractJPAGraph<T> implements EntityGrap
         return includeAllAttributes;
     }
 
-    public JPAEntityGraph<T> cloneMutableEntityGraph()
+    public JakartaEntityGraph<T> cloneMutableEntityGraph()
     {
-        JPAEntityGraph<T> eg = new JPAEntityGraph<T>(mmgr, name, classType);
+        JakartaEntityGraph<T> eg = new JakartaEntityGraph<T>(mmgr, name, classType);
         if (attributeNodeMap != null)
         {
-            eg.attributeNodeMap = new HashMap<String, JPAAttributeNode<?>>();
+            eg.attributeNodeMap = new HashMap<String, JakartaAttributeNode<?>>();
             eg.attributeNodeMap.putAll(attributeNodeMap);
         }
         if (subclassSubgraphsByType != null)
@@ -122,7 +122,7 @@ public class JPAEntityGraph<T> extends AbstractJPAGraph<T> implements EntityGrap
         {
             subclassSubgraphsByType = new HashMap<Class, Subgraph>();
         }
-        JPASubgraph<? extends V> subgraph = new JPASubgraph(mmgr, type);
+        JakartaSubgraph<? extends V> subgraph = new JakartaSubgraph(mmgr, type);
         subclassSubgraphsByType.put(type, subgraph);
         return subgraph;
     }

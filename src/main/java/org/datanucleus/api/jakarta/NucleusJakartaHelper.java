@@ -39,9 +39,9 @@ import org.datanucleus.store.query.QueryTimeoutException;
 import org.datanucleus.util.ClassUtils;
 
 /**
- * Helper for persistence operations with JPA.
+ * Helper for persistence operations with Jakarta Persistence.
  */
-public class NucleusJPAHelper
+public class NucleusJakartaHelper
 {
     // ------------------------------ Object Management --------------------------------
 
@@ -96,7 +96,7 @@ public class NucleusJPAHelper
     {
         if (obj instanceof Persistable)
         {
-            return (JPAEntityManager) ((Persistable)obj).dnGetExecutionContext().getOwner();
+            return (JakartaEntityManager) ((Persistable)obj).dnGetExecutionContext().getOwner();
         }
         return null;
     }
@@ -239,7 +239,7 @@ public class NucleusJPAHelper
 
         if (isDetached(pc))
         {
-            ExecutionContext ec = ((JPAEntityManager)em).getExecutionContext();
+            ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
 
             // Temporarily attach a StateManager to access the detached field information
             ObjectProvider op = ec.getNucleusContext().getObjectProviderFactory().newForDetached(ec, pc, pc.dnGetObjectId(), null);
@@ -251,7 +251,7 @@ public class NucleusJPAHelper
             return dirtyFieldNames;
         }
 
-        ExecutionContext ec = ((JPAEntityManager)em).getExecutionContext();
+        ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
         ObjectProvider op = ec.findObjectProvider(pc);
         return op == null ? null : op.getDirtyFieldNames();
     }
@@ -273,7 +273,7 @@ public class NucleusJPAHelper
         if (isDetached(pc))
         {
             // Temporarily attach a StateManager to access the detached field information
-            ExecutionContext ec = ((JPAEntityManager)em).getExecutionContext();
+            ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
             ObjectProvider op = ec.getNucleusContext().getObjectProviderFactory().newForDetached(ec, pc, pc.dnGetObjectId(), null);
             pc.dnReplaceStateManager(op);
             op.retrieveDetachState(op);
@@ -283,21 +283,21 @@ public class NucleusJPAHelper
             return loadedFieldNames;
         }
 
-        ExecutionContext ec = ((JPAEntityManager)em).getExecutionContext();
+        ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
         ObjectProvider op = ec.findObjectProvider(pc);
         return op == null ? null : op.getLoadedFieldNames();
     }
 
     /**
-     * Convenience method to convert a Nucleus exception into a JPA exception.
+     * Convenience method to convert a Nucleus exception into a Jakarta Persistence exception.
      * If the incoming exception has a "failed object" then create the new exception with
      * a failed object. Otherwise if the incoming exception has nested exceptions then
      * create this exception with those nested exceptions. Else create this exception with
      * the incoming exception as its nested exception.
      * @param ne NucleusException
-     * @return The JPAException
+     * @return The JakartaException
      */
-    public static PersistenceException getJPAExceptionForNucleusException(NucleusException ne)
+    public static PersistenceException getJakartaExceptionForNucleusException(NucleusException ne)
     {
         if (ne instanceof ReachableObjectNotCascadedException)
         {
@@ -310,7 +310,7 @@ public class NucleusJPAHelper
         }
         else if (ne instanceof NucleusDataStoreException)
         {
-            // JPA doesn't have "datastore" exceptions so just give a PersistenceException
+            // Jakarta Persistence doesn't have "datastore" exceptions so just give a PersistenceException
             if (ne.getNestedExceptions() != null)
             {
                 return new PersistenceException(ne.getMessage(), ne.getCause());
@@ -319,7 +319,7 @@ public class NucleusJPAHelper
         }
         else if (ne instanceof NucleusCanRetryException)
         {
-            // JPA doesn't have "retry" exceptions so just give a PersistenceException
+            // Jakarta Persistence doesn't have "retry" exceptions so just give a PersistenceException
             if (ne.getNestedExceptions() != null)
             {
                 return new PersistenceException(ne.getMessage(), ne.getCause());
@@ -332,7 +332,7 @@ public class NucleusJPAHelper
         }
         else if (ne instanceof NucleusUserException)
         {
-            // JPA doesnt have "user" exceptions so just give a PersistenceException
+            // Jakarta Persistence doesnt have "user" exceptions so just give a PersistenceException
             if (ne.getNestedExceptions() != null)
             {
                 return new PersistenceException(ne.getMessage(), ne.getCause());
@@ -349,7 +349,7 @@ public class NucleusJPAHelper
         }
         else
         {
-            // JPA doesnt have "internal" exceptions so just give a PersistenceException
+            // Jakarta Persistence doesnt have "internal" exceptions so just give a PersistenceException
             if (ne.getNestedExceptions() != null)
             {
                 return new PersistenceException(ne.getMessage(), ne.getCause());

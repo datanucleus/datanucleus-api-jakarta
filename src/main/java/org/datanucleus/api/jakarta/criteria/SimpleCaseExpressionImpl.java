@@ -26,7 +26,7 @@ import org.datanucleus.store.query.expression.Literal;
 import jakarta.persistence.criteria.Expression;
 
 /**
- * Implementation of JPA SimpleCase expression.
+ * Implementation of Jakarta Persistence SimpleCase expression.
  * @param <C> Condition type
  * @param <R> Action type
  */

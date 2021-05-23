@@ -26,7 +26,7 @@ import jakarta.persistence.metamodel.CollectionAttribute;
 import org.datanucleus.api.jakarta.metamodel.CollectionAttributeImpl;
 
 /**
- * Implementation of JPA2 Criteria "CollectionJoin".
+ * Implementation of Jakarta Persistence Criteria "CollectionJoin".
  */
 public class CollectionJoinImpl<Z, E> extends PluralJoinImpl<Z,java.util.Collection<E>,E> implements CollectionJoin<Z, E>
 {

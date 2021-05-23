@@ -26,7 +26,7 @@ import jakarta.persistence.metamodel.ListAttribute;
 import org.datanucleus.api.jakarta.metamodel.ListAttributeImpl;
 
 /**
- * Implementation of JPA2 Criteria "ListJoin".
+ * Implementation of Jakarta Persistence Criteria "ListJoin".
  *
  * @param <Z> The source type of the join
  * @param <E> The element type of the target List

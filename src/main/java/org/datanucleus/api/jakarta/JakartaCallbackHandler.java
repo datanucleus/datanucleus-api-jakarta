@@ -39,7 +39,7 @@ import org.datanucleus.BeanValidationHandler;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ExecutionContext;
 import org.datanucleus.PersistenceNucleusContext;
-import org.datanucleus.api.jakarta.metadata.JPAMetaDataManager;
+import org.datanucleus.api.jakarta.metadata.JakartaMetaDataManager;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.EventListenerMetaData;
 import org.datanucleus.state.CallbackHandler;
@@ -47,15 +47,15 @@ import org.datanucleus.state.ObjectProvider;
 import org.datanucleus.util.NucleusLogger;
 
 /**
- * CallbackHandler implementation for JPA.
+ * CallbackHandler implementation for Jakarta Persistence.
  */
-public class JPACallbackHandler implements CallbackHandler
+public class JakartaCallbackHandler implements CallbackHandler
 {
     PersistenceNucleusContext nucleusCtx;
 
     BeanValidationHandler beanValidationHandler;
 
-    public JPACallbackHandler(PersistenceNucleusContext nucleusCtx)
+    public JakartaCallbackHandler(PersistenceNucleusContext nucleusCtx)
     {
         this.nucleusCtx = nucleusCtx;
     }
@@ -189,7 +189,7 @@ public class JPACallbackHandler implements CallbackHandler
             if (!acmd.isExcludeDefaultListeners())
             {
                 // Global listeners for all classes
-                List<EventListenerMetaData> listenerMetaData = ((JPAMetaDataManager)ec.getMetaDataManager()).getEventListeners();
+                List<EventListenerMetaData> listenerMetaData = ((JakartaMetaDataManager)ec.getMetaDataManager()).getEventListeners();
                 if (listenerMetaData != null && !listenerMetaData.isEmpty())
                 {
                     // Files have listeners so go through them in the same order
@@ -268,27 +268,27 @@ public class JPACallbackHandler implements CallbackHandler
         }
         catch (SecurityException e)
         {
-            JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+            JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
         }
         catch (IllegalArgumentException e)
         {
-            JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+            JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
         }
         catch (IllegalAccessException e)
         {
-            JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+            JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
         }
         catch (InstantiationException e)
         {
-            JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+            JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
         }
         catch (NoSuchMethodException e)
         {
-            JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+            JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
         }
         catch (InvocationTargetException e)
         {
-            JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+            JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
         }
     }
 
@@ -330,15 +330,15 @@ public class JPACallbackHandler implements CallbackHandler
                     }
                     catch (NoSuchMethodException e)
                     {
-                        JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+                        JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
                     }
                     catch (IllegalArgumentException e)
                     {
-                        JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+                        JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
                     }
                     catch (IllegalAccessException e)
                     {
-                        JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+                        JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
                     }
                     catch (InvocationTargetException e)
                     {
@@ -418,11 +418,11 @@ public class JPACallbackHandler implements CallbackHandler
                     }
                     catch (IllegalArgumentException e)
                     {
-                        JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+                        JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
                     }
                     catch (IllegalAccessException e)
                     {
-                        JPAEntityManagerFactory.LOGGER.debug("Exception in JPACallbackHandler", e);
+                        JakartaEntityManagerFactory.LOGGER.debug("Exception in JakartaCallbackHandler", e);
                     }
                     catch (InvocationTargetException e)
                     {

@@ -25,10 +25,10 @@ import jakarta.persistence.Query;
 import org.datanucleus.store.query.cache.QueryResultsCache;
 
 /**
- * Implementation of the JPA QueryCache.
+ * Implementation of the Jakarta Persistence QueryCache.
  * Provides a wrapper and hands off calls to the underlying query cache.
  */
-public class JPAQueryCache implements Serializable
+public class JakartaQueryCache implements Serializable
 {
     private static final long serialVersionUID = 658627275290103155L;
     QueryResultsCache resultsCache;
@@ -37,7 +37,7 @@ public class JPAQueryCache implements Serializable
      * Constructor.
      * @param cache Query results cache
      */
-    public JPAQueryCache(QueryResultsCache cache)
+    public JakartaQueryCache(QueryResultsCache cache)
     {
         this.resultsCache = cache;
     }
@@ -53,21 +53,21 @@ public class JPAQueryCache implements Serializable
 
     /**
      * Evict all cached results for the provided query.
-     * @param query The JPA query
+     * @param query The Jakarta Persistence query
      */
     public void evict(Query query)
     {
-        resultsCache.evict(((JPAQuery)query).getInternalQuery());
+        resultsCache.evict(((JakartaQuery)query).getInternalQuery());
     }
 
     /**
      * Evict the cached results for the provided query and params.
-     * @param query The JPA query
+     * @param query The Jakarta Persistence query
      * @param params The input params
      */
     public void evict(Query query, Map params)
     {
-        resultsCache.evict(((JPAQuery)query).getInternalQuery(), params);
+        resultsCache.evict(((JakartaQuery)query).getInternalQuery(), params);
     }
 
     /**
@@ -86,7 +86,7 @@ public class JPAQueryCache implements Serializable
      */
     public void pin(Query query)
     {
-        resultsCache.pin(((JPAQuery)query).getInternalQuery());
+        resultsCache.pin(((JakartaQuery)query).getInternalQuery());
     }
 
     /**
@@ -96,7 +96,7 @@ public class JPAQueryCache implements Serializable
      */
     public void pin(Query query, Map params)
     {
-        resultsCache.pin(((JPAQuery)query).getInternalQuery(), params);
+        resultsCache.pin(((JakartaQuery)query).getInternalQuery(), params);
     }
 
     /**
@@ -105,7 +105,7 @@ public class JPAQueryCache implements Serializable
      */
     public void unpin(Query query)
     {
-        resultsCache.unpin(((JPAQuery)query).getInternalQuery());
+        resultsCache.unpin(((JakartaQuery)query).getInternalQuery());
     }
 
     /**
@@ -115,6 +115,6 @@ public class JPAQueryCache implements Serializable
      */
     public void unpin(Query query, Map params)
     {
-        resultsCache.unpin(((JPAQuery)query).getInternalQuery(), params);
+        resultsCache.unpin(((JakartaQuery)query).getInternalQuery(), params);
     }
 }

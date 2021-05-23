@@ -32,7 +32,7 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
 
 /**
- * Activator used to register/deregister JPA services in an OSGi environment.
+ * Activator used to register/deregister Jakarta Persistence services in an OSGi environment.
  */
 public class OSGiActivator implements BundleActivator 
 {
@@ -40,8 +40,8 @@ public class OSGiActivator implements BundleActivator
     public static final String PERSISTENCE_PROVIDER = PersistenceProvider.class.getName();
     public static final String OSGI_PERSISTENCE_PROVIDER = PersistenceProviderImpl.class.getName();
 
-    /** The JPA registered service (or null if not currently registered). */
-    private static ServiceRegistration jpaService = null;
+    /** The Jakarta Persistence registered service (or null if not currently registered). */
+    private static ServiceRegistration myService = null;
 
     @SuppressWarnings("unused")
     private static TransactionManager jtaTxnManager;
@@ -57,10 +57,10 @@ public class OSGiActivator implements BundleActivator
         PersistenceProvider provider = new PersistenceProviderImpl();
         Hashtable<String, String> props = new Hashtable<String, String>();
 
-        // Register JPA service with alternative properties used by various OSGi frameworks
+        // Register Jakarta Persistence service with alternative properties used by various OSGi frameworks
         props.put(PERSISTENCE_PROVIDER_ARIES, OSGI_PERSISTENCE_PROVIDER);
         props.put(PERSISTENCE_PROVIDER, OSGI_PERSISTENCE_PROVIDER);
-        jpaService = ctx.registerService(PERSISTENCE_PROVIDER, provider, props);
+        myService = ctx.registerService(PERSISTENCE_PROVIDER, provider, props);
 
         // Add listener to any JTA txn manager
         if (jtaListener != null)
@@ -101,10 +101,10 @@ public class OSGiActivator implements BundleActivator
             }
         }
 
-        if (jpaService != null) 
+        if (myService != null) 
         {
-            jpaService.unregister();
-            jpaService = null;
+            myService.unregister();
+            myService = null;
         }
     }
 

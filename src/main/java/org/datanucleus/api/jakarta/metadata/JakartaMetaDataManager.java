@@ -33,7 +33,7 @@ import jakarta.persistence.PreUpdate;
 
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.NucleusContext;
-import org.datanucleus.api.jakarta.JPAEntityGraph;
+import org.datanucleus.api.jakarta.JakartaEntityGraph;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.ClassMetaData;
 import org.datanucleus.metadata.DiscriminatorMetaData;
@@ -48,10 +48,10 @@ import org.datanucleus.util.Localiser;
 import org.datanucleus.util.NucleusLogger;
 
 /**
- * Manager of JPA MetaData information in DataNucleus.
+ * Manager of Jakarta Persistence MetaData information in DataNucleus.
  * Manages the MetaData for a particular "persistence-unit".
  */
-public class JPAMetaDataManager extends MetaDataManagerImpl
+public class JakartaMetaDataManager extends MetaDataManagerImpl
 {
     private static final long serialVersionUID = 3591790314245592821L;
 
@@ -62,13 +62,13 @@ public class JPAMetaDataManager extends MetaDataManagerImpl
     protected List eventListeners = new ArrayList();
 
     /** Listeners for notification of when an EntityGraph is registered. */
-    protected List<JPAEntityGraphRegistrationListener> entityGraphListeners = new ArrayList<JPAEntityGraphRegistrationListener>();
+    protected List<JakartaEntityGraphRegistrationListener> entityGraphListeners = new ArrayList<JakartaEntityGraphRegistrationListener>();
 
     /**
      * Constructor.
      * @param ctxt NucleusContext that this metadata manager operates in
      */
-    public JPAMetaDataManager(NucleusContext ctxt)
+    public JakartaMetaDataManager(NucleusContext ctxt)
     {
         super(ctxt);
 
@@ -94,14 +94,14 @@ public class JPAMetaDataManager extends MetaDataManagerImpl
         }
     }
 
-    public synchronized void registerEntityGraphListener(JPAEntityGraphRegistrationListener listener)
+    public synchronized void registerEntityGraphListener(JakartaEntityGraphRegistrationListener listener)
     {
         entityGraphListeners.add(listener);
     }
 
-    public synchronized void registerEntityGraph(JPAEntityGraph eg)
+    public synchronized void registerEntityGraph(JakartaEntityGraph eg)
     {
-        for (JPAEntityGraphRegistrationListener listener : entityGraphListeners)
+        for (JakartaEntityGraphRegistrationListener listener : entityGraphListeners)
         {
             listener.entityGraphRegistered(eg);
         }
@@ -117,7 +117,7 @@ public class JPAMetaDataManager extends MetaDataManagerImpl
     }
 
     /**
-     * Utility to parse a file, using the "jpa" MetaData handler.
+     * Utility to parse a file, using the "jakarta" MetaData handler.
      * @param fileURL URL of the file
      * @return The FileMetaData for this file
      */
@@ -127,12 +127,12 @@ public class JPAMetaDataManager extends MetaDataManagerImpl
         {
             metaDataParser = new MetaDataParser(this, nucleusContext.getPluginManager(), validateXML, supportXMLNamespaces);
         }
-        return (FileMetaData)metaDataParser.parseMetaDataURL(fileURL, "jpa");
+        return (FileMetaData)metaDataParser.parseMetaDataURL(fileURL, "jakarta");
     }
 
     /**
      * Method that will perform any necessary post-processing on metadata.
-     * In the case of JPA we need to populate all event listener methods against the listener.
+     * In the case of Jakarta Persistence we need to populate all event listener methods against the listener.
      * @param cmd Metadata for the class
      * @param clr ClassLoader resolver
      */
@@ -306,7 +306,7 @@ public class JPAMetaDataManager extends MetaDataManagerImpl
 
     /**
      * Load the metadata for the specified class (if available).
-     * With JPA if a class hasn't been loaded at startup (from the persistence-unit) then we only check for annotations in the class itself.
+     * With Jakarta Persistence if a class hasn't been loaded at startup (from the persistence-unit) then we only check for annotations in the class itself.
      * @param c The class
      * @param clr ClassLoader resolver
      * @return The metadata for this class (if found)

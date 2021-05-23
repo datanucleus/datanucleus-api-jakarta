@@ -21,9 +21,9 @@ import org.datanucleus.properties.PropertyValidator;
 import org.datanucleus.util.NucleusLogger;
 
 /**
- * Validator for persistence properties used by JPA.
+ * Validator for persistence properties used by Jakarta Persistence.
  */
-public class JPAPropertyValidator implements PropertyValidator
+public class JakartaPropertyValidator implements PropertyValidator
 {
     /**
      * Validate the specified property.
@@ -37,7 +37,7 @@ public class JPAPropertyValidator implements PropertyValidator
         {
             return false;
         }
-        else if (name.equals(JPAPropertyNames.PROPERTY_JPA_PERSISTENCE_CONTEXT_TYPE))
+        else if (name.equals(JakartaPropertyNames.PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE))
         {
             if (value instanceof String)
             {
@@ -49,8 +49,8 @@ public class JPAPropertyValidator implements PropertyValidator
                 }
             }
         }
-        else if (name.equals(JPAPropertyNames.PROPERTY_JPA_STANDARD_GENERATE_SCHEMA_DATABASE_ACTION) ||
-                name.equals(JPAPropertyNames.PROPERTY_JPA_STANDARD_GENERATE_SCHEMA_SCRIPTS_ACTION))
+        else if (name.equals(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_GENERATE_SCHEMA_DATABASE_ACTION) ||
+                name.equals(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_GENERATE_SCHEMA_SCRIPTS_ACTION))
         {
             if (value instanceof String)
             {
@@ -64,8 +64,8 @@ public class JPAPropertyValidator implements PropertyValidator
                 }
             }
         }
-        else if (name.equals(JPAPropertyNames.PROPERTY_JPA_STANDARD_GENERATE_SCHEMA_CREATE_SRC) ||
-                name.equals(JPAPropertyNames.PROPERTY_JPA_STANDARD_GENERATE_SCHEMA_DROP_SRC))
+        else if (name.equals(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_GENERATE_SCHEMA_CREATE_SRC) ||
+                name.equals(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_GENERATE_SCHEMA_DROP_SRC))
         {
             NucleusLogger.METADATA.warn(name + " is currently ignored. Execute the scripts yourself!");
             if (value instanceof String)

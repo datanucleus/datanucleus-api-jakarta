@@ -68,8 +68,8 @@ import org.datanucleus.PropertyNames;
 import org.datanucleus.api.jakarta.criteria.CriteriaBuilderImpl;
 import org.datanucleus.api.jakarta.exceptions.NoPersistenceUnitException;
 import org.datanucleus.api.jakarta.exceptions.NotProviderException;
-import org.datanucleus.api.jakarta.metadata.JPAEntityGraphRegistrationListener;
-import org.datanucleus.api.jakarta.metadata.JPAMetaDataManager;
+import org.datanucleus.api.jakarta.metadata.JakartaEntityGraphRegistrationListener;
+import org.datanucleus.api.jakarta.metadata.JakartaMetaDataManager;
 import org.datanucleus.api.jakarta.metamodel.MetamodelImpl;
 import org.datanucleus.identity.SingleFieldId;
 import org.datanucleus.metadata.AbstractClassMetaData;
@@ -92,20 +92,20 @@ import org.datanucleus.util.Localiser;
  * EntityManagerFactory implementation.
  * Caches the "persistence-unit" MetaData information when encountered, in JavaSE mode.
  */
-public class JPAEntityManagerFactory implements EntityManagerFactory, PersistenceUnitUtil, JPAEntityGraphRegistrationListener, Serializable
+public class JakartaEntityManagerFactory implements EntityManagerFactory, PersistenceUnitUtil, JakartaEntityGraphRegistrationListener, Serializable
 {
     static
     {
-        Localiser.registerBundle("org.datanucleus.api.jpa.Localisation", JPAEntityManagerFactory.class.getClassLoader());
+        Localiser.registerBundle("org.datanucleus.api.jakarta.Localisation", JakartaEntityManagerFactory.class.getClassLoader());
     }
 
     static final long serialVersionUID = -2306972481580259021L;
 
     /** Logger for enhancing. */
-    public static final NucleusLogger LOGGER = NucleusLogger.getLoggerInstance("DataNucleus.JPA");
+    public static final NucleusLogger LOGGER = NucleusLogger.getLoggerInstance("DataNucleus.Jakarta");
 
     /** Cache of EMF keyed by the name. Only used when having single-EMF property enabled. */
-    private static ConcurrentHashMap<String, JPAEntityManagerFactory> emfByName = null;
+    private static ConcurrentHashMap<String, JakartaEntityManagerFactory> emfByName = null;
 
     /** Cache of persistence-unit information for JavaSE. */
     private static volatile Map<String, PersistenceUnitMetaData> unitMetaDataCache = null;
@@ -122,13 +122,13 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
 
     private transient Cache datastoreCache = null;
 
-    private transient JPAQueryCache queryCache = null;
+    private transient JakartaQueryCache queryCache = null;
 
     private transient MetamodelImpl metamodel = null;
 
-    private transient Map<String, JPAEntityGraph> entityGraphsByName = null;
+    private transient Map<String, JakartaEntityGraph> entityGraphsByName = null;
 
-    private transient JPAClassTransformer transformer = null;
+    private transient JakartaClassTransformer transformer = null;
 
     /** Flag for whether this EMF is managed by a container (whether it was created via JavaEE constructor). */
     private boolean containerManaged = false;
@@ -138,7 +138,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      * @param unitInfo The "persistent-unit" info
      * @param overridingProps factory properties overriding those in the "persistence-unit"
      */
-    public JPAEntityManagerFactory(PersistenceUnitInfo unitInfo, Map overridingProps)
+    public JakartaEntityManagerFactory(PersistenceUnitInfo unitInfo, Map overridingProps)
     {
         containerManaged = true;
         Properties props = unitInfo.getProperties();
@@ -274,14 +274,14 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
         boolean addClassTransformer = false;
         if (unitMetaData.getProperties() != null)
         {
-            Object addCTVal = unitMetaData.getProperties().get(JPAPropertyNames.PROPERTY_JPA_ADD_CLASS_TRANSFORMER);
+            Object addCTVal = unitMetaData.getProperties().get(JakartaPropertyNames.PROPERTY_JAKARTA_ADD_CLASS_TRANSFORMER);
             if (addCTVal != null && ((String)addCTVal).equalsIgnoreCase("true"))
             {
                 addClassTransformer = true;
             }
         }
 
-        Object addCTVal = overridingProps.get(JPAPropertyNames.PROPERTY_JPA_ADD_CLASS_TRANSFORMER);
+        Object addCTVal = overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_ADD_CLASS_TRANSFORMER);
         if (addCTVal != null && ((String)addCTVal).equalsIgnoreCase("true"))
         {
             addClassTransformer = true;
@@ -291,7 +291,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
             try
             {
                 LOGGER.debug("Adding ClassTransformer for enhancing classes at runtime");
-                transformer = new JPAClassTransformer(overridingProps);
+                transformer = new JakartaClassTransformer(overridingProps);
                 unitInfo.addTransformer(transformer);
             }
             catch (IllegalStateException ise)
@@ -316,7 +316,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
 
         if (entityGraphsToRegister != null)
         {
-            for (JPAEntityGraph eg : entityGraphsToRegister)
+            for (JakartaEntityGraph eg : entityGraphsToRegister)
             {
                 registerEntityGraph(eg, eg.getName());
             }
@@ -338,13 +338,13 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
     private void setPersistenceContextTypeFromProperties(Properties props, Map overridingProps)
     {
         String persistenceContextTypeProp = null;
-        if (props != null && props.containsKey(JPAPropertyNames.PROPERTY_JPA_PERSISTENCE_CONTEXT_TYPE))
+        if (props != null && props.containsKey(JakartaPropertyNames.PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE))
         {
-            persistenceContextTypeProp = (String)props.get(JPAPropertyNames.PROPERTY_JPA_PERSISTENCE_CONTEXT_TYPE);
+            persistenceContextTypeProp = (String)props.get(JakartaPropertyNames.PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE);
         }
-        if (overridingProps != null && overridingProps.containsKey(JPAPropertyNames.PROPERTY_JPA_PERSISTENCE_CONTEXT_TYPE))
+        if (overridingProps != null && overridingProps.containsKey(JakartaPropertyNames.PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE))
         {
-            persistenceContextTypeProp = (String)overridingProps.get(JPAPropertyNames.PROPERTY_JPA_PERSISTENCE_CONTEXT_TYPE);
+            persistenceContextTypeProp = (String)overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE);
         }
 
         if ("extended".equals(persistenceContextTypeProp))
@@ -362,7 +362,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      * @param pumd Persistence unit metadata
      * @param overridingProps Properties overriding those defined for this unit
      */
-    public JPAEntityManagerFactory(PersistenceUnitMetaData pumd, Map overridingProps)
+    public JakartaEntityManagerFactory(PersistenceUnitMetaData pumd, Map overridingProps)
     {
         name = pumd.getName();
         if (unitMetaDataCache == null)
@@ -388,7 +388,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      * @param unitName Name of the "persistent-unit" to use
      * @param overridingProps factory properties overriding those in the "persistence-unit"
      */
-    public JPAEntityManagerFactory(String unitName, Map overridingProps)
+    public JakartaEntityManagerFactory(String unitName, Map overridingProps)
     {
         name = unitName;
         if (unitMetaDataCache == null)
@@ -516,7 +516,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
 
         if (entityGraphsToRegister != null)
         {
-            for (JPAEntityGraph eg : entityGraphsToRegister)
+            for (JakartaEntityGraph eg : entityGraphsToRegister)
             {
                 registerEntityGraph(eg, eg.getName());
             }
@@ -607,13 +607,13 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      * Accessor for the query results cache.
      * @return Query results cache
      */
-    public JPAQueryCache getQueryCache()
+    public JakartaQueryCache getQueryCache()
     {
         assertIsClosed();
 
         if (queryCache == null)
         {
-            queryCache = new JPAQueryCache(nucleusCtx.getStoreManager().getQueryManager().getQueryResultsCache());
+            queryCache = new JakartaQueryCache(nucleusCtx.getStoreManager().getQueryManager().getQueryResultsCache());
         }
         return queryCache;
     }
@@ -650,7 +650,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
             return;
         }
 
-        org.datanucleus.store.query.Query intQuery = ((JPAQuery)query).getInternalQuery();
+        org.datanucleus.store.query.Query intQuery = ((JakartaQuery)query).getInternalQuery();
         QueryMetaData qmd = new QueryMetaData(name);
         qmd.setLanguage(QueryLanguage.JPQL.toString());
         qmd.setQuery(intQuery.toString());
@@ -690,7 +690,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      */
     public EntityManager createEntityManager(Map overridingProps)
     {
-        JPAEntityManager em = (JPAEntityManager)newEntityManager(nucleusCtx, persistenceContextType, SynchronizationType.SYNCHRONIZED);
+        JakartaEntityManager em = (JakartaEntityManager)newEntityManager(nucleusCtx, persistenceContextType, SynchronizationType.SYNCHRONIZED);
         if (overridingProps != null && !overridingProps.isEmpty())
         {
             Iterator<Map.Entry> propIter = overridingProps.entrySet().iterator();
@@ -711,7 +711,6 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      * @param syncType how and when the entity manager should be synchronized with the current JTA transaction
      * @return entity manager instance
      * @throws IllegalStateException if the entity manager factory has been configured for resource-local entity managers or has been closed
-     * @since JPA2.1
      */
     public EntityManager createEntityManager(SynchronizationType syncType)
     {
@@ -726,7 +725,6 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      * @param overridingProps properties for entity manager; may be null
      * @return entity manager instance
      * @throws IllegalStateException if the entity manager factory has been configured for resource-local entity managers or has been closed
-     * @since JPA2.1
      */
     public EntityManager createEntityManager(SynchronizationType syncType, Map overridingProps)
     {
@@ -736,7 +734,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
             throw new IllegalStateException("EntityManagerFactory is configured for RESOURCE_LOCAL");
         }
 
-        JPAEntityManager em = (JPAEntityManager)newEntityManager(nucleusCtx, persistenceContextType, syncType);
+        JakartaEntityManager em = (JakartaEntityManager)newEntityManager(nucleusCtx, persistenceContextType, syncType);
         if (overridingProps != null && !overridingProps.isEmpty())
         {
             Iterator<Map.Entry> propIter = overridingProps.entrySet().iterator();
@@ -760,7 +758,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      */
     protected EntityManager newEntityManager(PersistenceNucleusContext nucleusCtx, PersistenceContextType contextType, SynchronizationType syncType)
     {
-        return new JPAEntityManager(this, nucleusCtx, contextType, syncType);
+        return new JakartaEntityManager(this, nucleusCtx, contextType, syncType);
     }
 
     /**
@@ -852,7 +850,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
                 // User providing connectionURL overriding persistence unit so remove any JNDI
                 props.remove(PropertyNames.PROPERTY_CONNECTION_FACTORY_NAME.toLowerCase(Locale.ENGLISH));
             }
-            else if (overridingProps.containsKey(JPAPropertyNames.PROPERTY_JPA_STANDARD_JDBC_URL))
+            else if (overridingProps.containsKey(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_JDBC_URL))
             {
                 // User providing connectionURL overriding persistence unit so remove any JNDI
                 props.remove(PropertyNames.PROPERTY_CONNECTION_FACTORY_NAME.toLowerCase(Locale.ENGLISH));
@@ -862,14 +860,14 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
             props.putAll(overridingProps);
         }
 
-        props.put(PropertyNames.PROPERTY_AUTOSTART_MECHANISM.toLowerCase(Locale.ENGLISH), "None"); // Don't allow autostart with JPA
+        props.put(PropertyNames.PROPERTY_AUTOSTART_MECHANISM.toLowerCase(Locale.ENGLISH), "None"); // Don't allow autostart with Jakarta Persistence
         props.put(PropertyNames.PROPERTY_PERSISTENCE_UNIT_NAME.toLowerCase(Locale.ENGLISH), unitMetaData.getName()); // Make sure we register the name
         if (unitMetaData.getValidationMode() != null)
         {
             // Set validation mode if set on persistence-unit
             props.put(PropertyNames.PROPERTY_VALIDATION_MODE.toLowerCase(Locale.ENGLISH), unitMetaData.getValidationMode());
         }
-        props.remove(JPAPropertyNames.PROPERTY_JPA_PERSISTENCE_CONTEXT_TYPE); // Processed above
+        props.remove(JakartaPropertyNames.PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE); // Processed above
         if (!props.containsKey(PropertyNames.PROPERTY_TRANSACTION_TYPE.toLowerCase(Locale.ENGLISH)))
         {
             // Default to RESOURCE_LOCAL txns
@@ -905,14 +903,14 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
             }
         }
 
-        // Initialise the context for JPA
-        PersistenceNucleusContext nucCtx = (pluginMgr != null ? new PersistenceNucleusContextImpl("JPA", startupProps, pluginMgr) :
-            new PersistenceNucleusContextImpl("JPA", startupProps));
+        // Initialise the context for Jakarta Persistence
+        PersistenceNucleusContext nucCtx = (pluginMgr != null ? new PersistenceNucleusContextImpl("Jakarta", startupProps, pluginMgr) :
+            new PersistenceNucleusContextImpl("Jakarta", startupProps));
 
         // Apply remaining persistence properties
         Configuration propConfig = nucCtx.getConfiguration();
         propConfig.setPersistenceProperties(props);
-        JPAMetaDataManager mmgr = (JPAMetaDataManager)nucCtx.getMetaDataManager();
+        JakartaMetaDataManager mmgr = (JakartaMetaDataManager)nucCtx.getMetaDataManager();
 
         // Initialise metadata manager, and load up the MetaData implied by this "persistence-unit"
         mmgr.setAllowXML(propConfig.getBooleanProperty(PropertyNames.PROPERTY_METADATA_ALLOW_XML));
@@ -940,10 +938,9 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
 
     /**
      * Get the names of the properties that are supported for use with the entity manager factory. 
-     * These correspond to properties that may be passed to the methods of the EntityManagerFactory 
-     * interface that take a properties argument. These include all standard properties as well as
-     * vendor-specific properties supported by the provider. These properties may or may not currently 
-     * be in effect.
+     * These correspond to properties that may be passed to the methods of the EntityManagerFactory interface that take a properties argument. 
+     * These include all standard properties as well as vendor-specific properties supported by the provider. 
+     * These properties may or may not currently be in effect.
      * @return properties and hints
      */
     public Set<String> getSupportedProperties()
@@ -972,7 +969,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
         if (datastoreCache == null && nucleusCtx.hasLevel2Cache())
         {
             // Initialise the L2 cache (if used)
-            datastoreCache = new JPADataStoreCache(nucleusCtx);
+            datastoreCache = new JakartaDataStoreCache(nucleusCtx);
         }
         return datastoreCache;
     }
@@ -1146,7 +1143,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
         }
 
         final List<EntityGraph<? super T>> results = new ArrayList<EntityGraph<? super T>>();
-        for (JPAEntityGraph eg : entityGraphsByName.values())
+        for (JakartaEntityGraph eg : entityGraphsByName.values())
         {
             if (eg.getClassType().isAssignableFrom(entityClass))
             {
@@ -1162,29 +1159,29 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
 
         if (graph == null)
         {
-            // Maybe better to throw an exception but the JPA API says nothing
+            // Maybe better to throw an exception but the Jakarta Persistence API says nothing
             return;
         }
-        AbstractClassMetaData cmd = nucleusCtx.getMetaDataManager().getMetaDataForClass(((JPAEntityGraph)graph).getClassType(), nucleusCtx.getClassLoaderResolver(null));
+        AbstractClassMetaData cmd = nucleusCtx.getMetaDataManager().getMetaDataForClass(((JakartaEntityGraph)graph).getClassType(), nucleusCtx.getClassLoaderResolver(null));
         if (cmd == null)
         {
-            throw new IllegalStateException("Attempt to add graph " + graph + " for type=" + ((JPAEntityGraph)graph).getClassType() + " but is not a known Entity");
+            throw new IllegalStateException("Attempt to add graph " + graph + " for type=" + ((JakartaEntityGraph)graph).getClassType() + " but is not a known Entity");
         }
 
         String myGraphName = (graphName != null ? graphName : cmd.getEntityName());
-        ((JPAEntityGraph)graph).setName(myGraphName);
+        ((JakartaEntityGraph)graph).setName(myGraphName);
 
         if (entityGraphsByName == null)
         {
-            entityGraphsByName = new HashMap<String, JPAEntityGraph>();
+            entityGraphsByName = new HashMap<String, JakartaEntityGraph>();
         }
-        entityGraphsByName.put(myGraphName, (JPAEntityGraph) graph);
+        entityGraphsByName.put(myGraphName, (JakartaEntityGraph) graph);
 
         // Register graph as FetchGroupMetaData for the class
-        registerEntityGraph((JPAEntityGraph) graph, graph.getName());
+        registerEntityGraph((JakartaEntityGraph) graph, graph.getName());
     }
 
-    public void registerEntityGraph(JPAEntityGraph eg, String graphName)
+    public void registerEntityGraph(JakartaEntityGraph eg, String graphName)
     {
         assertIsClosed();
 
@@ -1264,14 +1261,14 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
         return "DN_ENTITY_GRAPH" + random.nextLong();
     }
 
-    List<JPAEntityGraph> entityGraphsToRegister = null;
+    List<JakartaEntityGraph> entityGraphsToRegister = null;
 
-    public void entityGraphRegistered(JPAEntityGraph eg)
+    public void entityGraphRegistered(JakartaEntityGraph eg)
     {
         // Add to internal map
         if (entityGraphsByName == null)
         {
-            entityGraphsByName = new HashMap<String, JPAEntityGraph>();
+            entityGraphsByName = new HashMap<String, JakartaEntityGraph>();
         }
         entityGraphsByName.put(eg.getName(), eg);
 
@@ -1336,13 +1333,13 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
                     else
                     {
                         LOGGER.warn("Found persistence-unit with name \"" + unitmds[j].getName() + "\" at " + unitmds[j].getRootURI() +
-                            " but already found one with same name at " + JPAEntityManagerFactory.unitMetaDataCache.get(unitmds[j].getName()).getRootURI());
+                            " but already found one with same name at " + JakartaEntityManagerFactory.unitMetaDataCache.get(unitmds[j].getName()).getRootURI());
                     }
 
                     if (unitmds[j].getName().equals(unitName) && pumd == null)
                     {
                         pumd = unitmds[j];
-                        pumd.clearJarFiles(); // Jar files not applicable to J2SE [JPA 6.3]
+                        pumd.clearJarFiles(); // Jar files not applicable to J2SE [Jakarta Persistence 6.3]
                     }
                 }
             }
@@ -1359,21 +1356,21 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
 
             if (overridingProps != null)
             {
-                if (overridingProps.containsKey(JPAPropertyNames.PROPERTY_JPA_STANDARD_JTA_DATASOURCE))
+                if (overridingProps.containsKey(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_JTA_DATASOURCE))
                 {
-                    pumd.setJtaDataSource((String)overridingProps.get(JPAPropertyNames.PROPERTY_JPA_STANDARD_JTA_DATASOURCE));
+                    pumd.setJtaDataSource((String)overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_JTA_DATASOURCE));
                 }
-                if (overridingProps.containsKey(JPAPropertyNames.PROPERTY_JPA_STANDARD_NONJTA_DATASOURCE))
+                if (overridingProps.containsKey(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_NONJTA_DATASOURCE))
                 {
-                    pumd.setNonJtaDataSource((String)overridingProps.get(JPAPropertyNames.PROPERTY_JPA_STANDARD_NONJTA_DATASOURCE));
+                    pumd.setNonJtaDataSource((String)overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_NONJTA_DATASOURCE));
                 }
-                if (overridingProps.containsKey(JPAPropertyNames.PROPERTY_JPA_STANDARD_TRANSACTION_TYPE))
+                if (overridingProps.containsKey(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_TRANSACTION_TYPE))
                 {
-                    pumd.setTransactionType((String)overridingProps.get(JPAPropertyNames.PROPERTY_JPA_STANDARD_TRANSACTION_TYPE));
+                    pumd.setTransactionType((String)overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_TRANSACTION_TYPE));
                 }
-                if (overridingProps.containsKey(JPAPropertyNames.PROPERTY_JPA_STANDARD_SHAREDCACHE_MODE))
+                if (overridingProps.containsKey(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_SHAREDCACHE_MODE))
                 {
-                    pumd.setSharedCacheMode((String)overridingProps.get(JPAPropertyNames.PROPERTY_JPA_STANDARD_SHAREDCACHE_MODE));
+                    pumd.setSharedCacheMode((String)overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_SHAREDCACHE_MODE));
                 }
             }
         }
@@ -1410,7 +1407,7 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
      */
     private Object readResolve() throws InvalidObjectException 
     {
-        JPAEntityManagerFactory emf = null;
+        JakartaEntityManagerFactory emf = null;
         if (emfByName != null)
         {
             // Return singleton if present to save reinitialisation
@@ -1435,19 +1432,19 @@ public class JPAEntityManagerFactory implements EntityManagerFactory, Persistenc
         return this;
     }
 
-    private static synchronized void assertSingleton(String name, JPAEntityManagerFactory emf)
+    private static synchronized void assertSingleton(String name, JakartaEntityManagerFactory emf)
     {
-        Boolean singleton = emf.getNucleusContext().getConfiguration().getBooleanObjectProperty(JPAPropertyNames.PROPERTY_JPA_SINGLETON_EMF_FOR_NAME);
+        Boolean singleton = emf.getNucleusContext().getConfiguration().getBooleanObjectProperty(JakartaPropertyNames.PROPERTY_JAKARTA_SINGLETON_EMF_FOR_NAME);
         if (singleton != null && singleton)
         {
             // Check on singleton pattern
             if (emfByName == null)
             {
-                emfByName = new ConcurrentHashMap<String, JPAEntityManagerFactory>();
+                emfByName = new ConcurrentHashMap<String, JakartaEntityManagerFactory>();
             }
             if (emfByName.containsKey(name))
             {
-                JPAEntityManagerFactory singletonEMF = emfByName.get(name);
+                JakartaEntityManagerFactory singletonEMF = emfByName.get(name);
                 emf.close();
                 NucleusLogger.PERSISTENCE.warn("Requested EMF of name \"" + name + 
                     "\" but already exists and using singleton pattern, so returning existing EMF");

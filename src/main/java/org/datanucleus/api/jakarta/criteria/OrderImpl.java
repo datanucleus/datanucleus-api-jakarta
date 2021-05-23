@@ -23,7 +23,7 @@ import jakarta.persistence.criteria.Order;
 import org.datanucleus.store.query.expression.OrderExpression;
 
 /**
- * Implementation of JPA Criteria "Order".
+ * Implementation of Jakarta Persistence Criteria "Order".
  */
 public class OrderImpl implements Order
 {

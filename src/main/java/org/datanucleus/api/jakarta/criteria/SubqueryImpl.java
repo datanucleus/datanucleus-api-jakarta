@@ -38,7 +38,7 @@ import jakarta.persistence.metamodel.EntityType;
 import org.datanucleus.store.query.expression.VariableExpression;
 
 /**
- * Implementation of JPA2 Criteria "Subquery".
+ * Implementation of Jakarta Persistence Criteria "Subquery".
  * A subquery in DataNucleus is represented as a variable (as it is in JDOQL), consequently this
  * expression is backed by a VariableExpression.
  */

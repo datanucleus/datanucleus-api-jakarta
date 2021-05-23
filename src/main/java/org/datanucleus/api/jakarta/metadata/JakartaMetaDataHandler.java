@@ -31,9 +31,9 @@ import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.PropertyNames;
-import org.datanucleus.api.jakarta.AbstractJPAGraph;
-import org.datanucleus.api.jakarta.JPAEntityGraph;
-import org.datanucleus.api.jakarta.JPASubgraph;
+import org.datanucleus.api.jakarta.AbstractJakartaGraph;
+import org.datanucleus.api.jakarta.JakartaEntityGraph;
+import org.datanucleus.api.jakarta.JakartaSubgraph;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.ClassMetaData;
@@ -87,8 +87,8 @@ import org.datanucleus.util.NucleusLogger;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Parser handler for JPA MetaData.
- * Implements DefaultHandler and handles the extracting of MetaData for JPA
+ * Parser handler for Jakarta Persistence MetaData.
+ * Implements DefaultHandler and handles the extracting of MetaData for Jakarta Persistence
  * from the XML elements/attributes. This class simply constructs the MetaData
  * representation mirroring what is in the MetaData file. It has no knowledge
  * of the class(es) that it represents, simply the information in the MetaData
@@ -98,7 +98,7 @@ import org.datanucleus.util.StringUtils;
  * to the stack as they are encountered and created. They are then popped off
  * the stack when the end element is encountered.</P>
  */
-public class JPAMetaDataHandler extends AbstractMetaDataHandler
+public class JakartaMetaDataHandler extends AbstractMetaDataHandler
 {
     /** Default package name for the entity-mappings (if any). */
     String defaultPackageName = null;
@@ -123,7 +123,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
 
     private class GraphHolder
     {
-        AbstractJPAGraph graph;
+        AbstractJakartaGraph graph;
         Map<String, String> attributeNameBySubgroupName = new HashMap<String, String>();
     }
     Deque<GraphHolder> graphHolderStack = new ArrayDeque<GraphHolder>();
@@ -134,7 +134,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
      * @param filename The name of the file to parse
      * @param resolver Entity Resolver to use (null if not available)
      */
-    public JPAMetaDataHandler(MetaDataManager mgr, String filename, EntityResolver resolver)
+    public JakartaMetaDataHandler(MetaDataManager mgr, String filename, EntityResolver resolver)
     {
         super(mgr, filename, resolver);
         metadata = new FileMetaData(filename);
@@ -485,12 +485,12 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                 String initValue = getAttr(attrs, "initial-value");
                 if (StringUtils.isWhitespace(initValue))
                 {
-                    initValue = "1"; // JPA default
+                    initValue = "1"; // Jakarta Persistence default
                 }
                 String allocSize = getAttr(attrs, "allocation-size");
                 if (StringUtils.isWhitespace(allocSize))
                 {
-                    allocSize = "50"; // JPA default
+                    allocSize = "50"; // Jakarta Persistence default
                 }
                 SequenceMetaData seqmd = pmd.newSequenceMetadata(getAttr(attrs, "name"), null);
                 String datastoreSeqName = getAttr(attrs, "sequence-name");
@@ -1090,14 +1090,14 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                             // TODO Support injectable AttributeConverters
                             ClassLoaderResolver clr = mmgr.getNucleusContext().getClassLoaderResolver(null);
                             Class entityConvCls = clr.classForName(converterClassName);
-                            AttributeConverter entityConv = JPATypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), entityConvCls);
+                            AttributeConverter entityConv = JakartaTypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), entityConvCls);
 
                             // Extract attribute and datastore types for this converter
-                            Class attrType = JPATypeConverterUtils.getAttributeTypeForAttributeConverter(entityConv.getClass(), null);
-                            Class dbType = JPATypeConverterUtils.getDatabaseTypeForAttributeConverter(entityConv.getClass(), attrType, null);
+                            Class attrType = JakartaTypeConverterUtils.getAttributeTypeForAttributeConverter(entityConv.getClass(), null);
+                            Class dbType = JakartaTypeConverterUtils.getDatabaseTypeForAttributeConverter(entityConv.getClass(), attrType, null);
 
                             // Register the TypeConverter under the name of the AttributeConverter class
-                            TypeConverter conv = new JPATypeConverter(entityConv);
+                            TypeConverter conv = new JakartaTypeConverter(entityConv);
                             typeMgr.registerConverter(converterClassName, conv, attrType, dbType, false, null);
                         }
                     }
@@ -1114,8 +1114,8 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
 
                     TypeManager typeMgr = mmgr.getNucleusContext().getTypeManager();
                     Class entityConvCls = mmgr.getNucleusContext().getClassLoaderResolver(null).classForName(converterClassName);
-                    Class attrType = JPATypeConverterUtils.getAttributeTypeForAttributeConverter(entityConvCls, null);
-                    Class dbType = JPATypeConverterUtils.getDatabaseTypeForAttributeConverter(entityConvCls, attrType, null);
+                    Class attrType = JakartaTypeConverterUtils.getAttributeTypeForAttributeConverter(entityConvCls, null);
+                    Class dbType = JakartaTypeConverterUtils.getDatabaseTypeForAttributeConverter(entityConvCls, attrType, null);
 
                     if (attrType != null)
                     {
@@ -1124,7 +1124,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                         if (typeConv == null)
                         {
                             // Not yet cached an instance of this converter so create one
-                            typeConv = new JPATypeConverter(JPATypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), entityConvCls));
+                            typeConv = new JakartaTypeConverter(JakartaTypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), entityConvCls));
                             typeMgr.registerConverter(converterClassName, typeConv, attrType, dbType, autoApply, attrType.getName());
                         }
                         else
@@ -1180,7 +1180,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                 {
                     mmd.setTargetClassName(targetEntityName);
                 }
-                mmd.setOrdered(); // Mark as ordered so we know we're using JPA
+                mmd.setOrdered(); // Mark as ordered so we know we're using Jakarta Persistence
                 if (mmd.getMappedBy() == null && mmd.getJoinMetaData() == null)
                 {
                     if (mmd.getColumnMetaData() != null)
@@ -1189,7 +1189,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                     }
                     else
                     {
-                        // JPA1 : 1-N uni with no join specified (yet) so add one (see JPA1 spec [9.1.24])
+                        // Jakarta Persistence : 1-N uni with no join specified (yet) so add one (see Jakarta Persistence spec [9.1.24])
                         mmd.setJoinMetaData(new JoinMetaData());
                     }
                 }
@@ -1245,7 +1245,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                 {
                     mmd.setTargetClassName(targetEntityName);
                 }
-                mmd.setOrdered(); // Mark as ordered so we know we're using JPA
+                mmd.setOrdered(); // Mark as ordered so we know we're using Jakarta Persistence
                 if (mmd.getMappedBy() == null && mmd.getJoinMetaData() == null)
                 {
                     // M-N and no join specified (yet) so add one
@@ -1689,7 +1689,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                 DiscriminatorMetaData dismd = inhmd.getDiscriminatorMetaData();
                 if (dismd == null)
                 {
-                    // User hasn't specified discriminator value so use "provider-specific function" (JPA 9.1.3.1)
+                    // User hasn't specified discriminator value so use "provider-specific function" (Jakarta Persistence 9.1.3.1)
                     if (mmgr.getNucleusContext().getConfiguration().getBooleanProperty(PropertyNames.PROPERTY_METADATA_USE_DISCRIMINATOR_DEFAULT_CLASS_NAME))
                     {
                         // Legacy handling, DN <= 5.0.2
@@ -2092,7 +2092,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                 {
                     AbstractClassMetaData cmd = (AbstractClassMetaData)md;
                     ClassLoaderResolver clr = mmgr.getNucleusContext().getClassLoaderResolver(null);
-                    JPAEntityGraph entityGraph = new JPAEntityGraph(mmgr, getAttr(attrs, "name"), clr.classForName(cmd.getFullClassName()));
+                    JakartaEntityGraph entityGraph = new JakartaEntityGraph(mmgr, getAttr(attrs, "name"), clr.classForName(cmd.getFullClassName()));
                     GraphHolder graphHolder = new GraphHolder();
                     graphHolder.graph = entityGraph;
                     graphHolderStack.push(graphHolder);
@@ -2125,7 +2125,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
             else if (localName.equals("subgraph"))
             {
                 GraphHolder parentGraphHolder = graphHolderStack.peek();
-                AbstractJPAGraph parentGraph = parentGraphHolder.graph;
+                AbstractJakartaGraph parentGraph = parentGraphHolder.graph;
                 String subgraphName = getAttr(attrs, "name");
                 String attributeName = (parentGraphHolder.attributeNameBySubgroupName != null ? parentGraphHolder.attributeNameBySubgroupName.get(subgraphName) : null);
                 if (attributeName == null)
@@ -2139,7 +2139,7 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
                 {
                     cls = mmgr.getNucleusContext().getClassLoaderResolver(null).classForName(subgraphClassName);
                 }
-                JPASubgraph subgraph = (cls == null ? (JPASubgraph) parentGraph.addSubgraph(attributeName) : (JPASubgraph)parentGraph.addSubgraph(attributeName, cls));
+                JakartaSubgraph subgraph = (cls == null ? (JakartaSubgraph) parentGraph.addSubgraph(attributeName) : (JakartaSubgraph)parentGraph.addSubgraph(attributeName, cls));
                 GraphHolder graphHolder = new GraphHolder();
                 graphHolder.graph = subgraph;
                 graphHolderStack.push(graphHolder);
@@ -2147,10 +2147,10 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
             else if (localName.equals("subclass-subgraph"))
             {
                 GraphHolder parentGraphHolder = graphHolderStack.peek();
-                JPAEntityGraph parentGraph = (JPAEntityGraph) parentGraphHolder.graph;
+                JakartaEntityGraph parentGraph = (JakartaEntityGraph) parentGraphHolder.graph;
                 String subgraphClassName = getAttr(attrs, "class");
                 Class subclass = mmgr.getNucleusContext().getClassLoaderResolver(null).classForName(subgraphClassName);
-                JPASubgraph subgraph = (JPASubgraph) parentGraph.addSubclassSubgraph(subclass);
+                JakartaSubgraph subgraph = (JakartaSubgraph) parentGraph.addSubclassSubgraph(subclass);
                 GraphHolder graphHolder = new GraphHolder();
                 graphHolder.graph = subgraph;
                 graphHolderStack.push(graphHolder);
@@ -2781,8 +2781,8 @@ public class JPAMetaDataHandler extends AbstractMetaDataHandler
             {
                 // Register the EntityGraph
                 GraphHolder graphHolder = graphHolderStack.pop();
-                JPAEntityGraph entityGraph = (JPAEntityGraph) graphHolder.graph;
-                ((JPAMetaDataManager)mmgr).registerEntityGraph(entityGraph);
+                JakartaEntityGraph entityGraph = (JakartaEntityGraph) graphHolder.graph;
+                ((JakartaMetaDataManager)mmgr).registerEntityGraph(entityGraph);
                 graphHolderStack.clear();
             }
         }

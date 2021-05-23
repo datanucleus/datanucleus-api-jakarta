@@ -25,7 +25,7 @@ import java.lang.annotation.Target;
 import jakarta.persistence.GenerationType;
 
 /**
- * Extension annotation allowing for use of datastore-identity with JPA.
+ * Extension annotation allowing for use of datastore-identity with Jakarta Persistence.
  */
 @Target(ElementType.TYPE) 
 @Retention(RetentionPolicy.RUNTIME)

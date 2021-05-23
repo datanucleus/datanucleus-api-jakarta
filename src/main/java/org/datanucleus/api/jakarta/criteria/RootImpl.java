@@ -22,7 +22,7 @@ import jakarta.persistence.metamodel.EntityType;
 import jakarta.persistence.metamodel.Type;
 
 /**
- * Implementation of JPA2 Criteria "Root".
+ * Implementation of Jakarta Persistence Criteria "Root".
  */
 public class RootImpl<X> extends FromImpl<X, X> implements Root<X>
 {

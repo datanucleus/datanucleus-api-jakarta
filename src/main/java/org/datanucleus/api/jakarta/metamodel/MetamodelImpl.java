@@ -32,7 +32,7 @@ import jakarta.persistence.metamodel.Metamodel;
 import jakarta.persistence.metamodel.Type;
 
 import org.datanucleus.ClassLoaderResolver;
-import org.datanucleus.api.jakarta.JPAEntityManagerFactory;
+import org.datanucleus.api.jakarta.JakartaEntityManagerFactory;
 import org.datanucleus.exceptions.ClassNotResolvedException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
@@ -43,7 +43,7 @@ import org.datanucleus.metadata.MetaDataManager;
 import org.datanucleus.metadata.PackageMetaData;
 
 /**
- * Implementation of JPA Criteria "Metamodel".
+ * Implementation of Jakarta Persistence Criteria "Metamodel".
  */
 public class MetamodelImpl implements Metamodel
 {
@@ -140,7 +140,7 @@ public class MetamodelImpl implements Metamodel
                                     }
                                     catch (Exception e)
                                     {
-                                        JPAEntityManagerFactory.LOGGER.debug("Exception in setting metamodel", e);
+                                        JakartaEntityManagerFactory.LOGGER.debug("Exception in setting metamodel", e);
                                     }
                                 }
                             }

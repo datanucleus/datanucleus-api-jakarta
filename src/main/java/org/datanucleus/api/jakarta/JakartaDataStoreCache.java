@@ -29,10 +29,10 @@ import org.datanucleus.identity.SingleFieldId;
 import org.datanucleus.metadata.AbstractClassMetaData;
 
 /**
- * Implementation of the JPA DataStoreCache.
+ * Implementation of the Jakarta Persistence DataStoreCache.
  * Provides a wrapper and hands off calls to the underlying Level2 cache.
  */
-public class JPADataStoreCache implements Cache
+public class JakartaDataStoreCache implements Cache
 {
     PersistenceNucleusContext nucleusCtx;
 
@@ -43,7 +43,7 @@ public class JPADataStoreCache implements Cache
      * Constructor.
      * @param nucleusCtx Context
      */
-    public JPADataStoreCache(PersistenceNucleusContext nucleusCtx)
+    public JakartaDataStoreCache(PersistenceNucleusContext nucleusCtx)
     {
         this.nucleusCtx = nucleusCtx;
         this.cache = nucleusCtx.getLevel2Cache();

@@ -24,14 +24,14 @@ import org.datanucleus.store.types.converters.TypeConverter;
 /**
  * Wrapper for a type converter provided by a user, so it can be used by the internal TypeConverter mechanism.
  */
-public class JPATypeConverter<X, Y> implements TypeConverter<X, Y>
+public class JakartaTypeConverter<X, Y> implements TypeConverter<X, Y>
 {
     private static final long serialVersionUID = -4533920769365489446L;
 
     /** The user-provided entity converter. */
     AttributeConverter<X, Y> entityConverter;
 
-    public JPATypeConverter(AttributeConverter<X, Y> entityConv)
+    public JakartaTypeConverter(AttributeConverter<X, Y> entityConv)
     {
         this.entityConverter = entityConv;
     }
@@ -48,6 +48,6 @@ public class JPATypeConverter<X, Y> implements TypeConverter<X, Y>
 
     public String toString()
     {
-        return "JPATypeConverter for " + entityConverter;
+        return "JakartaTypeConverter for " + entityConverter;
     }
 }

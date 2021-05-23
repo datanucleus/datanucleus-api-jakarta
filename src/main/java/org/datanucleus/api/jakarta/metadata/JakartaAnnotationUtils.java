@@ -104,9 +104,9 @@ import org.datanucleus.metadata.annotations.Member;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Series of utility methods for converting between JPA annotations and metadata.
+ * Series of utility methods for converting between Jakarta Persistence annotations and metadata.
  */
-public class JPAAnnotationUtils
+public class JakartaAnnotationUtils
 {
     public static final String ENTITY = Entity.class.getName();
 
@@ -255,7 +255,7 @@ public class JPAAnnotationUtils
     public static final String NAMED_ATTRIBUTE_NODE = NamedAttributeNode.class.getName();
 
     /**
-     * Convenience accessor for the string name of a value generator strategy (from JPA annotations)
+     * Convenience accessor for the string name of a value generator strategy (from Jakarta Persistence annotations)
      * @param type Generation type (strategy)
      * @return The name
      */
@@ -288,9 +288,9 @@ public class JPAAnnotationUtils
     }
 
     /**
-     * Whether the given type is temporal for JPA.
+     * Whether the given type is temporal for Jakarta Persistence.
      * @param type the type
-     * @return true if the type is temporal as per JPA spec
+     * @return true if the type is temporal as per Jakarta Persistence spec
      */
     public static boolean isTemporalType(Class type)
     {
@@ -372,7 +372,7 @@ public class JPAAnnotationUtils
         }
         allowsNull = Boolean.valueOf(column.nullable()).toString();
         insertable = Boolean.valueOf(column.insertable()).toString();
-        updateable = Boolean.valueOf(column.updatable()).toString(); // Note : "updatable" is spelt incorrectly in the JPA spec.
+        updateable = Boolean.valueOf(column.updatable()).toString(); // Note : "updatable" is spelt incorrectly in the Jakarta Persistence spec.
         unique = Boolean.valueOf(column.unique()).toString();
         table = column.table();
         if (!StringUtils.isWhitespace(table))

@@ -26,11 +26,11 @@ import org.datanucleus.metadata.MetaDataManager;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Implementation of JPA2.1 Subgraph
+ * Implementation of Jakarta Persistence Subgraph
  */
-public class JPASubgraph<T> extends AbstractJPAGraph<T> implements Subgraph<T>
+public class JakartaSubgraph<T> extends AbstractJakartaGraph<T> implements Subgraph<T>
 {
-    public JPASubgraph(MetaDataManager mmgr, Class<T> clsType)
+    public JakartaSubgraph(MetaDataManager mmgr, Class<T> clsType)
     {
         super(mmgr, clsType);
     }

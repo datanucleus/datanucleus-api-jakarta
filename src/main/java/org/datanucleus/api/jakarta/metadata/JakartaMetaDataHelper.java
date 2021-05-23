@@ -29,17 +29,17 @@ import org.datanucleus.metadata.RelationType;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Helper class that can convert internal metadata into (JPA) orm.xml metadata.
+ * Helper class that can convert internal metadata into (Jakarta Persistence) orm.xml metadata.
  * TODO Make this complete. Much is lacking currently
  */
-public class JPAMetaDataHelper
+public class JakartaMetaDataHelper
 {
-    public JPAMetaDataHelper()
+    public JakartaMetaDataHelper()
     {
     }
 
     /**
-     * Method to convert an internal class/interface metadata into the associated JPA XML metadata.
+     * Method to convert an internal class/interface metadata into the associated Jakarta Persistence XML metadata.
      * @param cmd Metadata for the class/interface
      * @param prefix Prefix for the XML (e.g "    ")
      * @param indent Indent for each block of XML (e.g "    ")
@@ -103,7 +103,7 @@ public class JPAMetaDataHelper
         // Inheritance
         if (cmd.getInheritanceMetaData() != null)
         {
-            // TODO Convert internal strategy to JPA strategy
+            // TODO Convert internal strategy to Jakarta Persistence strategy
             str.append(prefix).append(indent).append("<inheritance strategy=\"").append(cmd.getInheritanceMetaData().getStrategy()).append("\"/>\n");
         }
         // TODO Add discriminator-value, discriminator-column

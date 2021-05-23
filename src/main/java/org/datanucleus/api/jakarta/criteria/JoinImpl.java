@@ -31,7 +31,7 @@ import org.datanucleus.api.jakarta.metamodel.PluralAttributeImpl;
 import org.datanucleus.api.jakarta.metamodel.SingularAttributeImpl;
 
 /**
- * Implementation of JPA2 Criteria "Join".
+ * Implementation of Jakarta Persistence Criteria "Join".
  * 
  * @param <Z> type from which joining
  * @param <X> type of the attribute being joined

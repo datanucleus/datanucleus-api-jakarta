@@ -58,7 +58,7 @@ import org.datanucleus.store.query.expression.PrimaryExpression;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Implementation of JPA2 Criteria "From".
+ * Implementation of Jakarta Persistence Criteria "From".
  * @param <Z> the parent type
  * @param <X> the type represented by this
  */

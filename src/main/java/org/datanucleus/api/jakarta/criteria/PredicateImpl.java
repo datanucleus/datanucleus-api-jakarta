@@ -29,7 +29,7 @@ import org.datanucleus.store.query.expression.DyadicExpression;
 import org.datanucleus.store.query.expression.Expression.DyadicOperator;
 
 /**
- * Implementation of JPA2 Criteria "Predicate".
+ * Implementation of Jakarta Persistence Criteria "Predicate".
  */
 public class PredicateImpl extends ExpressionImpl<Boolean> implements Predicate
 {

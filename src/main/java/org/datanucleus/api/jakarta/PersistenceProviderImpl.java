@@ -13,7 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License. 
 
 Contributors:
-2006-2012 Andy Jefferson - javadocs, JPA2.0, JPA2.1
     ...
 **********************************************************************/
 package org.datanucleus.api.jakarta;
@@ -79,7 +78,7 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
     {
         try
         {
-            return new JPAEntityManagerFactory(unitInfo, properties);
+            return new JakartaEntityManagerFactory(unitInfo, properties);
         }
         catch (SingletonEMFException se)
         {
@@ -101,7 +100,7 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
     {
         try
         {
-            return new JPAEntityManagerFactory(unitName, properties);
+            return new JakartaEntityManagerFactory(unitName, properties);
         }
         catch (SingletonEMFException se)
         {
@@ -139,7 +138,7 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
             return LoadState.UNKNOWN;
         }
 
-        JPAAdapter adapter = new JPAAdapter();
+        JakartaAdapter adapter = new JakartaAdapter();
         ExecutionContext ec = adapter.getExecutionContext(entity);
         if (ec == null)
         {
@@ -218,7 +217,7 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
             return LoadState.UNKNOWN;
         }
 
-        JPAAdapter adapter = new JPAAdapter();
+        JakartaAdapter adapter = new JakartaAdapter();
         ExecutionContext ec = adapter.getExecutionContext(entity);
         if (ec == null)
         {
@@ -275,7 +274,6 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
      * @param unitInfo metadata for use by the persistence provider
      * @param overridingProps properties for schema generation; these may also include provider-specific properties
      * @throws PersistenceException if insufficient or inconsistent configuration information is provided or if schema generation otherwise fails.
-     * @since JPA2.1
      */
     public void generateSchema(PersistenceUnitInfo unitInfo, Map overridingProps)
     {
@@ -393,7 +391,7 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
                 if (unitmds[j].getName().equals(unitName))
                 {
                     pumd = unitmds[j];
-                    pumd.clearJarFiles(); // Jar files not applicable to J2SE [JPA 6.3]
+                    pumd.clearJarFiles(); // Jar files not applicable to J2SE [Jakarta Persistence 6.3]
                     break;
                 }
             }
@@ -414,11 +412,11 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
     protected void generateSchemaForPersistentUnit(PersistenceUnitMetaData pumd, Map overridingProps)
     {
         // Generate schema in database if specified, otherwise as scripts, otherwise nothing
-        String modeStr = (String) overridingProps.get(JPAPropertyNames.PROPERTY_JPA_STANDARD_GENERATE_SCHEMA_DATABASE_ACTION);
+        String modeStr = (String) overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_GENERATE_SCHEMA_DATABASE_ACTION);
         if (modeStr == null || modeStr.equalsIgnoreCase("none"))
         {
             // Database not needed, so check if scripts needed
-            modeStr = (String) overridingProps.get(JPAPropertyNames.PROPERTY_JPA_STANDARD_GENERATE_SCHEMA_SCRIPTS_ACTION);
+            modeStr = (String) overridingProps.get(JakartaPropertyNames.PROPERTY_JAKARTA_STANDARD_GENERATE_SCHEMA_SCRIPTS_ACTION);
         }
         Mode mode = null;
         if (modeStr != null)
@@ -442,6 +440,6 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
         }
 
         // Create NucleusContext, and initialise it (which triggers generate schema)
-        SchemaTool.getNucleusContextForMode(mode, "JPA", overridingProps, pumd.getName(), null, true);
+        SchemaTool.getNucleusContextForMode(mode, "Jakarta", overridingProps, pumd.getName(), null, true);
     }
 }

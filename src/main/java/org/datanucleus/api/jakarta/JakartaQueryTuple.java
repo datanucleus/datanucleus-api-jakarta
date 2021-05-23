@@ -26,14 +26,14 @@ import jakarta.persistence.Tuple;
 import jakarta.persistence.TupleElement;
 
 /**
- * Implementation of a JPA Tuple, for a query result.
+ * Implementation of a Jakarta Persistence Tuple, for a query result.
  */
-public class JPAQueryTuple implements Tuple
+public class JakartaQueryTuple implements Tuple
 {
-    protected List<JPAQueryTupleElement> elements = new ArrayList<JPAQueryTupleElement>();
-    protected Map<String, JPAQueryTupleElement> elementByAlias = new HashMap<String, JPAQueryTupleElement>();
+    protected List<JakartaQueryTupleElement> elements = new ArrayList<JakartaQueryTupleElement>();
+    protected Map<String, JakartaQueryTupleElement> elementByAlias = new HashMap<String, JakartaQueryTupleElement>();
 
-    public JPAQueryTuple()
+    public JakartaQueryTuple()
     {
     }
 
@@ -44,7 +44,7 @@ public class JPAQueryTuple implements Tuple
      */
     public void put(Object key, Object val)
     {
-        JPAQueryTupleElement te = new JPAQueryTupleElement((String) key, (val != null) ? val.getClass() : null, val);
+        JakartaQueryTupleElement te = new JakartaQueryTupleElement((String) key, (val != null) ? val.getClass() : null, val);
         elements.add(te);
         elementByAlias.put((String)key, te);
     }
@@ -60,7 +60,7 @@ public class JPAQueryTuple implements Tuple
             throw new IllegalArgumentException("TupleElement is not present in this Tuple");
         }
 
-        for (JPAQueryTupleElement te : elements)
+        for (JakartaQueryTupleElement te : elements)
         {
             if (te.equals(tupleElement))
             {
@@ -76,7 +76,7 @@ public class JPAQueryTuple implements Tuple
     @Override
     public <X> X get(String alias, Class<X> type)
     {
-        JPAQueryTupleElement te = elementByAlias.get(alias);
+        JakartaQueryTupleElement te = elementByAlias.get(alias);
         if (te == null)
         {
             throw new IllegalArgumentException("Cannot find element of Tuple with alias=" + alias);
@@ -95,7 +95,7 @@ public class JPAQueryTuple implements Tuple
     @Override
     public Object get(String alias)
     {
-        JPAQueryTupleElement te = elementByAlias.get(alias);
+        JakartaQueryTupleElement te = elementByAlias.get(alias);
         if (te == null)
         {
             throw new IllegalArgumentException("Cannot find element of Tuple with alias=" + alias);
@@ -115,7 +115,7 @@ public class JPAQueryTuple implements Tuple
             throw new IllegalArgumentException("Cannot return value for position " + i + " of this Tuple. Max position=" + (elements.size()-1));
         }
 
-        JPAQueryTupleElement te = elements.get(i);
+        JakartaQueryTupleElement te = elements.get(i);
         if (!type.isAssignableFrom(te.getJavaType()))
         {
             throw new IllegalArgumentException("Cannot return value for position " + i + " of this Tuple to be type=" + type.getName() + " because type is " + te.getJavaType());
@@ -134,7 +134,7 @@ public class JPAQueryTuple implements Tuple
             throw new IllegalArgumentException("Cannot return value for position " + i + " of this Tuple. Max position=" + (elements.size()-1));
         }
 
-        JPAQueryTupleElement te = elements.get(i);
+        JakartaQueryTupleElement te = elements.get(i);
         return te.getValue();
     }
 
@@ -146,7 +146,7 @@ public class JPAQueryTuple implements Tuple
     {
         Object[] values = new Object[elements.size()];
         int i = 0;
-        for (JPAQueryTupleElement te : elements)
+        for (JakartaQueryTupleElement te : elements)
         {
             values[i++] = te.getValue();
         }
@@ -160,7 +160,7 @@ public class JPAQueryTuple implements Tuple
     public List<TupleElement<?>> getElements()
     {
         List<TupleElement<?>> tupleElements = new ArrayList();
-        for (JPAQueryTupleElement te : elements)
+        for (JakartaQueryTupleElement te : elements)
         {
             tupleElements.add(te);
         }
@@ -169,6 +169,6 @@ public class JPAQueryTuple implements Tuple
 
     public String toString()
     {
-        return "JPAQueryTuple : " + elements.size() + " elements";
+        return "JakartaQueryTuple : " + elements.size() + " elements";
     }
 }

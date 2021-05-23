@@ -54,7 +54,7 @@ import org.datanucleus.store.query.expression.SubqueryExpression;
 import org.datanucleus.store.query.expression.VariableExpression;
 
 /**
- * Implementation of JPA2 Criteria "Query".
+ * Implementation of Jakarta Persistence Criteria "Query".
  * When the user calls getCompilation() or getParameters(), or toString() then that part of the query is compiled.
  * Any subsequent update will require the compilation to be redone.
  */

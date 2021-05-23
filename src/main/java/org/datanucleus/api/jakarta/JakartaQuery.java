@@ -54,11 +54,11 @@ import org.datanucleus.util.Localiser;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Basic implementation of a JPA Query.
+ * Basic implementation of a Jakarta Persistence Query.
  * Wraps an internal query.
  * @param <X> Type of the candidate of the query
  */
-public class JPAQuery<X> implements TypedQuery<X>
+public class JakartaQuery<X> implements TypedQuery<X>
 {
     public static final String QUERY_HINT_TIMEOUT = "jakarta.persistence.query.timeout";
 
@@ -66,7 +66,7 @@ public class JPAQuery<X> implements TypedQuery<X>
     public static final String QUERY_HINT_IGNORE_CACHE = "datanucleus.query.ignoreCache";
 
     /** Underlying EntityManager handling persistence. */
-    JPAEntityManager em;
+    JakartaEntityManager em;
 
     /** Query language. */
     String language;
@@ -90,28 +90,28 @@ public class JPAQuery<X> implements TypedQuery<X>
 
     Set<Parameter<?>> parameters = null;
 
-    JPAFetchPlan fetchPlan;
+    JakartaFetchPlan fetchPlan;
 
     /**
-     * Constructor for a query used by JPA.
+     * Constructor for a query used by Jakarta Persistence.
      * @param em Entity Manager
      * @param query Underlying query
      * @param language Query language
      */
-    public JPAQuery(JPAEntityManager em, org.datanucleus.store.query.Query query, String language)
+    public JakartaQuery(JakartaEntityManager em, org.datanucleus.store.query.Query query, String language)
     {
         this.em = em;
         this.query = query;
         this.language = language;
         this.flushMode = em.getFlushMode(); // Default to flush mode of EntityManager
         this.query.setCacheResults(false);
-        this.fetchPlan = new JPAFetchPlan(query.getFetchPlan());
+        this.fetchPlan = new JakartaFetchPlan(query.getFetchPlan());
 
         // Enable closure of results at ExecutionContext close (i.e EntityManager close). User can turn it off by adding this hint as "false"
         this.query.addExtension(Query.EXTENSION_CLOSE_RESULTS_AT_EC_CLOSE, "true");
     }
 
-    public JPAFetchPlan getFetchPlan()
+    public JakartaFetchPlan getFetchPlan()
     {
         assertIsOpen();
         return fetchPlan;
@@ -164,7 +164,7 @@ public class JPAQuery<X> implements TypedQuery<X>
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(jpe);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
@@ -217,7 +217,7 @@ public class JPAQuery<X> implements TypedQuery<X>
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(jpe);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
@@ -275,7 +275,7 @@ public class JPAQuery<X> implements TypedQuery<X>
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(jpe);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
@@ -330,11 +330,7 @@ public class JPAQuery<X> implements TypedQuery<X>
     public int getMaxResults()
     {
         assertIsOpen();
-        // This was used datanucleus-api-jpa <= v5.0.6 but would prevent getting correct results when allowing "RANGE" in the JPQL, so commented out.
-        /*if (maxResults == -1)
-        {
-            return Integer.MAX_VALUE;
-        }*/
+
         long queryMin = query.getRangeFromIncl();
         long queryMax = query.getRangeToExcl();
         long max = queryMax - queryMin;
@@ -399,13 +395,13 @@ public class JPAQuery<X> implements TypedQuery<X>
         {
             query.setDatastoreReadTimeoutMillis((Integer)value);
         }
-        else if (hintName.equalsIgnoreCase(JPAEntityGraph.FETCHGRAPH_PROPERTY))
+        else if (hintName.equalsIgnoreCase(JakartaEntityGraph.FETCHGRAPH_PROPERTY))
         {
-            JPAEntityGraph eg = (JPAEntityGraph) value;
+            JakartaEntityGraph eg = (JakartaEntityGraph) value;
             String egName = eg.getName();
             if (eg.getName() == null)
             {
-                JPAEntityManagerFactory emf = (JPAEntityManagerFactory)em.getEntityManagerFactory();
+                JakartaEntityManagerFactory emf = (JakartaEntityManagerFactory)em.getEntityManagerFactory();
                 String tmpEntityGraphName = emf.getDefinedEntityGraphName();
                 emf.registerEntityGraph(eg, tmpEntityGraphName);
                 egName = tmpEntityGraphName;
@@ -413,13 +409,13 @@ public class JPAQuery<X> implements TypedQuery<X>
             query.getFetchPlan().setGroup(egName);
             // TODO Need to deregister any temporary EntityGraph
         }
-        else if (hintName.equalsIgnoreCase(JPAEntityGraph.LOADGRAPH_PROPERTY))
+        else if (hintName.equalsIgnoreCase(JakartaEntityGraph.LOADGRAPH_PROPERTY))
         {
-            JPAEntityGraph eg = (JPAEntityGraph) value;
+            JakartaEntityGraph eg = (JakartaEntityGraph) value;
             String egName = eg.getName();
             if (eg.getName() == null)
             {
-                JPAEntityManagerFactory emf = (JPAEntityManagerFactory)em.getEntityManagerFactory();
+                JakartaEntityManagerFactory emf = (JakartaEntityManagerFactory)em.getEntityManagerFactory();
                 String tmpEntityGraphName = emf.getDefinedEntityGraphName();
                 emf.registerEntityGraph(eg, tmpEntityGraphName);
                 egName = tmpEntityGraphName;
@@ -488,8 +484,8 @@ public class JPAQuery<X> implements TypedQuery<X>
         supportedExtensions.add(QUERY_HINT_FETCH_SIZE);
         supportedExtensions.add(QUERY_HINT_IGNORE_CACHE);
         supportedExtensions.add(QUERY_HINT_TIMEOUT);
-        supportedExtensions.add(JPAEntityGraph.FETCHGRAPH_PROPERTY);
-        supportedExtensions.add(JPAEntityGraph.LOADGRAPH_PROPERTY);
+        supportedExtensions.add(JakartaEntityGraph.FETCHGRAPH_PROPERTY);
+        supportedExtensions.add(JakartaEntityGraph.LOADGRAPH_PROPERTY);
         return supportedExtensions;
     }
 
@@ -751,7 +747,7 @@ public class JPAQuery<X> implements TypedQuery<X>
     /* (non-Javadoc)
      * @see jakarta.persistence.Query#setParameter(jakarta.persistence.Parameter, java.util.Calendar, jakarta.persistence.TemporalType)
      */
-    public JPAQuery<X> setParameter(Parameter<Calendar> param, Calendar cal, TemporalType type)
+    public JakartaQuery<X> setParameter(Parameter<Calendar> param, Calendar cal, TemporalType type)
     {
         assertIsOpen();
         if (param.getName() != null)
@@ -900,7 +896,7 @@ public class JPAQuery<X> implements TypedQuery<X>
                     // Positional parameters
                     try
                     {
-                        param = new JPAQueryParameter(Integer.valueOf(sym.getQualifiedName()), sym.getValueType());
+                        param = new JakartaQueryParameter(Integer.valueOf(sym.getQualifiedName()), sym.getValueType());
                     }
                     catch (NumberFormatException nfe)
                     {
@@ -910,7 +906,7 @@ public class JPAQuery<X> implements TypedQuery<X>
                 else
                 {
                     // Named parameters
-                    param = new JPAQueryParameter(sym.getQualifiedName(), sym.getValueType());
+                    param = new JakartaQueryParameter(sym.getQualifiedName(), sym.getValueType());
                 }
                 parameters.add(param);
             }
@@ -1199,7 +1195,7 @@ public class JPAQuery<X> implements TypedQuery<X>
 
     /**
      * Method to return the single-string form of the query.
-     * Note that the JPA spec doesn't define this methods handling and this is an extension.
+     * Note that the Jakarta Persistence spec doesn't define this methods handling and this is an extension.
      * @return The single-string form of the query
      */
     public String toString()

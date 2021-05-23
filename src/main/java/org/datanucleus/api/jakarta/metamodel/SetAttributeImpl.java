@@ -24,7 +24,7 @@ import jakarta.persistence.metamodel.SetAttribute;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 /**
- * Implementation of JPA metamodel "SetAttribute".
+ * Implementation of Jakarta Persistence metamodel "SetAttribute".
  * 
  * @param <X> The type the represented Set belongs to
  * @param <E> The element type of the represented Set

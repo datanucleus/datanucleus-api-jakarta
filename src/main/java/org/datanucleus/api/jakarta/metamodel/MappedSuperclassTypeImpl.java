@@ -22,7 +22,7 @@ import jakarta.persistence.metamodel.MappedSuperclassType;
 import org.datanucleus.metadata.AbstractClassMetaData;
 
 /**
- * Implementation of JPA Metamodel "MappedSuperclassType".
+ * Implementation of Jakarta Persistence Metamodel "MappedSuperclassType".
  */
 public class MappedSuperclassTypeImpl<X> extends IdentifiableTypeImpl<X> implements MappedSuperclassType<X>
 {

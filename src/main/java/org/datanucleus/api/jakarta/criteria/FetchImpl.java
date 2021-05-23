@@ -33,7 +33,7 @@ import org.datanucleus.api.jakarta.metamodel.AttributeImpl;
 import org.datanucleus.api.jakarta.metamodel.SingularAttributeImpl;
 
 /**
- * Implementation of JPA Criteria "Fetch".
+ * Implementation of Jakarta Persistence Criteria "Fetch".
  * @param <Z> type from which joining
  * @param <X> type of the attribute being joined
  */

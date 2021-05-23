@@ -20,22 +20,22 @@ package org.datanucleus.api.jakarta;
 import jakarta.persistence.Parameter;
 
 /**
- * Implementation of a JPA query parameter.
+ * Implementation of a Jakarta Persistence query parameter.
  * @param <T> Type of the parameter
  */
-public class JPAQueryParameter<T> implements Parameter<T>
+public class JakartaQueryParameter<T> implements Parameter<T>
 {
     String name = null;
     Integer position = null;
     Class<T> type = null;
 
-    public JPAQueryParameter(String name, Class<T> type)
+    public JakartaQueryParameter(String name, Class<T> type)
     {
         this.name = name;
         this.type = type;
     }
 
-    public JPAQueryParameter(Integer pos, Class<T> type)
+    public JakartaQueryParameter(Integer pos, Class<T> type)
     {
         this.position = pos;
         this.type = type;
@@ -66,12 +66,12 @@ public class JPAQueryParameter<T> implements Parameter<T>
 
     public boolean equals(Object other)
     {
-        if (other == null || !(other instanceof JPAQueryParameter))
+        if (other == null || !(other instanceof JakartaQueryParameter))
         {
             return false;
         }
 
-        JPAQueryParameter otherParam = (JPAQueryParameter)other;
+        JakartaQueryParameter otherParam = (JakartaQueryParameter)other;
         if ((type == null && otherParam.type != null) || (type != null && otherParam.type == null))
         {
             return false;

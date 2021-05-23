@@ -41,7 +41,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.RelationType;
 
 /**
- * Implementation of JPA Metamodel "ManagedType".
+ * Implementation of Jakarta Persistence Metamodel "ManagedType".
  * Provides a wrapper to AbstractClassMetaData.
  */
 public class ManagedTypeImpl<X> extends TypeImpl<X> implements ManagedType<X>
@@ -102,7 +102,7 @@ public class ManagedTypeImpl<X> extends TypeImpl<X> implements ManagedType<X>
             }
             else if (mmd.hasArray())
             {
-                // Include arrays as SingularAttributeImpl! since JPA doesn't provide an alternative
+                // Include arrays as SingularAttributeImpl! since Jakarta Persistence doesn't provide an alternative
                 attr = new SingularAttributeImpl(mmd, mt);
             }
         }
@@ -134,7 +134,7 @@ public class ManagedTypeImpl<X> extends TypeImpl<X> implements ManagedType<X>
             }
             else
             {
-                // Include arrays as SingularAttributeImpl! since JPA doesn't provide an alternative
+                // Include arrays as SingularAttributeImpl! since Jakarta Persistence doesn't provide an alternative
                 attr = new SingularAttributeImpl(mmd, mt);
             }
         }

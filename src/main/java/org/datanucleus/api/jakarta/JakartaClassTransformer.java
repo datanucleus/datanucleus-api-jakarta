@@ -26,23 +26,23 @@ import java.util.Map;
 import jakarta.persistence.spi.ClassTransformer;
 
 /**
- * ClassTransformer for runtime enhancement of classes to the JPA interface.
+ * ClassTransformer for runtime enhancement of classes to the Jakarta Persistence interface.
  * A persistence provider supplies an instance of this interface to the
  * PersistenceUnitInfo.addTransformer method. The supplied transformer instance
  * will get called to transform entity class files when they are loaded or
  * redefined. The transformation occurs before the class is defined by the JVM.
  */
-public class JPAClassTransformer implements ClassTransformer
+public class JakartaClassTransformer implements ClassTransformer
 {
     final ClassFileTransformer transformer;
 
-    public JPAClassTransformer(Map contextProps)
+    public JakartaClassTransformer(Map contextProps)
     {
         try
         {
             Class cls = Class.forName("org.datanucleus.enhancer.DataNucleusClassFileTransformer");
             Constructor ctr = cls.getConstructor(new Class[]{String.class, Map.class});
-            transformer = (ClassFileTransformer) ctr.newInstance(new Object[]{"-api=JPA"}, contextProps);
+            transformer = (ClassFileTransformer) ctr.newInstance(new Object[]{"-api=Jakarta"}, contextProps);
         }
         catch (Exception e)
         {

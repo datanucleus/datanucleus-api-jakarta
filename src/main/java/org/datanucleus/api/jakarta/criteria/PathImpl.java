@@ -39,7 +39,7 @@ import org.datanucleus.store.query.expression.ClassExpression;
 import org.datanucleus.store.query.expression.PrimaryExpression;
 
 /**
- * Implementation of JPA Criteria "Path".
+ * Implementation of Jakarta Persistence Criteria "Path".
  * @param <X> Type referenced by the path
  */
 public class PathImpl<Z,X> extends ExpressionImpl<X> implements Path<X>

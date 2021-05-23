@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Annotation defining a set of extensions to JPA.
+ * Annotation defining a set of extensions to Jakarta Persistence.
  */
 @Target({ElementType.TYPE, ElementType.FIELD, ElementType.METHOD}) @Retention(RetentionPolicy.RUNTIME)
 public @interface Extensions

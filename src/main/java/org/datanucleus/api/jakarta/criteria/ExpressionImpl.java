@@ -29,7 +29,7 @@ import org.datanucleus.store.query.expression.DyadicExpression;
 import org.datanucleus.store.query.expression.Literal;
 
 /**
- * Implementation of JPA2 Criteria "Expression".
+ * Implementation of Jakarta Persistence Criteria "Expression".
  */
 public class ExpressionImpl<T> implements Expression<T>, Serializable
 {

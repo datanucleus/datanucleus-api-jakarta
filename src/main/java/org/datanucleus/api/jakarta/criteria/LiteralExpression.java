@@ -40,7 +40,7 @@ public class LiteralExpression<X> extends ExpressionImpl
     }
 
     /* (non-Javadoc)
-     * @see org.datanucleus.api.jpa.criteria.ExpressionImpl#getQueryExpression()
+     * @see org.datanucleus.api.jakarta.criteria.ExpressionImpl#getQueryExpression()
      */
     @Override
     public Expression getQueryExpression()

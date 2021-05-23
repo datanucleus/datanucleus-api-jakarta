@@ -28,7 +28,7 @@ import jakarta.persistence.metamodel.Type;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 /**
- * Implementation of JPA Metamodel "PluralAttribute".
+ * Implementation of Jakarta Persistence Metamodel "PluralAttribute".
  * 
  * @param <X> the type that owns this member
  * @param <C> the container type that holds this member (e.g. java.util.Set&lt;Employee&gt;)

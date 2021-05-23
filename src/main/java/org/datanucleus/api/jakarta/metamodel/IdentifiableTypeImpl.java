@@ -29,7 +29,7 @@ import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 /**
- * Implementation of JPA Metamodel "IdentifiableType".
+ * Implementation of Jakarta Persistence Metamodel "IdentifiableType".
  */
 public class IdentifiableTypeImpl<X> extends ManagedTypeImpl<X> implements IdentifiableType<X>
 {

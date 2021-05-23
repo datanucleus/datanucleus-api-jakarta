@@ -40,7 +40,7 @@ public class TreatPathImpl extends PathImpl
     }
 
     /* (non-Javadoc)
-     * @see org.datanucleus.api.jpa.criteria.PathImpl#getQueryExpression()
+     * @see org.datanucleus.api.jakarta.criteria.PathImpl#getQueryExpression()
      */
     @Override
     public Expression getQueryExpression()

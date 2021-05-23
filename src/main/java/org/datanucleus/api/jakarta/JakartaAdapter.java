@@ -29,7 +29,7 @@ import org.datanucleus.ClassNameConstants;
 import org.datanucleus.ExecutionContext;
 import org.datanucleus.PropertyNames;
 import org.datanucleus.api.ApiAdapter;
-import org.datanucleus.api.jakarta.metadata.JPAMetaDataHelper;
+import org.datanucleus.api.jakarta.metadata.JakartaMetaDataHelper;
 import org.datanucleus.api.jakarta.state.LifeCycleStateFactory;
 import org.datanucleus.enhancement.Persistable;
 import org.datanucleus.exceptions.NucleusException;
@@ -38,9 +38,9 @@ import org.datanucleus.metadata.MetaDataManager;
 import org.datanucleus.state.LifeCycleState;
 
 /**
- * Adapter for the JPA API, to allow the DataNucleus core runtime to expose multiple APIs to clients.
+ * Adapter for the Jakarta Persistence API, to allow the DataNucleus core runtime to expose multiple APIs to clients.
  */
-public class JPAAdapter implements ApiAdapter
+public class JakartaAdapter implements ApiAdapter
 {
     private static final long serialVersionUID = 7676231809409935625L;
     protected final static Set<String> defaultPersistentTypeNames = new HashSet<String>();
@@ -82,7 +82,7 @@ public class JPAAdapter implements ApiAdapter
      */
     public String getName()
     {
-        return "JPA";
+        return "Jakarta";
     }
 
     /* (non-Javadoc)
@@ -111,12 +111,18 @@ public class JPAAdapter implements ApiAdapter
     @Override
     public String getXMLMetaDataForClass(AbstractClassMetaData cmd, String prefix, String indent)
     {
-        return new JPAMetaDataHelper().getXMLForMetaData(cmd, prefix, indent);
+        return new JakartaMetaDataHelper().getXMLForMetaData(cmd, prefix, indent);
     }
+
+    @Override
+	public String getDefaultMappingFileLocation() 
+    {
+    	return "META-INF/orm.xml";
+	}
 
     // ------------------------------ Object Lifecycle --------------------------------
 
-    /**
+	/**
      * Method to return the ExecutionContext (if any) associated with the passed object.
      * Supports persistable objects, and EntityManager.
      * @param obj The object
@@ -132,9 +138,9 @@ public class JPAAdapter implements ApiAdapter
         {
             return (ExecutionContext) ((Persistable)obj).dnGetExecutionContext();
         }
-        else if (obj instanceof JPAEntityManager)
+        else if (obj instanceof JakartaEntityManager)
         {
-            return ((JPAEntityManager)obj).getExecutionContext();
+            return ((JakartaEntityManager)obj).getExecutionContext();
         }
         return null;
     }
@@ -252,7 +258,7 @@ public class JPAAdapter implements ApiAdapter
      */
     public boolean allowPersistOfDeletedObject()
     {
-        // JPA allows re-persist of deleted objects
+        // Jakarta Persistence allows re-persist of deleted objects
         return true;
     }
 
@@ -262,7 +268,7 @@ public class JPAAdapter implements ApiAdapter
      */
     public boolean allowDeleteOfNonPersistentObject()
     {
-        // JPA allows delete of transient objects so they cascade to all persistent objects
+        // Jakarta Persistence allows delete of transient objects so they cascade to all persistent objects
         return true;
     }
 
@@ -345,38 +351,44 @@ public class JPAAdapter implements ApiAdapter
     public Map getDefaultFactoryProperties()
     {
         Map<String, String> props = new HashMap<String, String>();
-        props.put(PropertyNames.PROPERTY_DETACH_ALL_ON_COMMIT, "true"); // detachAllOnCommit in JPA
-        props.put(PropertyNames.PROPERTY_DETACH_ALL_ON_ROLLBACK, "true"); // detachAllOnRollback in JPA
-        props.put(PropertyNames.PROPERTY_COPY_ON_ATTACH, "true"); // JPA spec 3.2.7.1 attach onto copy
+        props.put(PropertyNames.PROPERTY_DETACH_ALL_ON_COMMIT, "true"); // detachAllOnCommit in Jakarta
+        props.put(PropertyNames.PROPERTY_DETACH_ALL_ON_ROLLBACK, "true"); // detachAllOnRollback in Jakarta
+        props.put(PropertyNames.PROPERTY_COPY_ON_ATTACH, "true"); // Jakarta Persistence spec 3.2.7.1 attach onto copy
         props.put(PropertyNames.PROPERTY_RETAIN_VALUES, "true");
 //        props.put("datanucleus.RestoreValues", "true");
-        props.put(PropertyNames.PROPERTY_OPTIMISTIC, "true"); // JPA uses optimistic txns
-        props.put(PropertyNames.PROPERTY_TRANSACTION_NONTX_ATOMIC, "false"); // JPA assumes non-atomic non-tx ops
+        props.put(PropertyNames.PROPERTY_OPTIMISTIC, "true"); // Jakarta uses optimistic txns
+        props.put(PropertyNames.PROPERTY_TRANSACTION_NONTX_ATOMIC, "false"); // Jakarta assumes non-atomic non-tx ops
         props.put(PropertyNames.PROPERTY_METADATA_ALLOW_LOAD_AT_RUNTIME, "false"); // Default to no load later on
-        props.put(PropertyNames.PROPERTY_IDENTIFIER_NAMING_FACTORY, "jpa"); // JPA identifier naming (non-RDBMS)
-        props.put(PropertyNames.PROPERTY_IDENTIFIER_FACTORY, "jpa"); // JPA identifier naming (RDBMS)
-        props.put(PropertyNames.PROPERTY_PERSISTENCE_BY_REACHABILITY_AT_COMMIT, "false"); // No PBR at commit with JPA
-        props.put(PropertyNames.PROPERTY_MANAGE_RELATIONSHIPS, "false"); // JPA doesn't have this
-        props.put(PropertyNames.PROPERTY_MANAGE_RELATIONSHIPS_CHECKS, "false"); // JPA doesn't have this
-        props.put(PropertyNames.PROPERTY_QUERY_SQL_ALLOWALL, "true"); // No restrictions on SQL statements in JPA
-        props.put(PropertyNames.PROPERTY_MAX_FETCH_DEPTH, "-1"); // Don't limit fetches for JPA
-        props.put(PropertyNames.PROPERTY_FIND_OBJECT_VALIDATE_WHEN_CACHED, "false"); // Don't validate with JPA
+        props.put(PropertyNames.PROPERTY_IDENTIFIER_NAMING_FACTORY, "jpa"); // Jakarta identifier naming (non-RDBMS)
+        props.put(PropertyNames.PROPERTY_IDENTIFIER_FACTORY, "jpa"); // Jakarta identifier naming (RDBMS)
+        props.put(PropertyNames.PROPERTY_PERSISTENCE_BY_REACHABILITY_AT_COMMIT, "false"); // No PBR at commit with Jakarta
+        props.put(PropertyNames.PROPERTY_MANAGE_RELATIONSHIPS, "false"); // Jakarta doesn't have this
+        props.put(PropertyNames.PROPERTY_MANAGE_RELATIONSHIPS_CHECKS, "false"); // Jakarta doesn't have this
+        props.put(PropertyNames.PROPERTY_QUERY_SQL_ALLOWALL, "true"); // No restrictions on SQL statements in Jakarta
+        props.put(PropertyNames.PROPERTY_MAX_FETCH_DEPTH, "-1"); // Don't limit fetches for Jakarta
+        props.put(PropertyNames.PROPERTY_FIND_OBJECT_VALIDATE_WHEN_CACHED, "false"); // Don't validate with Jakarta
         props.put(PropertyNames.PROPERTY_USE_IMPLEMENTATION_CREATOR, "false"); // Feature of JDO only
-        props.put(PropertyNames.PROPERTY_ALLOW_ATTACH_OF_TRANSIENT, "true"); // Some JPA impls assume this even though not in the spec
+        props.put(PropertyNames.PROPERTY_ALLOW_ATTACH_OF_TRANSIENT, "true"); // Some Jakarta impls assume this even though not in the spec
         props.put(PropertyNames.PROPERTY_METADATA_USE_DISCRIMINATOR_DEFAULT_CLASS_NAME, "false"); // DN <= 5.0.2 effectively used value-map (class-name), but now we use entity-name
         props.put(PropertyNames.PROPERTY_METADATA_USE_DISCRIMINATOR_FOR_SINGLE_TABLE, "true"); // DN <= 5.0.2 didn't automatically add a discriminator for single-table, but now we do
 
-        props.put("datanucleus.rdbms.allowColumnReuse", "true"); // So that JPA usage defaults to how other implementations do it, ignoring safety of this feature
+        props.put("datanucleus.rdbms.allowColumnReuse", "true"); // So that Jakarta usage defaults to how other implementations do it, ignoring safety of this feature
 
         return props;
     }
 
-    /**
+    @Override
+	public boolean getDefaultPersistentPropertyWhenNotSpecified()
+    {
+    	return true;
+	}
+
+	/**
      * Convenience method to return an exception to throw for this API when an unexpected
      * exception occurs. This is considered a user exception.
      * @param msg The message
      * @param e The cause
-     * @return The JPA exception
+     * @return The Jakarta exception
      */
     public RuntimeException getUserExceptionForException(String msg, Exception e)
     {
@@ -399,6 +411,6 @@ public class JPAAdapter implements ApiAdapter
      */
     public RuntimeException getApiExceptionForNucleusException(NucleusException ne)
     {
-        return NucleusJPAHelper.getJPAExceptionForNucleusException(ne);
+        return NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
     }
 }

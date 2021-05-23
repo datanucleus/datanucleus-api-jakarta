@@ -30,7 +30,7 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.RelationType;
 
 /**
- * Implementation of JPA Metamodel "Attribute".
+ * Implementation of Jakarta Persistence Metamodel "Attribute".
  * Provides a wrapper to AbstractMemberMetaData.
  *
  * @param <X> The type containing the represented attribute
@@ -108,7 +108,7 @@ public class AttributeImpl<X, Y> implements Attribute<X, Y>
         {
             if (mmd.getRelationTypeString() != null && mmd.getRelationTypeString().equals("ManyToOne"))
             {
-                // 1-1 and N-1 (uni) are to all intents and purposes the exact same thing yet JPA insists on a user artificially discriminating
+                // 1-1 and N-1 (uni) are to all intents and purposes the exact same thing yet Jakarta Persistence insists on a user artificially discriminating
                 return PersistentAttributeType.MANY_TO_ONE;
             }
             return PersistentAttributeType.ONE_TO_ONE;
@@ -150,7 +150,7 @@ public class AttributeImpl<X, Y> implements Attribute<X, Y>
      */
     public boolean isCollection()
     {
-        // In JPA a "collection" is a Collection or Map (even though we have CollectionAttribute and MapAttribute ...). Totally weird.
+        // In Jakarta Persistence a "collection" is a Collection or Map (even though we have CollectionAttribute and MapAttribute ...). Totally weird.
         return Collection.class.isAssignableFrom(mmd.getType()) || Map.class.isAssignableFrom(mmd.getType());
     }
 
@@ -168,7 +168,7 @@ public class AttributeImpl<X, Y> implements Attribute<X, Y>
         }
         else if (mmd.hasMap())
         {
-            // In JPA we return the map "value". How we get the map "key" no idea ...
+            // In Jakarta Persistence we return the map "value". How we get the map "key" no idea ...
             return owner.model.getType(clr.classForName(mmd.getMap().getValueType()));
         }
         else if (mmd.hasArray())

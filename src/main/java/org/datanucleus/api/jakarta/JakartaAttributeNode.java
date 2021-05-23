@@ -27,19 +27,19 @@ import jakarta.persistence.Subgraph;
 import org.datanucleus.metadata.MetaDataManager;
 
 /**
- * Implementation of JPA2.1 AttributeNode
+ * Implementation of Jakarta Persistence AttributeNode
  */
-public class JPAAttributeNode<T> implements AttributeNode<T>
+public class JakartaAttributeNode<T> implements AttributeNode<T>
 {
     MetaDataManager mmgr;
 
-    AbstractJPAGraph parent;
+    AbstractJakartaGraph parent;
 
     String name;
 
     Map<Class, Subgraph> subgraphsByType = null;
 
-    public JPAAttributeNode(MetaDataManager mmgr, AbstractJPAGraph parent, String name)
+    public JakartaAttributeNode(MetaDataManager mmgr, AbstractJakartaGraph parent, String name)
     {
         this.mmgr = mmgr;
         this.parent = parent;
@@ -54,7 +54,7 @@ public class JPAAttributeNode<T> implements AttributeNode<T>
         return name;
     }
 
-    public void addSubgraph(JPASubgraph<T> subgraph)
+    public void addSubgraph(JakartaSubgraph<T> subgraph)
     {
         if (subgraphsByType == null)
         {

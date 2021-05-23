@@ -32,10 +32,10 @@ import org.datanucleus.util.NucleusLogger;
 import org.datanucleus.util.Localiser;
 
 /**
- * EntityTransaction implementation for JPA for ResourceLocal transaction.
- * Utilises the underlying ExecutionContext and its real transaction, providing a JPA layer on top.
+ * EntityTransaction implementation for Jakarta Persistence for ResourceLocal transaction.
+ * Utilises the underlying ExecutionContext and its real transaction, providing a Jakarta Persistence layer on top.
  */
-public class JPAEntityTransaction implements EntityTransaction
+public class JakartaEntityTransaction implements EntityTransaction
 {
     /** The underlying transaction */
     org.datanucleus.Transaction tx;
@@ -44,7 +44,7 @@ public class JPAEntityTransaction implements EntityTransaction
      * Constructor.
      * @param ec The ExecutionContext providing the transaction.
      */
-    public JPAEntityTransaction(ExecutionContext ec)
+    public JakartaEntityTransaction(ExecutionContext ec)
     {
         this.tx = ec.getTransaction();
     }
@@ -71,7 +71,7 @@ public class JPAEntityTransaction implements EntityTransaction
         }
         catch (NucleusException ne)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(ne);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
         }
     }
 
@@ -104,7 +104,7 @@ public class JPAEntityTransaction implements EntityTransaction
             Throwable pe = null;
             if (cause instanceof NucleusException)
             {
-                pe = NucleusJPAHelper.getJPAExceptionForNucleusException((NucleusException)cause);
+                pe = NucleusJakartaHelper.getJakartaExceptionForNucleusException((NucleusException)cause);
             }
             else
             {
@@ -114,7 +114,7 @@ public class JPAEntityTransaction implements EntityTransaction
         }
         catch (NucleusException ne)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(ne);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
         }
     }
 
@@ -133,7 +133,7 @@ public class JPAEntityTransaction implements EntityTransaction
         }
         catch (NucleusException ne)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(ne);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
         }
     }
 

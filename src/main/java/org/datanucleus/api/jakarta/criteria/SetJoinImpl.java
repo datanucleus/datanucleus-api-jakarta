@@ -26,7 +26,7 @@ import jakarta.persistence.metamodel.SetAttribute;
 import org.datanucleus.api.jakarta.metamodel.SetAttributeImpl;
 
 /**
- * Implementation of JPA2 Criteria "SetJoin".
+ * Implementation of Jakarta Persistence Criteria "SetJoin".
  * 
  * @param <Z> The source type of the join
  * @param <E> The element type of the target Set

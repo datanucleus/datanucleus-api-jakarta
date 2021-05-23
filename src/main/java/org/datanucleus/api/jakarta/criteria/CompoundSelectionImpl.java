@@ -26,7 +26,7 @@ import jakarta.persistence.criteria.CompoundSelection;
 import jakarta.persistence.criteria.Selection;
 
 /**
- * Implementation of JPA2 Criteria "CompoundSelection".
+ * Implementation of Jakarta Persistence Criteria "CompoundSelection".
  * @param <X> The selection
  */
 public class CompoundSelectionImpl<X> extends ExpressionImpl<X> implements CompoundSelection<X>
@@ -47,7 +47,7 @@ public class CompoundSelectionImpl<X> extends ExpressionImpl<X> implements Compo
     }
 
     /* (non-Javadoc)
-     * @see org.datanucleus.api.jpa.criteria.ExpressionImpl#getCompoundSelectionItems()
+     * @see org.datanucleus.api.jakarta.criteria.ExpressionImpl#getCompoundSelectionItems()
      */
     @Override
     public List<Selection<?>> getCompoundSelectionItems()
@@ -58,7 +58,7 @@ public class CompoundSelectionImpl<X> extends ExpressionImpl<X> implements Compo
     }
 
     /* (non-Javadoc)
-     * @see org.datanucleus.api.jpa.criteria.ExpressionImpl#isCompoundSelection()
+     * @see org.datanucleus.api.jakarta.criteria.ExpressionImpl#isCompoundSelection()
      */
     @Override
     public boolean isCompoundSelection()

@@ -51,7 +51,7 @@ import jakarta.persistence.criteria.SetJoin;
 import jakarta.persistence.criteria.Subquery;
 import jakarta.persistence.criteria.Predicate.BooleanOperator;
 
-import org.datanucleus.api.jakarta.JPAEntityManagerFactory;
+import org.datanucleus.api.jakarta.JakartaEntityManagerFactory;
 import org.datanucleus.store.query.expression.CreatorExpression;
 import org.datanucleus.store.query.expression.DyadicExpression;
 import org.datanucleus.store.query.expression.InvokeExpression;
@@ -60,21 +60,21 @@ import org.datanucleus.store.query.expression.SubqueryExpression;
 import org.datanucleus.store.query.expression.VariableExpression;
 
 /**
- * Implementation of JPA "CriteriaBuilder".
+ * Implementation of Jakarta Persistence "CriteriaBuilder".
  * Acts as a factory for expressions, and also for the criteria queries themselves.
  */
 public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
 {
     static final long serialVersionUID = -1798682551615240941L;
 
-    JPAEntityManagerFactory emf;
+    JakartaEntityManagerFactory emf;
 
-    public CriteriaBuilderImpl(JPAEntityManagerFactory emf)
+    public CriteriaBuilderImpl(JakartaEntityManagerFactory emf)
     {
         this.emf = emf;
     }
 
-    public JPAEntityManagerFactory getEntityManagerFactory()
+    public JakartaEntityManagerFactory getEntityManagerFactory()
     {
         return emf;
     }
@@ -1720,35 +1720,35 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
 
     public <X, T, V extends T> Join<X, V> treat(Join<X, T> join, Class<V> type)
     {
-        // TODO JPA2.1 addition
+        // TODO Implement this
         throw new UnsupportedOperationException(
                 "CriteriaBuilder.treat(Join, Class) not yet implemented. Provide a testcase that uses this and raise an issue attaching your testcase");
     }
 
     public <X, T, E extends T> CollectionJoin<X, E> treat(CollectionJoin<X, T> join, Class<E> type)
     {
-        // TODO JPA2.1 addition
+        // TODO Implement this
         throw new UnsupportedOperationException(
                 "CriteriaBuilder.treat(CollectionJoin, Class) not yet implemented. Provide a testcase that uses this and raise an issue attaching your testcase");
     }
 
     public <X, T, E extends T> SetJoin<X, E> treat(SetJoin<X, T> join, Class<E> type)
     {
-        // TODO JPA2.1 addition
+        // TODO Implement this
         throw new UnsupportedOperationException(
                 "CriteriaBuilder.treat(SetJoin, Class) not yet implemented. Provide a testcase that uses this and raise an issue attaching your testcase");
     }
 
     public <X, T, E extends T> ListJoin<X, E> treat(ListJoin<X, T> join, Class<E> type)
     {
-        // TODO JPA2.1 addition
+        // TODO Implement this
         throw new UnsupportedOperationException(
                 "CriteriaBuilder.treat(ListJoin, Class) not yet implemented. Provide a testcase that uses this and raise an issue attaching your testcase");
     }
 
     public <X, K, T, V extends T> MapJoin<X, K, V> treat(MapJoin<X, K, T> join, Class<V> type)
     {
-        // TODO JPA2.1 addition
+        // TODO Implement this
         throw new UnsupportedOperationException(
                 "CriteriaBuilder.treat(MapJoin, Class) not yet implemented. Provide a testcase that uses this and raise an issue attaching your testcase");
     }

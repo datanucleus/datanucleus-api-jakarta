@@ -38,7 +38,7 @@ public class ConcatExpression extends ExpressionImpl<String>
     }
 
     /* (non-Javadoc)
-     * @see org.datanucleus.api.jpa.criteria.ExpressionImpl#getQueryExpression()
+     * @see org.datanucleus.api.jakarta.criteria.ExpressionImpl#getQueryExpression()
      */
     @Override
     public org.datanucleus.store.query.expression.Expression getQueryExpression()
@@ -52,7 +52,7 @@ public class ConcatExpression extends ExpressionImpl<String>
     }
 
     /* (non-Javadoc)
-     * @see org.datanucleus.api.jpa.criteria.ExpressionImpl#toString()
+     * @see org.datanucleus.api.jakarta.criteria.ExpressionImpl#toString()
      */
     @Override
     public String toString()

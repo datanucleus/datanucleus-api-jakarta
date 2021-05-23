@@ -20,7 +20,7 @@ Contributors:
 <plugin id="org.datanucleus.api.jakarta" name="DataNucleus Jakarta" provider-name="DataNucleus">
     <!-- PERSISTENCE PROPERTIES -->
     <extension point="org.datanucleus.persistence_properties">
-        <!-- Map JPA properties to internal DataNucleus properties -->
+        <!-- Map Jakarta properties to internal DataNucleus properties -->
         <persistence-property name="jakarta.persistence.jdbc.driver" internal-name="datanucleus.ConnectionDriverName"/>
         <persistence-property name="jakarta.persistence.jdbc.url" internal-name="datanucleus.ConnectionURL"/>
         <persistence-property name="jakarta.persistence.jdbc.user" internal-name="datanucleus.ConnectionUserName"/>
@@ -57,75 +57,75 @@ Contributors:
         <persistence-property name="jakarta.persistence.schema-generation.scripts.drop-target" internal-name="datanucleus.schema.generateScripts.drop"/>
         <persistence-property name="jakarta.persistence.sql-load-script-source" internal-name="datanucleus.schema.loadScript"/>
 
-        <!-- DataNucleus JPA own properties -->
-        <persistence-property name="datanucleus.jpa.addClassTransformer" value="false" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
-        <persistence-property name="datanucleus.jpa.persistenceContextType" validator="org.datanucleus.api.jpa.JPAPropertyValidator"/>
-        <persistence-property name="datanucleus.jpa.txnMarkForRollbackOnException" value="true" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
-        <persistence-property name="datanucleus.jpa.findTypeConversion" value="true" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
+        <!-- DataNucleus Jakarta own properties -->
+        <persistence-property name="datanucleus.jakarta.addClassTransformer" value="false" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
+        <persistence-property name="datanucleus.jakarta.persistenceContextType" validator="org.datanucleus.api.jakarta.JakartaPropertyValidator"/>
+        <persistence-property name="datanucleus.jakarta.txnMarkForRollbackOnException" value="true" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
+        <persistence-property name="datanucleus.jakarta.findTypeConversion" value="true" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
 
         <persistence-property name="datanucleus.singletonEMFForName" value="false" validator="org.datanucleus.properties.BooleanPropertyValidator"/>
     </extension>
 
     <!-- ANNOTATIONS -->
     <extension point="org.datanucleus.annotations">
-        <annotations annotation-class="jakarta.persistence.Entity" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.MappedSuperclass" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.Embeddable" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.NamedQuery" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.NamedQueries" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.NamedNativeQuery" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.NamedNativeQueries" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.NamedStoredProcedureQuery" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.NamedStoredProcedureQueries" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="org.datanucleus.api.jpa.annotations.PersistenceAware" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
-        <annotations annotation-class="jakarta.persistence.Converter" reader="org.datanucleus.api.jpa.metadata.JPAAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.Entity" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.MappedSuperclass" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.Embeddable" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedQuery" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedQueries" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedNativeQuery" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedNativeQueries" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedStoredProcedureQuery" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.NamedStoredProcedureQueries" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="org.datanucleus.api.jakarta.annotations.PersistenceAware" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
+        <annotations annotation-class="jakarta.persistence.Converter" reader="org.datanucleus.api.jakarta.metadata.JakartaAnnotationReader"/>
     </extension>
 
     <!-- EXTENSION CLASS ANNOTATIONS -->
     <extension point="org.datanucleus.class_annotation_handler">
-        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ReadOnly" handler="org.datanucleus.api.jpa.annotations.ReadOnlyHandler"/>
-        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateTimestamp" handler="org.datanucleus.api.jpa.annotations.CreateTimestampHandler"/>
-        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateTimestamp" handler="org.datanucleus.api.jpa.annotations.UpdateTimestampHandler"/>
-        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateUser" handler="org.datanucleus.api.jpa.annotations.CreateUserHandler"/>
-        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateUser" handler="org.datanucleus.api.jpa.annotations.UpdateUserHandler"/>
-        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.MultiTenant" handler="org.datanucleus.api.jpa.annotations.MultiTenantHandler"/>
-        <class-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.SoftDelete" handler="org.datanucleus.api.jpa.annotations.SoftDeleteHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.ReadOnly" handler="org.datanucleus.api.jakarta.annotations.ReadOnlyHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.CreateTimestamp" handler="org.datanucleus.api.jakarta.annotations.CreateTimestampHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.UpdateTimestamp" handler="org.datanucleus.api.jakarta.annotations.UpdateTimestampHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.CreateUser" handler="org.datanucleus.api.jakarta.annotations.CreateUserHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.UpdateUser" handler="org.datanucleus.api.jakarta.annotations.UpdateUserHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.MultiTenant" handler="org.datanucleus.api.jakarta.annotations.MultiTenantHandler"/>
+        <class-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.SoftDelete" handler="org.datanucleus.api.jakarta.annotations.SoftDeleteHandler"/>
     </extension>
 
     <!-- EXTENSION MEMBER ANNOTATIONS -->
     <extension point="org.datanucleus.member_annotation_handler">
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ReadOnly" handler="org.datanucleus.api.jpa.annotations.ReadOnlyHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.Index" handler="org.datanucleus.api.jpa.annotations.IndexHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.JdbcType" handler="org.datanucleus.api.jpa.annotations.JdbcTypeHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.SqlType" handler="org.datanucleus.api.jpa.annotations.SqlTypeHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ColumnPosition" handler="org.datanucleus.api.jpa.annotations.ColumnPositionHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ValueGenerator" handler="org.datanucleus.api.jpa.annotations.ValueGeneratorHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.SharedRelation" handler="org.datanucleus.api.jpa.annotations.SharedRelationHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateTimestamp" handler="org.datanucleus.api.jpa.annotations.CreateTimestampHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateTimestamp" handler="org.datanucleus.api.jpa.annotations.UpdateTimestampHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.CreateUser" handler="org.datanucleus.api.jpa.annotations.CreateUserHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.UpdateUser" handler="org.datanucleus.api.jpa.annotations.UpdateUserHandler"/>
-        <member-annotation-handler annotation-class="org.datanucleus.api.jpa.annotations.ComparatorClass" handler="org.datanucleus.api.jpa.annotations.ComparatorClassHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.ReadOnly" handler="org.datanucleus.api.jakarta.annotations.ReadOnlyHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.Index" handler="org.datanucleus.api.jakarta.annotations.IndexHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.JdbcType" handler="org.datanucleus.api.jakarta.annotations.JdbcTypeHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.SqlType" handler="org.datanucleus.api.jakarta.annotations.SqlTypeHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.ColumnPosition" handler="org.datanucleus.api.jakarta.annotations.ColumnPositionHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.ValueGenerator" handler="org.datanucleus.api.jakarta.annotations.ValueGeneratorHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.SharedRelation" handler="org.datanucleus.api.jakarta.annotations.SharedRelationHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.CreateTimestamp" handler="org.datanucleus.api.jakarta.annotations.CreateTimestampHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.UpdateTimestamp" handler="org.datanucleus.api.jakarta.annotations.UpdateTimestampHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.CreateUser" handler="org.datanucleus.api.jakarta.annotations.CreateUserHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.UpdateUser" handler="org.datanucleus.api.jakarta.annotations.UpdateUserHandler"/>
+        <member-annotation-handler annotation-class="org.datanucleus.api.jakarta.annotations.ComparatorClass" handler="org.datanucleus.api.jakarta.annotations.ComparatorClassHandler"/>
     </extension>
 
     <!-- PERSISTENCE API -->
     <extension point="org.datanucleus.api_adapter">
-        <api-adapter name="JPA" class-name="org.datanucleus.api.jpa.JPAAdapter"/>
+        <api-adapter name="Jakarta" class-name="org.datanucleus.api.jakarta.JakartaAdapter"/>
     </extension>
 
     <!-- CALLBACK HANDLER -->
     <extension point="org.datanucleus.callbackhandler">
-        <callback-handler name="JPA" class-name="org.datanucleus.api.jpa.JPACallbackHandler"/>
+        <callback-handler name="Jakarta" class-name="org.datanucleus.api.jakarta.JakartaCallbackHandler"/>
     </extension>
 
     <!-- METADATA MANAGER -->
     <extension point="org.datanucleus.metadata_manager">
-       <metadata-manager name="JPA" class="org.datanucleus.api.jpa.metadata.JPAMetaDataManager"/>
+       <metadata-manager name="Jakarta" class="org.datanucleus.api.jakarta.metadata.JakartaMetaDataManager"/>
     </extension>
 
     <!-- METADATA HANDLER -->
     <extension point="org.datanucleus.metadata_handler">
-        <handler name="JPA" class-name="org.datanucleus.api.jpa.metadata.JPAMetaDataHandler"/>
+        <handler name="Jakarta" class-name="org.datanucleus.api.jakarta.metadata.JakartaMetaDataHandler"/>
     </extension>
 
     <!-- METADATA ENTITY RESOLVERS -->

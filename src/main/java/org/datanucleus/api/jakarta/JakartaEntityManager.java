@@ -13,10 +13,6 @@ See the License for the specific language governing permissions and
 limitations under the License.
 
 Contributors:
-2006 Andy Jefferson - provded exception handling
-2008 Andy Jefferson - change query interface to be independent of store.rdbms
-2009 Andy Jefferson - add JPA2 methods
-2013 Andy Jefferson - support persist of Collection/array of entities
     ...
 **********************************************************************/
 package org.datanucleus.api.jakarta;
@@ -85,9 +81,9 @@ import org.datanucleus.util.Localiser;
 import org.datanucleus.util.StringUtils;
 
 /**
- * EntityManager implementation for JPA.
+ * EntityManager implementation for Jakarta Persistence.
  */
-public class JPAEntityManager implements EntityManager
+public class JakartaEntityManager implements EntityManager
 {
     protected boolean closed = false;
 
@@ -95,7 +91,7 @@ public class JPAEntityManager implements EntityManager
     protected ExecutionContext ec;
 
     /** Parent EntityManagerFactory. */
-    protected JPAEntityManagerFactory emf;
+    protected JakartaEntityManagerFactory emf;
 
     /** Current Transaction (when using ResourceLocal). Will be null if using JTA. */
     protected EntityTransaction tx;
@@ -109,7 +105,7 @@ public class JPAEntityManager implements EntityManager
     protected SynchronizationType syncType;
 
     /** Fetch Plan (extension). */
-    protected JPAFetchPlan fetchPlan = null;
+    protected JakartaFetchPlan fetchPlan = null;
 
     /**
      * Constructor.
@@ -118,7 +114,7 @@ public class JPAEntityManager implements EntityManager
      * @param contextType The Persistence Context type
      * @param syncType The Synchronisation type
      */
-    public JPAEntityManager(JPAEntityManagerFactory theEMF, PersistenceNucleusContext nucleusCtx, PersistenceContextType contextType, SynchronizationType syncType)
+    public JakartaEntityManager(JakartaEntityManagerFactory theEMF, PersistenceNucleusContext nucleusCtx, PersistenceContextType contextType, SynchronizationType syncType)
     {
         this.emf = theEMF;
         this.persistenceContextType = contextType;
@@ -137,7 +133,7 @@ public class JPAEntityManager implements EntityManager
         if (nucleusCtx.getConfiguration().getStringProperty(PropertyNames.PROPERTY_TRANSACTION_TYPE).equalsIgnoreCase(TransactionType.RESOURCE_LOCAL.toString()))
         {
             // Using ResourceLocal transaction so allocate a transaction
-            tx = new JPAEntityTransaction(ec);
+            tx = new JakartaEntityTransaction(ec);
         }
 
         BeanValidationHandler beanValidator = nucleusCtx.getBeanValidationHandler(ec);
@@ -146,7 +142,7 @@ public class JPAEntityManager implements EntityManager
             ec.getCallbackHandler().setBeanValidationHandler(beanValidator);
         }
 
-        fetchPlan = new JPAFetchPlan(ec.getFetchPlan());
+        fetchPlan = new JakartaFetchPlan(ec.getFetchPlan());
     }
 
     /**
@@ -196,7 +192,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(ne);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
         }
 
         fetchPlan = null;
@@ -220,7 +216,7 @@ public class JPAEntityManager implements EntityManager
      * Acessor for the current FetchPlan
      * @return The FetchPlan
      */
-    public JPAFetchPlan getFetchPlan()
+    public JakartaFetchPlan getFetchPlan()
     {
         return fetchPlan;
     }
@@ -306,27 +302,27 @@ public class JPAEntityManager implements EntityManager
             boolean fetchGraphSpecified = false;
             if (properties != null) // TODO Should be for just this operation
             {
-                if (properties.containsKey(JPAEntityGraph.FETCHGRAPH_PROPERTY))
+                if (properties.containsKey(JakartaEntityGraph.FETCHGRAPH_PROPERTY))
                 {
-                    EntityGraph eg = (EntityGraph) properties.get(JPAEntityGraph.FETCHGRAPH_PROPERTY);
+                    EntityGraph eg = (EntityGraph) properties.get(JakartaEntityGraph.FETCHGRAPH_PROPERTY);
                     String egName = eg.getName();
                     if (eg.getName() == null)
                     {
                         tmpEntityGraphName = emf.getDefinedEntityGraphName();
-                        emf.registerEntityGraph((JPAEntityGraph) eg, tmpEntityGraphName);
+                        emf.registerEntityGraph((JakartaEntityGraph) eg, tmpEntityGraphName);
                         egName = tmpEntityGraphName;
                     }
                     ec.getFetchPlan().setGroup(egName);
                     fetchGraphSpecified = true;
                 }
-                if (properties.containsKey(JPAEntityGraph.LOADGRAPH_PROPERTY))
+                if (properties.containsKey(JakartaEntityGraph.LOADGRAPH_PROPERTY))
                 {
-                    EntityGraph eg = (EntityGraph) properties.get(JPAEntityGraph.LOADGRAPH_PROPERTY);
+                    EntityGraph eg = (EntityGraph) properties.get(JakartaEntityGraph.LOADGRAPH_PROPERTY);
                     String egName = eg.getName();
                     if (eg.getName() == null)
                     {
                         tmpEntityGraphName = emf.getDefinedEntityGraphName();
-                        emf.registerEntityGraph((JPAEntityGraph) eg, tmpEntityGraphName);
+                        emf.registerEntityGraph((JakartaEntityGraph) eg, tmpEntityGraphName);
                         egName = tmpEntityGraphName;
                     }
                     ec.getFetchPlan().addGroup(egName);
@@ -368,7 +364,7 @@ public class JPAEntityManager implements EntityManager
                     }
 
                     // Register the object for locking
-                    ec.getLockManager().lock(id, getLockModeForJPALockModeType(lock));
+                    ec.getLockManager().lock(id, getLockModeForJakartaLockModeType(lock));
                 }
 
                 pc = ec.findObject(entityClass, primaryKey);
@@ -382,7 +378,7 @@ public class JPAEntityManager implements EntityManager
             }
             catch (NucleusObjectNotFoundException ex)
             {
-                // in JPA, if object not found return null
+                // in Jakarta Persistence, if object not found return null
                 return null;
             }
 
@@ -431,7 +427,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            // Convert any DataNucleus exceptions into what JPA expects
+            // Convert any DataNucleus exceptions into what Jakarta Persistence expects
             throw new IllegalArgumentException("Exception finding object by unique values", ne);
         }
     }
@@ -519,7 +515,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusObjectNotFoundException ne)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(ne);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
         }
     }
 
@@ -576,7 +572,7 @@ public class JPAEntityManager implements EntityManager
         {
             // For pessimistic modes this will do a "SELECT ... FOR UPDATE" on the object.
             // For optimistic modes this will just mark the lock type in the ObjectProvider for later handling
-            ec.getLockManager().lock(ec.findObjectProvider(entity), getLockModeForJPALockModeType(lock));
+            ec.getLockManager().lock(ec.findObjectProvider(entity), getLockModeForJakartaLockModeType(lock));
         }
     }
 
@@ -614,7 +610,7 @@ public class JPAEntityManager implements EntityManager
         {
             if (ec.getApiAdapter().isDetached(entity))
             {
-                // The JPA spec is very confused about when this exception is thrown, however the JPA TCK invokes this operation multiple times over the same instance
+                // The Jakarta Persistence spec is very confused about when this exception is thrown, however the TCK invokes this operation multiple times over the same instance
                 // Entity is already persistent. Maybe the ExecutionContext.exists method isnt the best way of checking
                 throwException(new EntityExistsException(Localiser.msg("EM.EntityIsPersistent", StringUtils.toJVMIDString(entity))));
             }
@@ -626,7 +622,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -642,7 +638,7 @@ public class JPAEntityManager implements EntityManager
             assertEntity(entity);
             if (ec.exists(entity) && ec.getApiAdapter().isDetached(entity))
             {
-                // The JPA spec is very confused about when this exception is thrown, however the JPA TCK invokes this operation multiple times over the same instance
+                // The Jakarta Persistence spec is very confused about when this exception is thrown, however the TCK invokes this operation multiple times over the same instance
                 // Entity is already persistent. Maybe the ExecutionContext.exists method isnt the best way of checking
                 throwException(new EntityExistsException(Localiser.msg("EM.EntityIsPersistent", StringUtils.toJVMIDString(entity))));
             }
@@ -654,7 +650,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -696,7 +692,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
         return null;
     }
@@ -724,7 +720,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
         return null;
     }
@@ -764,7 +760,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -781,7 +777,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -840,14 +836,14 @@ public class JPAEntityManager implements EntityManager
             if (lock != null && lock != LockModeType.NONE)
             {
                 // Register the object for locking
-                ec.getLockManager().lock(ec.getApiAdapter().getIdForObject(entity), getLockModeForJPALockModeType(lock));
+                ec.getLockManager().lock(ec.getApiAdapter().getIdForObject(entity), getLockModeForJakartaLockModeType(lock));
             }
 
             ec.refreshObject(entity);
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -891,7 +887,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -919,7 +915,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -939,7 +935,7 @@ public class JPAEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJPAHelper.getJPAExceptionForNucleusException(ne));
+            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -985,7 +981,7 @@ public class JPAEntityManager implements EntityManager
         }
 
         ObjectProvider sm = ec.findObjectProvider(entity);
-        return getJPALockModeTypeForLockMode(ec.getLockManager().getLockMode(sm));
+        return getJakartaLockModeTypeForLockMode(ec.getLockManager().getLockMode(sm));
     }
 
     // ------------------------------------ Transactions --------------------------------------
@@ -1017,7 +1013,7 @@ public class JPAEntityManager implements EntityManager
         assertIsOpen();
         if (tx != null)
         {
-            // Not in the JPA spec but why would anyone call this with local txns?
+            // Not in the Jakarta Persistence spec but why would anyone call this with local txns?
             throw new IllegalStateException(Localiser.msg("EM.TransactionLocal"));
         }
 
@@ -1041,7 +1037,7 @@ public class JPAEntityManager implements EntityManager
     {
         if (tx != null)
         {
-            // Not explicitly mentioned in JPA spec what to do for local txn
+            // Not explicitly mentioned in Jakarta Persistence spec what to do for local txn
             return tx.isActive();
         }
 
@@ -1054,7 +1050,7 @@ public class JPAEntityManager implements EntityManager
     /**
      * Method to return a query for the specified Criteria Query.
      * @param cq The Criteria query
-     * @return The JPA query to use
+     * @return The Jakarta Persistence query to use
      */
     public <T> TypedQuery<T> createQuery(CriteriaQuery<T> cq)
     {
@@ -1070,7 +1066,7 @@ public class JPAEntityManager implements EntityManager
         {
             query = createQuery(jpqlString);
         }
-        org.datanucleus.store.query.Query internalQuery = ((JPAQuery)query).getInternalQuery();
+        org.datanucleus.store.query.Query internalQuery = ((JakartaQuery)query).getInternalQuery();
         if (compilation.getExprResult() == null)
         {
             // If the result was "Object(e)" or "e" then this is meaningless so remove
@@ -1087,7 +1083,7 @@ public class JPAEntityManager implements EntityManager
         String jpqlString = criteria.toString();
         QueryCompilation compilation = criteria.getCompilation(ec.getMetaDataManager(), ec.getClassLoaderResolver());
         TypedQuery query = createQuery(jpqlString);
-        org.datanucleus.store.query.Query internalQuery = ((JPAQuery)query).getInternalQuery();
+        org.datanucleus.store.query.Query internalQuery = ((JakartaQuery)query).getInternalQuery();
         internalQuery.setCompilation(compilation);
         return query;
     }
@@ -1098,7 +1094,7 @@ public class JPAEntityManager implements EntityManager
         String jpqlString = criteria.toString();
         QueryCompilation compilation = criteria.getCompilation(ec.getMetaDataManager(), ec.getClassLoaderResolver());
         TypedQuery query = createQuery(jpqlString);
-        org.datanucleus.store.query.Query internalQuery = ((JPAQuery)query).getInternalQuery();
+        org.datanucleus.store.query.Query internalQuery = ((JakartaQuery)query).getInternalQuery();
         internalQuery.setCompilation(compilation);
         return query;
     }
@@ -1133,7 +1129,7 @@ public class JPAEntityManager implements EntityManager
      * @return the new query instance
      * @throws IllegalArgumentException if a query has not been defined with the given name
      */
-    public JPAQuery createNamedQuery(String queryName)
+    public JakartaQuery createNamedQuery(String queryName)
     {
         assertIsOpen();
 
@@ -1168,7 +1164,7 @@ public class JPAEntityManager implements EntityManager
                     internalQuery.addExtension(org.datanucleus.store.query.Query.EXTENSION_FLUSH_BEFORE_EXECUTION, Boolean.TRUE);
                 }
 
-                return new JPAQuery(this, internalQuery, qmd.getLanguage());
+                return new JakartaQuery(this, internalQuery, qmd.getLanguage());
             }
 
             // "named-native-query" so return native query
@@ -1195,11 +1191,11 @@ public class JPAEntityManager implements EntityManager
                         internalQuery.addExtension(org.datanucleus.store.query.Query.EXTENSION_FLUSH_BEFORE_EXECUTION, Boolean.TRUE);
                     }
 
-                    return new JPAQuery(this, internalQuery, qmd.getLanguage());
+                    return new JakartaQuery(this, internalQuery, qmd.getLanguage());
                 }
                 catch (Exception e)
                 {
-                    // Result class not found so throw exception (not defined in the JPA spec)
+                    // Result class not found so throw exception (not defined in the Jakarta Persistence spec)
                     throw new IllegalArgumentException(Localiser.msg("Query.ResultClassNotFound", qmd.getName(), resultClassName));
                 }
             }
@@ -1217,11 +1213,11 @@ public class JPAEntityManager implements EntityManager
                     internalQuery.addExtension(org.datanucleus.store.query.Query.EXTENSION_FLUSH_BEFORE_EXECUTION, Boolean.TRUE);
                 }
 
-                return new JPAQuery(this, internalQuery, qmd.getLanguage());
+                return new JakartaQuery(this, internalQuery, qmd.getLanguage());
             }
             else
             {
-                return new JPAQuery(this, internalQuery, qmd.getLanguage());
+                return new JakartaQuery(this, internalQuery, qmd.getLanguage());
             }
         }
         catch (NucleusException ne)
@@ -1270,7 +1266,7 @@ public class JPAEntityManager implements EntityManager
                     internalQuery.setResultClass(resultClass);
                 }
             }
-            return new JPAQuery(this, internalQuery, nativeQueryLanguage);
+            return new JakartaQuery(this, internalQuery, nativeQueryLanguage);
         }
         catch (NucleusException ne)
         {
@@ -1303,7 +1299,7 @@ public class JPAEntityManager implements EntityManager
                 throw new IllegalArgumentException(Localiser.msg("Query.ResultSetMappingNotFound", resultSetMapping));
             }
             internalQuery.setResultMetaData(qrmd);
-            return new JPAQuery(this, internalQuery, nativeQueryLanguage);
+            return new JakartaQuery(this, internalQuery, nativeQueryLanguage);
         }
         catch (NucleusException ne)
         {
@@ -1372,7 +1368,7 @@ public class JPAEntityManager implements EntityManager
                 internalQuery.setResultMetaData(qrmds);
             }
 
-            return new JPAStoredProcedureQuery(this, internalQuery);
+            return new JakartaStoredProcedureQuery(this, internalQuery);
         }
         catch (NucleusException ne)
         {
@@ -1391,7 +1387,7 @@ public class JPAEntityManager implements EntityManager
         try
         {
             org.datanucleus.store.query.Query internalQuery = ec.getStoreManager().newQuery(QueryLanguage.STOREDPROC.toString(), ec, procName);
-            return new JPAStoredProcedureQuery(this, internalQuery);
+            return new JakartaStoredProcedureQuery(this, internalQuery);
         }
         catch (NucleusException ne)
         {
@@ -1418,7 +1414,7 @@ public class JPAEntityManager implements EntityManager
             {
                 ((AbstractStoredProcedureQuery)internalQuery).setResultClasses(resultClasses);
             }
-            return new JPAStoredProcedureQuery(this, internalQuery);
+            return new JakartaStoredProcedureQuery(this, internalQuery);
         }
         catch (NucleusException ne)
         {
@@ -1454,7 +1450,7 @@ public class JPAEntityManager implements EntityManager
                 }
                 ((AbstractStoredProcedureQuery)internalQuery).setResultMetaData(qrmds);
             }
-            return new JPAStoredProcedureQuery(this, internalQuery);
+            return new JakartaStoredProcedureQuery(this, internalQuery);
         }
         catch (NucleusException ne)
         {
@@ -1467,13 +1463,13 @@ public class JPAEntityManager implements EntityManager
      */
     public <T> TypedQuery<T> createQuery(String queryString, Class<T> resultClass)
     {
-        JPAQuery jpaQuery = createQuery(queryString);
+        JakartaQuery query = createQuery(queryString);
         if (resultClass != null)
         {
             // Catch special case of jakarta.persistence.Tuple
-            jpaQuery.setResultClass(resultClass.getName().equals("jakarta.persistence.Tuple") ? JPAQueryTuple.class : resultClass);
+        	query.setResultClass(resultClass.getName().equals("jakarta.persistence.Tuple") ? JakartaQueryTuple.class : resultClass);
         }
-        return jpaQuery;
+        return query;
     }
 
     /**
@@ -1482,13 +1478,13 @@ public class JPAEntityManager implements EntityManager
      * @return the new query instance
      * @throws IllegalArgumentException if query string is not valid
      */
-    public JPAQuery createQuery(String queryString)
+    public JakartaQuery createQuery(String queryString)
     {
         assertIsOpen();
         try
         {
             org.datanucleus.store.query.Query internalQuery = ec.getStoreManager().newQuery(QueryLanguage.JPQL.toString(), ec, queryString);
-            return new JPAQuery(this, internalQuery, QueryLanguage.JPQL.toString());
+            return new JakartaQuery(this, internalQuery, QueryLanguage.JPQL.toString());
         }
         catch (NucleusException ne)
         {
@@ -1649,9 +1645,9 @@ public class JPAEntityManager implements EntityManager
             Configuration conf = ec.getNucleusContext().getConfiguration();
             if (tx != null && tx.isActive())
             {
-                if (conf.getBooleanProperty(JPAPropertyNames.PROPERTY_JPA_TRANSACTION_ROLLBACK_ON_EXCEPTION))
+                if (conf.getBooleanProperty(JakartaPropertyNames.PROPERTY_JAKARTA_TRANSACTION_ROLLBACK_ON_EXCEPTION))
                 {
-                    // The JPA spec says that all PersistenceExceptions thrown should mark the transaction for rollback.
+                    // The Jakarta Persistence spec says that all PersistenceExceptions thrown should mark the transaction for rollback.
                     // Seems stupid to me. e.g you try to find an object with a particular id and it doesn't exist so you then have to rollback the txn and start again. FFS.
                     getTransaction().setRollbackOnly();
                 }
@@ -1661,11 +1657,11 @@ public class JPAEntityManager implements EntityManager
     }
 
     /**
-     * Convenience method to convert from the JPA LockModeType to the internal lock mode.
-     * @param lock JPA LockModeType
+     * Convenience method to convert from the Jakarta Persistence LockModeType to the internal lock mode.
+     * @param lock Jakarta Persistence LockModeType
      * @return The internal lock mode
      */
-    public static LockMode getLockModeForJPALockModeType(LockModeType lock)
+    public static LockMode getLockModeForJakartaLockModeType(LockModeType lock)
     {
         LockMode lockModeType = LockMode.LOCK_NONE;
         if (lock == LockModeType.OPTIMISTIC || lock == LockModeType.READ)
@@ -1688,11 +1684,11 @@ public class JPAEntityManager implements EntityManager
     }
 
     /**
-     * Convenience method to convert from LockManager lock type to JPA LockModeType
+     * Convenience method to convert from LockManager lock type to Jakarta Persistence LockModeType
      * @param lockMode Lock mode
-     * @return JPA LockModeType
+     * @return Jakarta Persistence LockModeType
      */
-    public static LockModeType getJPALockModeTypeForLockMode(LockMode lockMode)
+    public static LockModeType getJakartaLockModeTypeForLockMode(LockMode lockMode)
     {
         if (lockMode == LockMode.LOCK_OPTIMISTIC_READ)
         {
@@ -1716,7 +1712,7 @@ public class JPAEntityManager implements EntityManager
     public <T> EntityGraph<T> createEntityGraph(Class<T> rootType)
     {
         // Return an unnamed EntityGraph for the user to play with (and then use with EM.find or Query)
-        return new JPAEntityGraph<T>(ec.getMetaDataManager(), null, rootType);
+        return new JakartaEntityGraph<T>(ec.getMetaDataManager(), null, rootType);
     }
 
     public jakarta.persistence.EntityGraph<?> createEntityGraph(String graphName)
@@ -1725,7 +1721,7 @@ public class JPAEntityManager implements EntityManager
         if (entityGraph != null)
         {
             // TODO Do we need to re-register this with the EMF? or does the user?
-            return ((JPAEntityGraph)entityGraph).cloneMutableEntityGraph();
+            return ((JakartaEntityGraph)entityGraph).cloneMutableEntityGraph();
         }
         return null;
     }

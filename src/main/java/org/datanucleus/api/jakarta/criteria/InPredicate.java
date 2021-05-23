@@ -143,7 +143,7 @@ public class InPredicate<X> extends PredicateImpl implements In<X>
     }
 
     /* (non-Javadoc)
-     * @see org.datanucleus.api.jpa.criteria.ExpressionImpl#getQueryExpression()
+     * @see org.datanucleus.api.jakarta.criteria.ExpressionImpl#getQueryExpression()
      */
     @Override
     public org.datanucleus.store.query.expression.Expression getQueryExpression()

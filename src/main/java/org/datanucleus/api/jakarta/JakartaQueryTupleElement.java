@@ -20,15 +20,15 @@ package org.datanucleus.api.jakarta;
 import jakarta.persistence.TupleElement;
 
 /**
- * Implementation of a JPA TupleElement, for a query result.
+ * Implementation of a Jakarta Persistence TupleElement, for a query result.
  */
-public class JPAQueryTupleElement implements TupleElement
+public class JakartaQueryTupleElement implements TupleElement
 {
     protected String alias;
     protected Class type;
     protected Object value;
 
-    public JPAQueryTupleElement(String alias, Class type, Object value)
+    public JakartaQueryTupleElement(String alias, Class type, Object value)
     {
         this.alias = alias;
         this.type = type;

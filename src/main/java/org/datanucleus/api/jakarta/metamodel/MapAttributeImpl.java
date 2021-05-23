@@ -25,7 +25,7 @@ import jakarta.persistence.metamodel.Type;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 
 /**
- * Implementation of JPA2 metamodel "ListAttribute".
+ * Implementation of Jakarta Persistence metamodel "ListAttribute".
  */
 public class MapAttributeImpl<X, K, V> extends PluralAttributeImpl<X, Map<K, V>, V> implements MapAttribute<X, K, V>
 {

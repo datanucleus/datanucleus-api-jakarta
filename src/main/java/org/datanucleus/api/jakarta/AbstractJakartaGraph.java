@@ -33,26 +33,26 @@ import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaDataManager;
 
 /**
- * Base for JPAEntityGraph and JPASubgraph.
+ * Base for JakartaEntityGraph and JakartaSubgraph.
  * @param <T> Type of the entity
  */
-public abstract class AbstractJPAGraph<T>
+public abstract class AbstractJakartaGraph<T>
 {
     MetaDataManager mmgr;
 
     Class<T> classType;
 
-    Map<String, JPAAttributeNode<?>> attributeNodeMap = null;
+    Map<String, JakartaAttributeNode<?>> attributeNodeMap = null;
 
     boolean mutable = true;
 
-    public AbstractJPAGraph(MetaDataManager mmgr, Class<T> clsType)
+    public AbstractJakartaGraph(MetaDataManager mmgr, Class<T> clsType)
     {
         this.mmgr = mmgr;
         this.classType = clsType;
         if (clsType == null)
         {
-            throw new IllegalArgumentException("Unable to create JPA EntityGraph component with no defined class");
+            throw new IllegalArgumentException("Unable to create Jakarta Persistence EntityGraph component with no defined class");
         }
     }
 
@@ -86,11 +86,11 @@ public abstract class AbstractJPAGraph<T>
 
         if (attributeNodeMap == null)
         {
-            attributeNodeMap = new HashMap<String, JPAAttributeNode<?>>();
+            attributeNodeMap = new HashMap<String, JakartaAttributeNode<?>>();
         }
         for (int i=0;i<attributeNames.length;i++)
         {
-            JPAAttributeNode node = new JPAAttributeNode<T>(mmgr, this, attributeNames[i]);
+            JakartaAttributeNode node = new JakartaAttributeNode<T>(mmgr, this, attributeNames[i]);
             attributeNodeMap.put(node.getAttributeName(), node);
         }
     }
@@ -104,11 +104,11 @@ public abstract class AbstractJPAGraph<T>
 
         if (attributeNodeMap == null)
         {
-            attributeNodeMap = new HashMap<String, JPAAttributeNode<?>>();
+            attributeNodeMap = new HashMap<String, JakartaAttributeNode<?>>();
         }
         for (int i=0;i<attributes.length;i++)
         {
-            JPAAttributeNode node = new JPAAttributeNode<T>(mmgr, this, attributes[i].getName());
+            JakartaAttributeNode node = new JakartaAttributeNode<T>(mmgr, this, attributes[i].getName());
             attributeNodeMap.put(node.getAttributeName(), node);
         }
     }
@@ -133,16 +133,16 @@ public abstract class AbstractJPAGraph<T>
 
         if (attributeNodeMap == null)
         {
-            attributeNodeMap = new HashMap<String, JPAAttributeNode<?>>();
+            attributeNodeMap = new HashMap<String, JakartaAttributeNode<?>>();
         }
-        JPAAttributeNode node = attributeNodeMap.get(attribute.getName());
+        JakartaAttributeNode node = attributeNodeMap.get(attribute.getName());
         if (node == null)
         {
-            node = new JPAAttributeNode<T>(mmgr, this, attribute.getName());
+            node = new JakartaAttributeNode<T>(mmgr, this, attribute.getName());
             attributeNodeMap.put(node.getAttributeName(), node);
         }
 
-        JPASubgraph<? extends X> subgraph = new JPASubgraph(mmgr, type);
+        JakartaSubgraph<? extends X> subgraph = new JakartaSubgraph(mmgr, type);
         node.addSubgraph(subgraph);
         return subgraph;
     }
@@ -184,16 +184,16 @@ public abstract class AbstractJPAGraph<T>
 
         if (attributeNodeMap == null)
         {
-            attributeNodeMap = new HashMap<String, JPAAttributeNode<?>>();
+            attributeNodeMap = new HashMap<String, JakartaAttributeNode<?>>();
         }
-        JPAAttributeNode node = attributeNodeMap.get(attributeName);
+        JakartaAttributeNode node = attributeNodeMap.get(attributeName);
         if (node == null)
         {
-            node = new JPAAttributeNode<T>(mmgr, this, attributeName);
+            node = new JakartaAttributeNode<T>(mmgr, this, attributeName);
             attributeNodeMap.put(node.getAttributeName(), node);
         }
 
-        JPASubgraph<X> subgraph = new JPASubgraph<X>(mmgr, type);
+        JakartaSubgraph<X> subgraph = new JakartaSubgraph<X>(mmgr, type);
         node.addSubgraph(subgraph);
         return subgraph;
     }

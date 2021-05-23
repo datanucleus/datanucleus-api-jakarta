@@ -27,9 +27,9 @@ import org.datanucleus.util.ClassUtils;
 import org.datanucleus.util.NucleusLogger;
 
 /**
- * Convenience methods for handling JPA AttributeConverters.
+ * Convenience methods for handling Jakarta Persistence AttributeConverters.
  */
-public class JPATypeConverterUtils
+public class JakartaTypeConverterUtils
 {
     /**
      * Convenience method that takes the class of an AttributeConverter class, and returns the attribute type that it is for.

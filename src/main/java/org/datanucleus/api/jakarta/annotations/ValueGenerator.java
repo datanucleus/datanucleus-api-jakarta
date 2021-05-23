@@ -23,7 +23,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * Extension annotation allowing for custom value generators in JPA (uuid, timestamp, etc).
+ * Extension annotation allowing for custom value generators in Jakarta Persistence (uuid, timestamp, etc).
  */
 @Target({ElementType.ANNOTATION_TYPE, ElementType.FIELD, ElementType.METHOD}) 
 @Retention(RetentionPolicy.RUNTIME)

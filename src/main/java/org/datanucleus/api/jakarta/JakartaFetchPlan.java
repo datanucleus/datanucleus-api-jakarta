@@ -24,10 +24,10 @@ import java.util.Set;
 import org.datanucleus.exceptions.NucleusException;
 
 /**
- * Implementation of a FetchPlan for JPA.
- * Provides a JPA wrapper around the internal org.datanucleus.FetchPlan.
+ * Implementation of a FetchPlan for Jakarta Persistence.
+ * Provides a Jakarta Persistence wrapper around the internal org.datanucleus.FetchPlan.
  */
-public class JPAFetchPlan implements Serializable
+public class JakartaFetchPlan implements Serializable
 {
     private static final long serialVersionUID = 7955990781412643432L;
     private final org.datanucleus.FetchPlan fp;
@@ -36,7 +36,7 @@ public class JPAFetchPlan implements Serializable
      * Constructor.
      * @param fp FetchPlan
      */
-    public JPAFetchPlan(org.datanucleus.FetchPlan fp)
+    public JakartaFetchPlan(org.datanucleus.FetchPlan fp)
     {
         this.fp = fp;
     }
@@ -55,7 +55,7 @@ public class JPAFetchPlan implements Serializable
      * @param group The group to add
      * @return The updated FetchPlan
      */
-    public JPAFetchPlan addGroup(String group)
+    public JakartaFetchPlan addGroup(String group)
     {
         fp.addGroup(group);
         return this;
@@ -65,7 +65,7 @@ public class JPAFetchPlan implements Serializable
      * Method to clear the fetch plan groups.
      * @return The updated FetchPlan
      */
-    public JPAFetchPlan clearGroups()
+    public JakartaFetchPlan clearGroups()
     {
         fp.clearGroups();
         return this;
@@ -76,7 +76,7 @@ public class JPAFetchPlan implements Serializable
      * @param group The group to remove
      * @return The updated FetchPlan
      */
-    public JPAFetchPlan removeGroup(String group)
+    public JakartaFetchPlan removeGroup(String group)
     {
         fp.removeGroup(group);
         return this;
@@ -87,7 +87,7 @@ public class JPAFetchPlan implements Serializable
      * @param group The group to set
      * @return The updated FetchPlan
      */
-    public JPAFetchPlan setGroup(String group)
+    public JakartaFetchPlan setGroup(String group)
     {
         fp.setGroup(group);
         return this;
@@ -98,7 +98,7 @@ public class JPAFetchPlan implements Serializable
      * @param groups Collection of groups
      * @return Updated FetchPlan
      */
-    public JPAFetchPlan setGroups(Collection groups)
+    public JakartaFetchPlan setGroups(Collection groups)
     {
         fp.setGroups(groups);
         return this;
@@ -109,7 +109,7 @@ public class JPAFetchPlan implements Serializable
      * @param groups Collection of groups
      * @return Updated FetchPlan
      */
-    public JPAFetchPlan setGroups(String... groups)
+    public JakartaFetchPlan setGroups(String... groups)
     {
         fp.setGroups(groups);
         return this;
@@ -129,7 +129,7 @@ public class JPAFetchPlan implements Serializable
      * @param size The size
      * @return Updated FetchPlan
      */
-    public JPAFetchPlan setFetchSize(int size)
+    public JakartaFetchPlan setFetchSize(int size)
     {
         fp.setFetchSize(size);
         return this;
@@ -149,7 +149,7 @@ public class JPAFetchPlan implements Serializable
      * @param depth The depth
      * @return Updated FetchPlan
      */
-    public JPAFetchPlan setMaxFetchDepth(int depth)
+    public JakartaFetchPlan setMaxFetchDepth(int depth)
     {
         try
         {
@@ -157,7 +157,7 @@ public class JPAFetchPlan implements Serializable
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(jpe);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
         }
         return this;
     }
@@ -194,7 +194,7 @@ public class JPAFetchPlan implements Serializable
      * @param options Detachment options
      * @return Updated FetchPlan
      */
-    public JPAFetchPlan setDetachmentOptions(int options)
+    public JakartaFetchPlan setDetachmentOptions(int options)
     {
         try
         {
@@ -202,7 +202,7 @@ public class JPAFetchPlan implements Serializable
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(jpe);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
         }
         return this;
     }
@@ -212,7 +212,7 @@ public class JPAFetchPlan implements Serializable
      * @param rootClasses The detachment root classes
      * @return Updated FetchPlan
      */
-    public JPAFetchPlan setDetachmentRootClasses(Class... rootClasses)
+    public JakartaFetchPlan setDetachmentRootClasses(Class... rootClasses)
     {
         try
         {
@@ -220,7 +220,7 @@ public class JPAFetchPlan implements Serializable
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJPAHelper.getJPAExceptionForNucleusException(jpe);
+            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
         }
         return this;
     }
@@ -230,7 +230,7 @@ public class JPAFetchPlan implements Serializable
      * @param roots Detachment roots
      * @return Updated FetchPlan
      */
-    public JPAFetchPlan setDetachmentRoots(Collection roots)
+    public JakartaFetchPlan setDetachmentRoots(Collection roots)
     {
         fp.setDetachmentRoots(roots);
         return this;

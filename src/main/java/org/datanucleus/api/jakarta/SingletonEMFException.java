@@ -24,19 +24,19 @@ package org.datanucleus.api.jakarta;
 public class SingletonEMFException extends RuntimeException
 {
     private static final long serialVersionUID = 4134092631249438748L;
-    final JPAEntityManagerFactory emf;
+    final JakartaEntityManagerFactory emf;
 
     /**
      * @param message The message
      * @param emf The EMF that is the singleton
      */
-    public SingletonEMFException(String message, JPAEntityManagerFactory emf)
+    public SingletonEMFException(String message, JakartaEntityManagerFactory emf)
     {
         super(message);
         this.emf = emf;
     }
 
-    public JPAEntityManagerFactory getSingleton()
+    public JakartaEntityManagerFactory getSingleton()
     {
         return emf;
     }

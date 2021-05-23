@@ -27,7 +27,7 @@ import org.datanucleus.store.query.expression.InvokeExpression;
 import org.datanucleus.store.query.expression.Literal;
 
 /**
- * Implementation of JPA2 Criteria "Coalesce".
+ * Implementation of Jakarta Persistence Criteria "Coalesce".
  */
 public class CoalesceExpression<T> extends ExpressionImpl<T> implements Coalesce<T>
 {

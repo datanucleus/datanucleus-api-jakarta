@@ -73,8 +73,8 @@ import jakarta.persistence.UniqueConstraint;
 
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.PropertyNames;
-import org.datanucleus.api.jakarta.JPAEntityGraph;
-import org.datanucleus.api.jakarta.JPASubgraph;
+import org.datanucleus.api.jakarta.JakartaEntityGraph;
+import org.datanucleus.api.jakarta.JakartaSubgraph;
 import org.datanucleus.api.jakarta.annotations.Extension;
 import org.datanucleus.exceptions.NucleusException;
 import org.datanucleus.metadata.AbstractClassMetaData;
@@ -137,11 +137,11 @@ import org.datanucleus.util.NucleusLogger;
 import org.datanucleus.util.StringUtils;
 
 /**
- * Implementation for Annotation Reader for Java annotations using JPA's definition.
- * This reader also accepts certain DataNucleus extensions where the JPA annotations don't provide 
+ * Implementation for Annotation Reader for Java annotations using Jakarta Persistence definition.
+ * This reader also accepts certain DataNucleus extensions where the Jakarta Persistence annotations don't provide 
  * full definition of the data required.
  */
-public class JPAAnnotationReader extends AbstractAnnotationReader
+public class JakartaAnnotationReader extends AbstractAnnotationReader
 {
     ClassLoaderResolver clr = null;
 
@@ -149,12 +149,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
      * Constructor.
      * @param mgr MetaData manager
      */
-    public JPAAnnotationReader(MetaDataManager mgr)
+    public JakartaAnnotationReader(MetaDataManager mgr)
     {
         super(mgr);
 
-        // We support "JPA" and "DataNucleus JPA extension" annotations in this reader
-        setSupportedAnnotationPackages(new String[] {"jakarta.persistence", "org.datanucleus.api.jpa.annotations"});
+        // We support "Jakarta Persistence" and "DataNucleus Jakarta Persistence extension" annotations in this reader
+        setSupportedAnnotationPackages(new String[] {"jakarta.persistence", "org.datanucleus.api.jakarta.annotations"});
     }
 
     /**
@@ -184,7 +184,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
             // Set entity name
             String entityName = ClassUtils.getClassNameForClass(cls);
             Map<String, Object> annotationValues = persistableAnnotation.getNameValueMap();
-            if (persistableAnnotation.getName().equals(JPAAnnotationUtils.ENTITY))
+            if (persistableAnnotation.getName().equals(JakartaAnnotationUtils.ENTITY))
             {
                 String entName = (String) annotationValues.get("name");
                 if (!StringUtils.isWhitespace(entName))
@@ -234,11 +234,11 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
             Map<String, Object> annotationValues = annotation.getNameValueMap();
             String annName = annotation.getName();
 
-            if (annName.equals(JPAAnnotationUtils.ENTITY))
+            if (annName.equals(JakartaAnnotationUtils.ENTITY))
             {
                 // Entity name processed above
             }
-            else if (annName.equals(JPAAnnotationUtils.MAPPED_SUPERCLASS))
+            else if (annName.equals(JakartaAnnotationUtils.MAPPED_SUPERCLASS))
             {
                 cmd.setMappedSuperclass(true);
                 if (cmd.getPersistenceModifier() == ClassPersistenceModifier.PERSISTENCE_CAPABLE)
@@ -251,14 +251,14 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     inhmd.setStrategy(InheritanceStrategy.SUBCLASS_TABLE);
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.DATASTORE_IDENTITY))
+            else if (annName.equals(JakartaAnnotationUtils.DATASTORE_IDENTITY))
             {
                 // extension to allow datastore-identity
                 cmd.setIdentityType(IdentityType.DATASTORE);
                 IdentityMetaData idmd = cmd.newIdentityMetadata();
                 idmd.setColumnName((String)annotationValues.get("column"));
 
-                String identityStrategy = JPAAnnotationUtils.getValueGenerationStrategyString((GenerationType) annotationValues.get("generationType"));
+                String identityStrategy = JakartaAnnotationUtils.getValueGenerationStrategyString((GenerationType) annotationValues.get("generationType"));
                 idmd.setValueStrategy(ValueGenerationStrategy.getIdentityStrategy(identityStrategy));
                 String identityGenerator = (String) annotationValues.get("generator");
                 if (identityGenerator != null)
@@ -267,12 +267,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     idmd.setValueGeneratorName(identityGenerator);
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.NONDURABLE_IDENTITY))
+            else if (annName.equals(JakartaAnnotationUtils.NONDURABLE_IDENTITY))
             {
                 // extension to allow nondurable-identity
                 cmd.setIdentityType(IdentityType.NONDURABLE);
             }
-            else if (annName.equals(JPAAnnotationUtils.SURROGATE_VERSION))
+            else if (annName.equals(JakartaAnnotationUtils.SURROGATE_VERSION))
             {
                 // extension to allow surrogate version
                 VersionMetaData vermd = cmd.newVersionMetadata();
@@ -288,12 +288,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     vermd.setIndexed(IndexedValue.getIndexedValue(indexed));
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.ACCESS))
+            else if (annName.equals(JakartaAnnotationUtils.ACCESS))
             {
                 AccessType access = (AccessType) annotationValues.get("value");
                 cmd.setAccessViaField(access == AccessType.FIELD);
             }
-            else if (annName.equals(JPAAnnotationUtils.TABLE))
+            else if (annName.equals(JakartaAnnotationUtils.TABLE))
             {
                 cmd.setTable((String)annotationValues.get("name"));
                 cmd.setCatalog((String)annotationValues.get("catalog"));
@@ -351,11 +351,11 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.ID_CLASS))
+            else if (annName.equals(JakartaAnnotationUtils.ID_CLASS))
             {
                 cmd.setObjectIdClass(((Class)annotationValues.get("value")).getName());
             }
-            else if (annName.equals(JPAAnnotationUtils.INHERITANCE))
+            else if (annName.equals(JakartaAnnotationUtils.INHERITANCE))
             {
                 // Add any InheritanceMetaData
                 InheritanceMetaData inhmd = cmd.getInheritanceMetaData();
@@ -383,7 +383,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 inhmd.setStrategy(inheritanceStrategy);
                 inhmd.setStrategyForTree(inhType.toString());
             }
-            else if (annName.equals(JPAAnnotationUtils.DISCRIMINATOR_COLUMN))
+            else if (annName.equals(JakartaAnnotationUtils.DISCRIMINATOR_COLUMN))
             {
                 // Add any InheritanceMetaData with nested DiscriminatorMetaData
                 InheritanceMetaData inhmd = cmd.getInheritanceMetaData();
@@ -444,7 +444,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.DISCRIMINATOR_VALUE))
+            else if (annName.equals(JakartaAnnotationUtils.DISCRIMINATOR_VALUE))
             {
                 // Add any InheritanceMetaData with nested DiscriminatorMetaData
                 InheritanceMetaData inhmd = cmd.getInheritanceMetaData();
@@ -463,17 +463,17 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 dismd.setStrategy(DiscriminatorStrategy.VALUE_MAP);
                 dismd.setIndexed("true");
             }
-            else if (annName.equals(JPAAnnotationUtils.EMBEDDABLE))
+            else if (annName.equals(JakartaAnnotationUtils.EMBEDDABLE))
             {
                 cmd.setEmbeddedOnly(true);
                 cmd.setIdentityType(IdentityType.NONDURABLE);
             }
-            else if (annName.equals(JPAAnnotationUtils.CACHEABLE))
+            else if (annName.equals(JakartaAnnotationUtils.CACHEABLE))
             {
                 Boolean cacheableVal = (Boolean)annotationValues.get("value");
                 cmd.setCacheable(cacheableVal != null ? cacheableVal : true);
             }
-            else if (annName.equals(JPAAnnotationUtils.ENTITY_LISTENERS))
+            else if (annName.equals(JakartaAnnotationUtils.ENTITY_LISTENERS))
             {
                 Class[] entityListeners = (Class[])annotationValues.get("value");
                 if (entityListeners != null)
@@ -486,23 +486,23 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.EXCLUDE_SUPERCLASS_LISTENERS))
+            else if (annName.equals(JakartaAnnotationUtils.EXCLUDE_SUPERCLASS_LISTENERS))
             {
                 cmd.excludeSuperClassListeners();
             }
-            else if (annName.equals(JPAAnnotationUtils.EXCLUDE_DEFAULT_LISTENERS))
+            else if (annName.equals(JakartaAnnotationUtils.EXCLUDE_DEFAULT_LISTENERS))
             {
                 cmd.excludeDefaultListeners();
             }
-            else if (annName.equals(JPAAnnotationUtils.SEQUENCE_GENERATOR))
+            else if (annName.equals(JakartaAnnotationUtils.SEQUENCE_GENERATOR))
             {
                 processSequenceGeneratorAnnotation(pmd, annotationValues);
             }
-            else if (annName.equals(JPAAnnotationUtils.TABLE_GENERATOR))
+            else if (annName.equals(JakartaAnnotationUtils.TABLE_GENERATOR))
             {
                 processTableGeneratorAnnotation(pmd, annotationValues);
             }
-            else if (annName.equals(JPAAnnotationUtils.PRIMARY_KEY_JOIN_COLUMN))
+            else if (annName.equals(JakartaAnnotationUtils.PRIMARY_KEY_JOIN_COLUMN))
             {
                 // Override the PK column name when we have a persistent superclass
                 PrimaryKeyMetaData pkmd = cmd.newPrimaryKeyMetadata();
@@ -525,7 +525,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.PRIMARY_KEY_JOIN_COLUMNS))
+            else if (annName.equals(JakartaAnnotationUtils.PRIMARY_KEY_JOIN_COLUMNS))
             {
                 // Override the PK column names when we have a persistent superclass
                 PrimaryKeyJoinColumn[] values = (PrimaryKeyJoinColumn[])annotationValues.get("value");
@@ -562,7 +562,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.ATTRIBUTE_OVERRIDES))
+            else if (annName.equals(JakartaAnnotationUtils.ATTRIBUTE_OVERRIDES))
             {
                 AttributeOverride[] overrides = (AttributeOverride[])annotationValues.get("value");
                 if (overrides != null)
@@ -588,7 +588,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.ATTRIBUTE_OVERRIDE))
+            else if (annName.equals(JakartaAnnotationUtils.ATTRIBUTE_OVERRIDE))
             {
                 AbstractMemberMetaData fmd = new FieldMetaData(cmd, "#UNKNOWN." + (String)annotationValues.get("name"));
                 Column col = (Column)annotationValues.get("column");
@@ -606,7 +606,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 cmd.addMember(fmd);
                 fmd.setParent(cmd);
             }
-            else if (annName.equals(JPAAnnotationUtils.ASSOCIATION_OVERRIDES))
+            else if (annName.equals(JakartaAnnotationUtils.ASSOCIATION_OVERRIDES))
             {
                 AssociationOverride[] overrides = (AssociationOverride[])annotationValues.get("value");
                 if (overrides != null)
@@ -632,7 +632,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.ASSOCIATION_OVERRIDE))
+            else if (annName.equals(JakartaAnnotationUtils.ASSOCIATION_OVERRIDE))
             {
                 AbstractMemberMetaData fmd = new FieldMetaData(cmd, "#UNKNOWN." + (String)annotationValues.get("name"));
                 JoinColumn[] cols = (JoinColumn[])annotationValues.get("joinColumns");
@@ -651,7 +651,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 cmd.addMember(fmd);
                 fmd.setParent(cmd);
             }
-            else if (annName.equals(JPAAnnotationUtils.SQL_RESULTSET_MAPPINGS))
+            else if (annName.equals(JakartaAnnotationUtils.SQL_RESULTSET_MAPPINGS))
             {
                 SqlResultSetMapping[] mappings = (SqlResultSetMapping[])annotationValues.get("value");
                 for (SqlResultSetMapping mapping : mappings)
@@ -707,7 +707,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     qrmd.setParent(cmd);
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.SQL_RESULTSET_MAPPING))
+            else if (annName.equals(JakartaAnnotationUtils.SQL_RESULTSET_MAPPING))
             {
                 QueryResultMetaData qrmd = new QueryResultMetaData((String)annotationValues.get("name"));
                 EntityResult[] entityResults = (EntityResult[])annotationValues.get("entities");
@@ -758,7 +758,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 cmd.addQueryResultMetaData(qrmd);
                 qrmd.setParent(cmd);
             }
-            else if (annName.equals(JPAAnnotationUtils.NAMED_ENTITY_GRAPHS))
+            else if (annName.equals(JakartaAnnotationUtils.NAMED_ENTITY_GRAPHS))
             {
                 NamedEntityGraph[] graphs = (NamedEntityGraph[])annotationValues.get("value");
                 for (int j=0;j<graphs.length;j++)
@@ -769,7 +769,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         // Fallback to entity name; TODO What if more than 1 graph?
                         graphName = cmd.getEntityName();
                     }
-                    JPAEntityGraph eg = new JPAEntityGraph(mmgr, graphName, cls);
+                    JakartaEntityGraph eg = new JakartaEntityGraph(mmgr, graphName, cls);
                     boolean includeAll = graphs[j].includeAllAttributes();
                     if (includeAll)
                     {
@@ -802,7 +802,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         {
                             String subgraphName = subgraphs[k].name();
                             String attributeName = attributeNameBySubgraphName.get(subgraphName);
-                            JPASubgraph subgraph = (JPASubgraph) eg.addSubgraph(attributeName, subgraphs[k].type());
+                            JakartaSubgraph subgraph = (JakartaSubgraph) eg.addSubgraph(attributeName, subgraphs[k].type());
                             NamedAttributeNode[] subnodes = subgraphs[k].attributeNodes();
                             if (subnodes != null && subnodes.length > 0)
                             {
@@ -820,7 +820,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         {
                             for (int k=0;k<subgraphs.length;k++)
                             {
-                                JPASubgraph subgraph = (JPASubgraph) eg.addSubclassSubgraph(subgraphs[k].type());
+                                JakartaSubgraph subgraph = (JakartaSubgraph) eg.addSubclassSubgraph(subgraphs[k].type());
                                 NamedAttributeNode[] subnodes = subgraphs[k].attributeNodes();
                                 if (subnodes != null && subnodes.length > 0)
                                 {
@@ -832,17 +832,17 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             }
                         }
                     }
-                    ((JPAMetaDataManager)mmgr).registerEntityGraph(eg);
+                    ((JakartaMetaDataManager)mmgr).registerEntityGraph(eg);
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.NAMED_ENTITY_GRAPH))
+            else if (annName.equals(JakartaAnnotationUtils.NAMED_ENTITY_GRAPH))
             {
                 String graphName = (String)annotationValues.get("name");
                 if (StringUtils.isWhitespace(graphName))
                 {
                     graphName = cmd.getEntityName();
                 }
-                JPAEntityGraph eg = new JPAEntityGraph(mmgr, graphName, cls);
+                JakartaEntityGraph eg = new JakartaEntityGraph(mmgr, graphName, cls);
                 boolean includeAll = (Boolean) annotationValues.get("includeAllAttributes");
                 if (includeAll)
                 {
@@ -871,7 +871,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     {
                         String subgraphName = subgraphs[k].name();
                         String attributeName = attributeNameBySubgraphName.get(subgraphName);
-                        JPASubgraph subgraph = (JPASubgraph) eg.addSubgraph(attributeName, subgraphs[k].type());
+                        JakartaSubgraph subgraph = (JakartaSubgraph) eg.addSubgraph(attributeName, subgraphs[k].type());
                         NamedAttributeNode[] subnodes = subgraphs[k].attributeNodes();
                         if (subnodes != null && subnodes.length > 0)
                         {
@@ -887,7 +887,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 {
                     for (int k=0;k<subclassSubgraphs.length;k++)
                     {
-                        JPASubgraph subgraph = (JPASubgraph) eg.addSubclassSubgraph(subclassSubgraphs[k].type());
+                        JakartaSubgraph subgraph = (JakartaSubgraph) eg.addSubclassSubgraph(subclassSubgraphs[k].type());
                         NamedAttributeNode[] subnodes = subclassSubgraphs[k].attributeNodes();
                         if (subnodes != null && subnodes.length > 0)
                         {
@@ -898,9 +898,9 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         }
                     }
                 }
-                ((JPAMetaDataManager)mmgr).registerEntityGraph(eg);
+                ((JakartaMetaDataManager)mmgr).registerEntityGraph(eg);
             }
-            else if (annName.equals(JPAAnnotationUtils.SECONDARY_TABLES))
+            else if (annName.equals(JakartaAnnotationUtils.SECONDARY_TABLES))
             {
                 SecondaryTable[] secTableAnns = (SecondaryTable[])annotationValues.get("value");
                 if (secTableAnns != null)
@@ -974,7 +974,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.SECONDARY_TABLE))
+            else if (annName.equals(JakartaAnnotationUtils.SECONDARY_TABLE))
             {
                 JoinMetaData joinmd = new JoinMetaData();
                 joinmd.setTable((String)annotationValues.get("name"));
@@ -1051,11 +1051,11 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.EXTENSION))
+            else if (annName.equals(JakartaAnnotationUtils.EXTENSION))
             {
                 cmd.addExtension((String)annotationValues.get("key"), (String)annotationValues.get("value"));
             }
-            else if (annName.equals(JPAAnnotationUtils.EXTENSIONS))
+            else if (annName.equals(JakartaAnnotationUtils.EXTENSIONS))
             {
                 // extension
                 Extension[] values = (Extension[])annotationValues.get("value");
@@ -1073,7 +1073,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
             }
         }
 
-        NucleusLogger.METADATA.debug(Localiser.msg("044200", cls.getName(), "JPA"));
+        NucleusLogger.METADATA.debug(Localiser.msg("044200", cls.getName(), "Jakarta"));
 
         // Add fallback info for discriminator when not explicitly specified
         InheritanceMetaData inhmd = cmd.getInheritanceMetaData();
@@ -1122,7 +1122,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
             Map<String, Object> annotationValues = annotation.getNameValueMap();
             String annName = annotation.getName();
 
-            if (annName.equals(JPAAnnotationUtils.NAMED_QUERIES))
+            if (annName.equals(JakartaAnnotationUtils.NAMED_QUERIES))
             {
                 NamedQuery[] queries = (NamedQuery[])annotationValues.get("value");
                 for (int j=0;j<queries.length;j++)
@@ -1148,7 +1148,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     qmd.setParent(cmd);
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.NAMED_QUERY))
+            else if (annName.equals(JakartaAnnotationUtils.NAMED_QUERY))
             {
                 if (StringUtils.isWhitespace((String)annotationValues.get("name")))
                 {
@@ -1170,7 +1170,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 cmd.addQuery(qmd);
                 qmd.setParent(cmd);
             }
-            else if (annName.equals(JPAAnnotationUtils.NAMED_NATIVE_QUERIES))
+            else if (annName.equals(JakartaAnnotationUtils.NAMED_NATIVE_QUERIES))
             {
                 NamedNativeQuery[] queries = (NamedNativeQuery[])annotationValues.get("value");
                 for (int j=0;j<queries.length;j++)
@@ -1204,7 +1204,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     qmd.setParent(cmd);
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.NAMED_NATIVE_QUERY))
+            else if (annName.equals(JakartaAnnotationUtils.NAMED_NATIVE_QUERY))
             {
                 Class resultClass = (Class)annotationValues.get("resultClass");
                 String resultClassName = null;
@@ -1235,7 +1235,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 cmd.addQuery(qmd);
                 qmd.setParent(cmd);
             }
-            else if (annName.equals(JPAAnnotationUtils.NAMED_STOREDPROC_QUERIES))
+            else if (annName.equals(JakartaAnnotationUtils.NAMED_STOREDPROC_QUERIES))
             {
                 NamedStoredProcedureQuery[] procs = (NamedStoredProcedureQuery[])annotationValues.get("value");
                 for (int j=0;j<procs.length;j++)
@@ -1276,7 +1276,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     spqmd.setParent(cmd);
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.NAMED_STOREDPROC_QUERY))
+            else if (annName.equals(JakartaAnnotationUtils.NAMED_STOREDPROC_QUERY))
             {
                 if (StringUtils.isWhitespace((String)annotationValues.get("name")))
                 {
@@ -1385,7 +1385,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     String annName = annotation.getName();
                     Map<String, Object> annotationValues = annotation.getNameValueMap();
 
-                    if (annName.equals(JPAAnnotationUtils.JOIN_COLUMNS))
+                    if (annName.equals(JakartaAnnotationUtils.JOIN_COLUMNS))
                     {
                         // 1-1 FK columns, or 1-N FK columns, or N-1 FK columns
                         JoinColumn[] cols = (JoinColumn[])annotationValues.get("value");
@@ -1425,7 +1425,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             }
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.JOIN_COLUMN))
+                    else if (annName.equals(JakartaAnnotationUtils.JOIN_COLUMN))
                     {
                         // 1-1 FK column, or 1-N FK column, or N-1 FK column
                         columnMetaData = new ColumnMetaData[1];
@@ -1447,7 +1447,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         }
                         if (annotationValues.get("updatable") != null)
                         {
-                            // Note : "updatable" is spelt incorrectly in the JPA spec.
+                            // Note : "updatable" is spelt incorrectly in the Jakarta Persistence spec.
                             colUpdateable = annotationValues.get("updatable").toString();
                         }
                         if (annotationValues.get("unique") != null)
@@ -1475,7 +1475,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             fkmd.addColumn(columnMetaData[0]);
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.PRIMARY_KEY_JOIN_COLUMNS))
+                    else if (annName.equals(JakartaAnnotationUtils.PRIMARY_KEY_JOIN_COLUMNS))
                     {
                         // 1-1 FK columns
                         PrimaryKeyJoinColumn[] cols = (PrimaryKeyJoinColumn[])annotationValues.get("value");
@@ -1506,7 +1506,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             }
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.PRIMARY_KEY_JOIN_COLUMN))
+                    else if (annName.equals(JakartaAnnotationUtils.PRIMARY_KEY_JOIN_COLUMN))
                     {
                         // 1-1 FK column
                         columnMetaData = new ColumnMetaData[1];
@@ -1527,7 +1527,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             fkmd.addColumn(columnMetaData[0]);
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ATTRIBUTE_OVERRIDES))
+                    else if (annName.equals(JakartaAnnotationUtils.ATTRIBUTE_OVERRIDES))
                     {
                         // AttributeOverrides on a field/property so assumed to be override of embedded (basic) field
                         mmd.setEmbedded(true);
@@ -1539,7 +1539,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             processEmbeddedAttributeOverride(mmd, attributeOverride[j].name(), member.getType(), attributeOverride[j].column());
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ATTRIBUTE_OVERRIDE))
+                    else if (annName.equals(JakartaAnnotationUtils.ATTRIBUTE_OVERRIDE))
                     {
                         // AttributeOverride on a field/property so assumed to be override of embedded (basic) field
                         mmd.setEmbedded(true);
@@ -1547,15 +1547,15 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         // Embedded field override
                         processEmbeddedAttributeOverride(mmd, (String)annotationValues.get("name"), member.getType(), (Column)annotationValues.get("column"));
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ASSOCIATION_OVERRIDES))
+                    else if (annName.equals(JakartaAnnotationUtils.ASSOCIATION_OVERRIDES))
                     {
                         // TODO Not yet processed
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ASSOCIATION_OVERRIDE))
+                    else if (annName.equals(JakartaAnnotationUtils.ASSOCIATION_OVERRIDE))
                     {
                         // TODO Not yet processed
                     }
-                    else if (annName.equals(JPAAnnotationUtils.JOIN_TABLE))
+                    else if (annName.equals(JakartaAnnotationUtils.JOIN_TABLE))
                     {
                         // Process @JoinTable to generate JoinMetaData
                         String tableName = (String)annotationValues.get("name");
@@ -1685,7 +1685,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             }
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.COLLECTION_TABLE))
+                    else if (annName.equals(JakartaAnnotationUtils.COLLECTION_TABLE))
                     {
                         // Process @CollectionTable to generate JoinMetaData
                         String tableName = (String)annotationValues.get("name");
@@ -1784,7 +1784,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             }
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MAP_KEY_CLASS))
+                    else if (annName.equals(JakartaAnnotationUtils.MAP_KEY_CLASS))
                     {
                         MapMetaData mapmd = mmd.getMap();
                         if (mmd.getMap() == null)
@@ -1793,7 +1793,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         }
                         mapmd.setKeyType(((Class) annotationValues.get("value")).getName());
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MAP_KEY_COLUMN))
+                    else if (annName.equals(JakartaAnnotationUtils.MAP_KEY_COLUMN))
                     {
                         if (keymd == null)
                         {
@@ -1804,12 +1804,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         Class keyType = mmd.getMap() != null && mmd.getMap().getKeyType() != null ? clr.classForName(mmd.getMap().getKeyType()) : Object.class;
                         keymd.addColumn(newColumnMetaDataForAnnotation(keymd, keyType, annotationValues));
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MAP_KEY_JOIN_COLUMNS))
+                    else if (annName.equals(JakartaAnnotationUtils.MAP_KEY_JOIN_COLUMNS))
                     {
                         // TODO Support this
                         NucleusLogger.METADATA.debug("We do not currently support @MapKeyJoinColumns");
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MAP_KEY_JOIN_COLUMN))// TODO Also support MapKeyJoinColumns
+                    else if (annName.equals(JakartaAnnotationUtils.MAP_KEY_JOIN_COLUMN))// TODO Also support MapKeyJoinColumns
                     {
                         if (keymd == null)
                         {
@@ -1820,7 +1820,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         Class keyType = mmd.getMap() != null && mmd.getMap().getKeyType() != null ? clr.classForName(mmd.getMap().getKeyType()) : Object.class;
                         keymd.addColumn(newColumnMetaDataForAnnotation(keymd, keyType, annotationValues));
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MAP_KEY))
+                    else if (annName.equals(JakartaAnnotationUtils.MAP_KEY))
                     {
                         String keyMappedBy = (String)annotationValues.get("name");
                         if (keyMappedBy != null)
@@ -1863,7 +1863,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             }
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MAP_KEY_ENUMERATED))
+                    else if (annName.equals(JakartaAnnotationUtils.MAP_KEY_ENUMERATED))
                     {
                         EnumType type = (EnumType)annotationValues.get("value");
                         if (keymd == null)
@@ -1875,7 +1875,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         ColumnMetaData colmd = keymd.newColumnMetaData();
                         colmd.setJdbcType(type == EnumType.STRING ? "VARCHAR" : "INTEGER");
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MAP_KEY_TEMPORAL))
+                    else if (annName.equals(JakartaAnnotationUtils.MAP_KEY_TEMPORAL))
                     {
                         TemporalType type = (TemporalType)annotationValues.get("value");
                         String jdbcType = null;
@@ -1900,7 +1900,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         ColumnMetaData colmd = keymd.newColumnMetaData();
                         colmd.setJdbcType(jdbcType);
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ORDER_BY))
+                    else if (annName.equals(JakartaAnnotationUtils.ORDER_BY))
                     {
                         if (mmd.getOrderMetaData() != null)
                         {
@@ -1916,7 +1916,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             mmd.setOrderMetaData(ordmd);
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ORDER_COLUMN))
+                    else if (annName.equals(JakartaAnnotationUtils.ORDER_COLUMN))
                     {
                         if (mmd.getOrderMetaData() != null)
                         {
@@ -1940,7 +1940,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         }
                         if (annotationValues.get("updatable") != null)
                         {
-                            // Note : "updatable" is spelt incorrectly in the JPA spec.
+                            // Note : "updatable" is spelt incorrectly in the Jakarta Persistence spec.
                             colUpdateable = annotationValues.get("updatable").toString();
                         }
                         ColumnMetaData colmd = new ColumnMetaData();
@@ -1956,21 +1956,21 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                         ordermd.addColumn(colmd);
                         mmd.setOrderMetaData(ordermd);
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ONE_TO_MANY))
+                    else if (annName.equals(JakartaAnnotationUtils.ONE_TO_MANY))
                     {
                         // 1-N relation
                         oneToMany = true;
                     }
-                    else if (annName.equals(JPAAnnotationUtils.MANY_TO_MANY))
+                    else if (annName.equals(JakartaAnnotationUtils.MANY_TO_MANY))
                     {
                         // M-N relation
                         manyToMany = true;
                     }
-                    else if (annName.equals(JPAAnnotationUtils.ACCESS))
+                    else if (annName.equals(JakartaAnnotationUtils.ACCESS))
                     {
                         // TODO Support this
                     }
-                    else if (annName.equals(JPAAnnotationUtils.CONVERTS))
+                    else if (annName.equals(JakartaAnnotationUtils.CONVERTS))
                     {
                         if (isPersistenceContext()) // Don't process this when enhancing since not needed
                         {
@@ -2000,7 +2000,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                                     {
                                         // Not yet cached an instance of this converter so create one
                                         // TODO Support injectable AttributeConverters
-                                        AttributeConverter entityConv = JPATypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), converterCls);
+                                        AttributeConverter entityConv = JakartaTypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), converterCls);
 
                                         // Extract field and datastore types for this converter
                                         Class attrType = member.getType();
@@ -2016,10 +2016,10 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                                         {
                                             attrType = ClassUtils.getCollectionElementType(member.getType(), member.getGenericType());
                                         }
-                                        Class dbType = JPATypeConverterUtils.getDatabaseTypeForAttributeConverter(converterCls, attrType, null);
+                                        Class dbType = JakartaTypeConverterUtils.getDatabaseTypeForAttributeConverter(converterCls, attrType, null);
 
                                         // Register the TypeConverter under the name of the AttributeConverter class
-                                        TypeConverter conv = new JPATypeConverter(entityConv);
+                                        TypeConverter conv = new JakartaTypeConverter(entityConv);
                                         typeMgr.registerConverter(converterCls.getName(), conv, attrType, dbType, false, null);
                                     }
 
@@ -2070,11 +2070,11 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                             }
                         }
                     }
-                    else if (annName.equals(JPAAnnotationUtils.CONVERT))
+                    else if (annName.equals(JakartaAnnotationUtils.CONVERT))
                     {
                         if (isPersistenceContext()) // Don't process this when enhancing since not needed
                         {
-                            // JPA2.1 : Field needs to be converted for persistence/retrieval
+                            // Jakarta Persistence : Field needs to be converted for persistence/retrieval
                             Class converterCls = (Class)annotationValues.get("converter");
                             String convAttrName = (String)annotationValues.get("attributeName");
                             Boolean disable = (Boolean)annotationValues.get("disableConversion");
@@ -2089,7 +2089,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                                 {
                                     // Not yet cached an instance of this converter so create one
                                     // TODO Support injectable AttributeConverters
-                                    AttributeConverter entityConv = JPATypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), converterCls);
+                                    AttributeConverter entityConv = JakartaTypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), converterCls);
 
                                     // Extract attribute and datastore types for this converter
                                     attrType = member.getType();
@@ -2109,7 +2109,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                                         // Assume it is for the element
                                         attrType = ClassUtils.getCollectionElementType(member.getType(), member.getGenericType());
                                     }
-                                    dbType = JPATypeConverterUtils.getDatabaseTypeForAttributeConverter(converterCls, attrType, null);
+                                    dbType = JakartaTypeConverterUtils.getDatabaseTypeForAttributeConverter(converterCls, attrType, null);
 
                                     if (dbType == null)
                                     {
@@ -2117,12 +2117,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                                         {
                                             // Assume the converter is for the whole field
                                             attrType = member.getType();
-                                            dbType = JPATypeConverterUtils.getDatabaseTypeForAttributeConverter(converterCls, attrType, null);
+                                            dbType = JakartaTypeConverterUtils.getDatabaseTypeForAttributeConverter(converterCls, attrType, null);
                                         }
                                     }
 
                                     // Register the TypeConverter under the name of the AttributeConverter class
-                                    conv = new JPATypeConverter(entityConv);
+                                    conv = new JakartaTypeConverter(entityConv);
                                     typeMgr.registerConverter(converterCls.getName(), conv, attrType, dbType, false, null);
                                 }
                                 else
@@ -2180,7 +2180,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
 
-                // Post-processing to apply JPA rules for field relationships etc
+                // Post-processing to apply Jakarta Persistence rules for field relationships etc
                 if (oneToMany && mmd.getJoinMetaData() == null && mmd.getMappedBy() == null)
                 {
                     if (columnMetaData != null)
@@ -2189,7 +2189,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                     else
                     {
-                        // 1-N with no join specified and unidirectional so JPA says it has to be via join (no 1-N uni FKs)
+                        // 1-N with no join specified and unidirectional so Jakarta Persistence says it has to be via join (no 1-N uni FKs)
                         joinmd = new JoinMetaData();
                         mmd.setJoinMetaData(joinmd);
                     }
@@ -2226,7 +2226,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     boolean elementCollection = false;
                     for (AnnotationObject annotation : annotations)
                     {
-                        if (annotation.getName().equals(JPAAnnotationUtils.ELEMENT_COLLECTION) && mmd.getTypeConverterName() == null)
+                        if (annotation.getName().equals(JakartaAnnotationUtils.ELEMENT_COLLECTION) && mmd.getTypeConverterName() == null)
                         {
                             // Not being converted, so treat as column info for the element (of collection) or value (of map)
                             elementCollection = true;
@@ -2480,7 +2480,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
             }
 
             embmd.addMember(ammd);
-            ammd.addColumn(JPAAnnotationUtils.getColumnMetaDataForColumnAnnotation(ammd, overriddenMember, column));
+            ammd.addColumn(JakartaAnnotationUtils.getColumnMetaDataForColumnAnnotation(ammd, overriddenMember, column));
         }
     }
 
@@ -2538,12 +2538,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
             String annName = annotation.getName();
             Map<String, Object> annotationValues = annotation.getNameValueMap();
 
-            if (annName.equals(JPAAnnotationUtils.EMBEDDED))
+            if (annName.equals(JakartaAnnotationUtils.EMBEDDED))
             {
                 mmd.setEmbedded(true);
                 setCascadesOnMember(mmd, new CascadeType[]{CascadeType.ALL});
             }
-            else if (annName.equals(JPAAnnotationUtils.ID))
+            else if (annName.equals(JakartaAnnotationUtils.ID))
             {
                 mmd.setPrimaryKey(true);
 
@@ -2552,18 +2552,18 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     modifier = FieldPersistenceModifier.PERSISTENT;
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.TRANSIENT))
+            else if (annName.equals(JakartaAnnotationUtils.TRANSIENT))
             {
                 modifier = FieldPersistenceModifier.NONE;
             }
-            else if (annName.equals(JPAAnnotationUtils.ENUMERATED))
+            else if (annName.equals(JakartaAnnotationUtils.ENUMERATED))
             {
                 if (modifier == null)
                 {
                     modifier = FieldPersistenceModifier.PERSISTENT;
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.VERSION))
+            else if (annName.equals(JakartaAnnotationUtils.VERSION))
             {
                 // Tag this field as the version field
                 VersionMetaData vermd = cmd.newVersionMetadata();
@@ -2574,7 +2574,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     modifier = FieldPersistenceModifier.PERSISTENT;
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.EMBEDDED_ID))
+            else if (annName.equals(JakartaAnnotationUtils.EMBEDDED_ID))
             {
                 mmd.setPrimaryKey(true);
                 mmd.setEmbedded(true);
@@ -2583,7 +2583,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     modifier = FieldPersistenceModifier.PERSISTENT;
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.BASIC))
+            else if (annName.equals(JakartaAnnotationUtils.BASIC))
             {
                 FetchType fetch = (FetchType)annotationValues.get("fetch");
                 mmd.setDefaultFetchGroup(fetch == FetchType.LAZY ? Boolean.FALSE : Boolean.TRUE);
@@ -2596,7 +2596,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     mmd.setNullValue(NullValue.getNullValue(nullValue));
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.ONE_TO_ONE))
+            else if (annName.equals(JakartaAnnotationUtils.ONE_TO_ONE))
             {
                 // 1-1 relation
                 modifier = FieldPersistenceModifier.PERSISTENT;
@@ -2615,7 +2615,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
                 targetEntity = (Class)annotationValues.get("targetEntity");
             }
-            else if (annName.equals(JPAAnnotationUtils.ONE_TO_MANY))
+            else if (annName.equals(JakartaAnnotationUtils.ONE_TO_MANY))
             {
                 // 1-N relation
                 modifier = FieldPersistenceModifier.PERSISTENT;
@@ -2627,7 +2627,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
                 targetEntity = (Class)annotationValues.get("targetEntity");
             }
-            else if (annName.equals(JPAAnnotationUtils.MANY_TO_MANY))
+            else if (annName.equals(JakartaAnnotationUtils.MANY_TO_MANY))
             {
                 // M-N relation
                 modifier = FieldPersistenceModifier.PERSISTENT;
@@ -2638,7 +2638,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
                 targetEntity = (Class)annotationValues.get("targetEntity");
             }
-            else if (annName.equals(JPAAnnotationUtils.MANY_TO_ONE))
+            else if (annName.equals(JakartaAnnotationUtils.MANY_TO_ONE))
             {
                 // N-1 relation
                 modifier = FieldPersistenceModifier.PERSISTENT;
@@ -2650,11 +2650,11 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
                 targetEntity = (Class)annotationValues.get("targetEntity");
             }
-            else if (annName.equals(JPAAnnotationUtils.MAPS_ID))
+            else if (annName.equals(JakartaAnnotationUtils.MAPS_ID))
             {
                 mmd.setMapsIdAttribute((String)annotationValues.get("value"));
             }
-            else if (annName.equals(JPAAnnotationUtils.ELEMENT_COLLECTION))
+            else if (annName.equals(JakartaAnnotationUtils.ELEMENT_COLLECTION))
             {
                 // 1-N NonPC relation
                 modifier = FieldPersistenceModifier.PERSISTENT;
@@ -2669,10 +2669,10 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
                 targetEntity = (Class)annotationValues.get("targetClass");
             }
-            else if (annName.equals(JPAAnnotationUtils.GENERATED_VALUE))
+            else if (annName.equals(JakartaAnnotationUtils.GENERATED_VALUE))
             {
                 GenerationType type = (GenerationType) annotationValues.get("strategy");
-                String valueStrategy = JPAAnnotationUtils.getValueGenerationStrategyString(type);
+                String valueStrategy = JakartaAnnotationUtils.getValueGenerationStrategyString(type);
                 String valueGenerator = (String) annotationValues.get("generator");
                 if (valueStrategy != null)
                 {
@@ -2684,16 +2684,16 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.LOB))
+            else if (annName.equals(JakartaAnnotationUtils.LOB))
             {
                 mmd.setStoreInLob();
                 modifier = FieldPersistenceModifier.PERSISTENT;
             }
-            else if (annName.equals(JPAAnnotationUtils.EXTENSION))
+            else if (annName.equals(JakartaAnnotationUtils.EXTENSION))
             {
                 mmd.addExtension((String)annotationValues.get("key"), (String)annotationValues.get("value"));
             }
-            else if (annName.equals(JPAAnnotationUtils.EXTENSIONS))
+            else if (annName.equals(JakartaAnnotationUtils.EXTENSIONS))
             {
                 Extension[] values = (Extension[])annotationValues.get("value");
                 if (values != null && values.length > 0)
@@ -2704,12 +2704,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
-            else if (annName.equals(JPAAnnotationUtils.SEQUENCE_GENERATOR))
+            else if (annName.equals(JakartaAnnotationUtils.SEQUENCE_GENERATOR))
             {
                 // Sequence generator, so store it against the package that we are under
                 processSequenceGeneratorAnnotation(cmd.getPackageMetaData(), annotationValues);
             }
-            else if (annName.equals(JPAAnnotationUtils.TABLE_GENERATOR))
+            else if (annName.equals(JakartaAnnotationUtils.TABLE_GENERATOR))
             {
                 // Table generator, so store it against the package that we are under
                 processTableGeneratorAnnotation(cmd.getPackageMetaData(), annotationValues);
@@ -2865,7 +2865,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
         columnName = (String)annotationValues.get("name");
 
-        // Take values of length, precision, scale when not set to JPA annotation default
+        // Take values of length, precision, scale when not set to Jakarta Persistence annotation default
         if (annotationValues.get("length") != null)
         {
             int lengthValue = ((Integer)annotationValues.get("length")).intValue();
@@ -2893,13 +2893,13 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
         if (fieldType == char.class || fieldType == Character.class)
         {
-            // Char field needs to have length of 1 (JPA TCK)
+            // Char field needs to have length of 1 (Jakarta Persistence TCK)
             jdbcType = "CHAR";
             typeLength = "1";
         }
         else if (fieldType == boolean.class || fieldType == Boolean.class)
         {
-            if (mmgr.getNucleusContext().getConfiguration().getBooleanProperty("datanucleus.jpa.legacy.mapBooleanToSmallint", false))
+            if (mmgr.getNucleusContext().getConfiguration().getBooleanProperty("datanucleus.jakarta.legacy.mapBooleanToSmallint", false))
             {
                 // NOTE : This was present for up to DN 4.0 but now only available via property since not found a reason for it
                 String memberName = "unknown";
@@ -2923,7 +2923,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
         }
         if (annotationValues.get("updatable") != null)
         {
-            // Note : "updatable" is spelt incorrectly in the JPA spec.
+            // Note : "updatable" is spelt incorrectly in the Jakarta Persistence spec.
             updateable = annotationValues.get("updatable").toString();
         }
         if (annotationValues.get("unique") != null)
@@ -3098,11 +3098,11 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
         {
             String annName = annotations[i].getName();
             Map<String, Object> annotationValues = annotations[i].getNameValueMap();
-            if (annName.equals(JPAAnnotationUtils.COLUMN))
+            if (annName.equals(JakartaAnnotationUtils.COLUMN))
             {
                 columnName = (String)annotationValues.get("name");
 
-                // Take values of length, precision, scale when not set to JPA annotation default
+                // Take values of length, precision, scale when not set to Jakarta Persistence annotation default
                 if (annotationValues.get("length") != null)
                 {
                     int lengthValue = ((Integer)annotationValues.get("length")).intValue();
@@ -3130,13 +3130,13 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
 
                 if (fieldType == char.class || fieldType == Character.class)
                 {
-                    // Char field needs to have length of 1 (JPA TCK)
+                    // Char field needs to have length of 1 (Jakarta Persistence TCK)
                     jdbcType = "CHAR";
                     typeLength = "1";
                 }
                 else if (fieldType == boolean.class || fieldType == Boolean.class)
                 {
-                    if (mmgr.getNucleusContext().getConfiguration().getBooleanProperty("datanucleus.jpa.legacy.mapBooleanToSmallint", false))
+                    if (mmgr.getNucleusContext().getConfiguration().getBooleanProperty("datanucleus.jakarta.legacy.mapBooleanToSmallint", false))
                     {
                         // NOTE : This was present for up to DN 4.0 but now only available via property since not found a reason for it
                         String memberName = mmd.getFullFieldName();
@@ -3156,7 +3156,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                 }
                 if (annotationValues.get("updatable") != null)
                 {
-                    // Note : "updatable" is spelt incorrectly in the JPA spec.
+                    // Note : "updatable" is spelt incorrectly in the Jakarta Persistence spec.
                     updateable = annotationValues.get("updatable").toString();
                 }
                 if (annotationValues.get("unique") != null)
@@ -3179,12 +3179,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     columnDdl = tmp;
                 }
             }
-            else if (Enum.class.isAssignableFrom(fieldType) && annName.equals(JPAAnnotationUtils.ENUMERATED))
+            else if (Enum.class.isAssignableFrom(fieldType) && annName.equals(JakartaAnnotationUtils.ENUMERATED))
             {
                 EnumType type = (EnumType)annotationValues.get("value");
                 jdbcType = (type == EnumType.STRING ? "VARCHAR" : "INTEGER");
             }
-            else if (JPAAnnotationUtils.isTemporalType(fieldType) && annName.equals(JPAAnnotationUtils.TEMPORAL))
+            else if (JakartaAnnotationUtils.isTemporalType(fieldType) && annName.equals(JakartaAnnotationUtils.TEMPORAL))
             {
                 TemporalType type = (TemporalType)annotationValues.get("value");
                 if (type == TemporalType.DATE)
@@ -3292,12 +3292,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
         Integer initialValue = (Integer)annotationValues.get("initialValue");
         if (initialValue == null)
         {
-            initialValue = Integer.valueOf(1); // JPA default
+            initialValue = Integer.valueOf(1); // Jakarta Persistence default
         }
         Integer allocationSize = (Integer)annotationValues.get("allocationSize");
         if (allocationSize == null)
         {
-            allocationSize = Integer.valueOf(50); // JPA default
+            allocationSize = Integer.valueOf(50); // Jakarta Persistence default
         }
         SequenceMetaData seqmd = pmd.newSequenceMetadata(name, null);
         seqmd.setDatastoreSequence(seqName);
@@ -3344,15 +3344,15 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
     {
         for (AnnotationObject annotation : annotations)
         {
-            if (JPAAnnotationUtils.ENTITY.equals(annotation.getName()))
+            if (JakartaAnnotationUtils.ENTITY.equals(annotation.getName()))
             {
                 return annotation;
             }
-            else if (JPAAnnotationUtils.EMBEDDABLE.equals(annotation.getName()))
+            else if (JakartaAnnotationUtils.EMBEDDABLE.equals(annotation.getName()))
             {
                 return annotation;
             }
-            else if (JPAAnnotationUtils.MAPPED_SUPERCLASS.equals(annotation.getName()))
+            else if (JakartaAnnotationUtils.MAPPED_SUPERCLASS.equals(annotation.getName()))
             {
                 return annotation;
             }
@@ -3369,7 +3369,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
     {
         for (AnnotationObject annotation : annotations)
         {
-            if (JPAAnnotationUtils.PERSISTENCE_AWARE.equals(annotation.getName()))
+            if (JakartaAnnotationUtils.PERSISTENCE_AWARE.equals(annotation.getName()))
             {
                 return true;
             }
@@ -3387,12 +3387,12 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
         for (AnnotationObject annotation : annotations)
         {
             String annClassName = annotation.getName();
-            if (annClassName.equals(JPAAnnotationUtils.NAMED_QUERIES) ||
-                annClassName.equals(JPAAnnotationUtils.NAMED_QUERY) || 
-                annClassName.equals(JPAAnnotationUtils.NAMED_NATIVE_QUERIES) ||
-                annClassName.equals(JPAAnnotationUtils.NAMED_NATIVE_QUERY) ||
-                annClassName.equals(JPAAnnotationUtils.NAMED_STOREDPROC_QUERIES) ||
-                annClassName.equals(JPAAnnotationUtils.NAMED_STOREDPROC_QUERY))
+            if (annClassName.equals(JakartaAnnotationUtils.NAMED_QUERIES) ||
+                annClassName.equals(JakartaAnnotationUtils.NAMED_QUERY) || 
+                annClassName.equals(JakartaAnnotationUtils.NAMED_NATIVE_QUERIES) ||
+                annClassName.equals(JakartaAnnotationUtils.NAMED_NATIVE_QUERY) ||
+                annClassName.equals(JakartaAnnotationUtils.NAMED_STOREDPROC_QUERIES) ||
+                annClassName.equals(JakartaAnnotationUtils.NAMED_STOREDPROC_QUERY))
             {
                 return true;
             }
@@ -3411,14 +3411,14 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
         for (AnnotationObject annotation : annotations)
         {
             String annClassName = annotation.getName();
-            if (annClassName.equals(JPAAnnotationUtils.CONVERTER))
+            if (annClassName.equals(JakartaAnnotationUtils.CONVERTER))
             {
                 Map<String, Object> annotationValues = annotation.getNameValueMap();
                 boolean autoApply = (Boolean) annotationValues.get("autoApply");
 
                 TypeManager typeMgr = mmgr.getNucleusContext().getTypeManager();
-                Class attrType = JPATypeConverterUtils.getAttributeTypeForAttributeConverter(cls, null);
-                Class dbType = JPATypeConverterUtils.getDatabaseTypeForAttributeConverter(cls, attrType, null);
+                Class attrType = JakartaTypeConverterUtils.getAttributeTypeForAttributeConverter(cls, null);
+                Class dbType = JakartaTypeConverterUtils.getDatabaseTypeForAttributeConverter(cls, attrType, null);
                 if (attrType != null)
                 {
                     // Register the TypeConverter under the name of the AttributeConverter class
@@ -3426,7 +3426,7 @@ public class JPAAnnotationReader extends AbstractAnnotationReader
                     if (typeConv == null)
                     {
                         // Not yet cached an instance of this converter so create one
-                        typeConv = new JPATypeConverter(JPATypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), cls));
+                        typeConv = new JakartaTypeConverter(JakartaTypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), cls));
                         typeMgr.registerConverter(cls.getName(), typeConv, attrType, dbType, autoApply, attrType.getName());
                     }
                     else

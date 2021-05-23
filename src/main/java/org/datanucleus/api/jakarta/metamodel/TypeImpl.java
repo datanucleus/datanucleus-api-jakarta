@@ -20,7 +20,7 @@ package org.datanucleus.api.jakarta.metamodel;
 import jakarta.persistence.metamodel.Type;
 
 /**
- * Implementation of JPA Metamodel "Type".
+ * Implementation of Jakarta Persistence Metamodel "Type".
  */
 public class TypeImpl<X> implements Type<X>
 {

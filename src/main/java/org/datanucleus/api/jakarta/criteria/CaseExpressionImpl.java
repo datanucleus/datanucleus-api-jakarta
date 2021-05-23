@@ -25,7 +25,7 @@ import org.datanucleus.store.query.expression.Literal;
 import jakarta.persistence.criteria.Expression;
 
 /**
- * Implementation of JPA Case expression.
+ * Implementation of Jakarta Persistence Case expression.
  * @param <R> The type of the result
  */
 public class CaseExpressionImpl<R> extends ExpressionImpl<R> implements Case<R>

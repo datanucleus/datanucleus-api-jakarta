@@ -20,7 +20,7 @@ package org.datanucleus.api.jakarta.criteria;
 import jakarta.persistence.criteria.ParameterExpression;
 
 /**
- * Implementation of JPA Criteria "ParameterExpression".
+ * Implementation of Jakarta Persistence Criteria "ParameterExpression".
  */
 public class ParameterExpressionImpl<T> extends ExpressionImpl<T> implements ParameterExpression<T>
 {

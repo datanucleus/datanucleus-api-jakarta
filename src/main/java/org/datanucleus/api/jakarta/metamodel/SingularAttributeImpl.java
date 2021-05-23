@@ -25,7 +25,7 @@ import org.datanucleus.metadata.RelationType;
 import org.datanucleus.metadata.VersionMetaData;
 
 /**
- * Implementation of JPA Metamodel "SingularAttribute".
+ * Implementation of Jakarta Persistence Metamodel "SingularAttribute".
  *
  * @param <X> The type containing the represented attribute
  * @param <T> The type of the represented attribute
@@ -98,7 +98,7 @@ public class SingularAttributeImpl<X, T> extends AttributeImpl<X, T> implements 
         RelationType relationType = mmd.getRelationType(owner.model.clr);
         if (mmd.getEmbeddedMetaData() != null || (mmd.isEmbedded() && RelationType.isRelationSingleValued(relationType)))
         {
-            // JPA spec says nothing about whether embeddable should be ENTITY_TYPE or SINGULAR_ATTRIBUTE or what.
+            // Jakarta Persistence spec says nothing about whether embeddable should be ENTITY_TYPE or SINGULAR_ATTRIBUTE or what.
             return BindableType.SINGULAR_ATTRIBUTE;
         }
 

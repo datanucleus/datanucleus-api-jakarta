@@ -31,7 +31,7 @@ import jakarta.persistence.metamodel.MapAttribute;
 import org.datanucleus.api.jakarta.metamodel.PluralAttributeImpl;
 
 /**
- * Implementation of JPA2 Criteria "MapJoin".
+ * Implementation of Jakarta Persistence Criteria "MapJoin".
  * 
  * @param <Z> The source type of the join
  * @param <K> The type of the target Map key

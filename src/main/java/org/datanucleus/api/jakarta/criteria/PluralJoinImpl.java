@@ -26,7 +26,7 @@ import jakarta.persistence.metamodel.PluralAttribute;
 import org.datanucleus.api.jakarta.metamodel.PluralAttributeImpl;
 
 /**
- * Implementation of JPA2 Criteria "PluralJoin".
+ * Implementation of Jakarta Persistence Criteria "PluralJoin".
  * 
  * @param <Z> The source type
  * @param <C> The collection type

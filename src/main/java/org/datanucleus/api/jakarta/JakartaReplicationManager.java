@@ -39,7 +39,7 @@ import org.datanucleus.util.StringUtils;
  * Allow replication of specified objects, or all objects of particular types.
  * Supports a series of properties defining the replication behaviour.
  */
-public class JPAReplicationManager
+public class JakartaReplicationManager
 {
     /** EMF for the source datastore. */
     final EntityManagerFactory emfSource;
@@ -55,7 +55,7 @@ public class JPAReplicationManager
      * @param emf1 EMF source
      * @param emf2 EMF target
      */
-    public JPAReplicationManager(EntityManagerFactory emf1, EntityManagerFactory emf2)
+    public JakartaReplicationManager(EntityManagerFactory emf1, EntityManagerFactory emf2)
     {
         if (emf1 == null || !emf1.isOpen())
         {
@@ -147,7 +147,7 @@ public class JPAReplicationManager
                 objects.addAll(results);
             }
 
-            tx1.commit(); // Objects detached at commit with JPA
+            tx1.commit(); // Objects detached at commit with Jakarta Persistence
         }
         finally
         {
@@ -199,7 +199,7 @@ public class JPAReplicationManager
                 objects.addAll(results);
             }
 
-            tx1.commit(); // Objects detached at commit with JPA
+            tx1.commit(); // Objects detached at commit with Jakarta Persistence
         }
         finally
         {
@@ -265,7 +265,7 @@ public class JPAReplicationManager
                 }
             }
 
-            tx1.commit(); // Objects detached at commit with JPA
+            tx1.commit(); // Objects detached at commit
         }
         finally
         {

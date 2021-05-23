@@ -17,13 +17,13 @@ Contributors:
 **********************************************************************/
 package org.datanucleus.api.jakarta.metadata;
 
-import org.datanucleus.api.jakarta.JPAEntityGraph;
+import org.datanucleus.api.jakarta.JakartaEntityGraph;
 
 /**
  * Interface to implement if you want to be notified of the registration (by metadata processing) of
  * a new EntityGraph.
  */
-public interface JPAEntityGraphRegistrationListener
+public interface JakartaEntityGraphRegistrationListener
 {
-    void entityGraphRegistered(JPAEntityGraph eg);
+    void entityGraphRegistered(JakartaEntityGraph eg);
 }
