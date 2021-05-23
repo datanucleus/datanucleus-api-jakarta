@@ -1,10 +1,13 @@
 # datanucleus-api-jakarta
-Support for DataNucleus persistence using the Jakarta Persistence API.  
-JPA "persistence provider" is [org.datanucleus.api.jakarta.PersistenceProviderImpl](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/PersistenceProviderImpl.java).  
-JPA EntityManagerFactory is implemented by [org.datanucleus.api.jakarta.JakartaEntityManagerFactory](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaEntityManagerFactory.java).  
-JPA EntityManager is implemented by [org.datanucleus.api.jakarta.JakartaEntityManager](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaEntityManager.java).  
-JPA Query is implemented by [org.datanucleus.api.jakarta.JakartaQuery](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaQuery.java).  
-JPA EntityTransaction is implemented by [org.datanucleus.api.jakarta.JakartaEntityTransaction](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaEntityTransaction.java).  
+
+Support for DataNucleus persistence using the Jakarta Persistence API. 
+The Jakarta Persistence API is simply a repackaged JPA, using package "jakarta.persistence" rather than "javax.persistence" for all classes, interfaces, annotations etc.
+
+Jakarta "persistence provider" is [org.datanucleus.api.jakarta.PersistenceProviderImpl](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/PersistenceProviderImpl.java).  
+Jakarta EntityManagerFactory is implemented by [org.datanucleus.api.jakarta.JakartaEntityManagerFactory](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaEntityManagerFactory.java).  
+Jakarta EntityManager is implemented by [org.datanucleus.api.jakarta.JakartaEntityManager](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaEntityManager.java).  
+Jakarta Query is implemented by [org.datanucleus.api.jakarta.JakartaQuery](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaQuery.java).  
+Jakarta EntityTransaction is implemented by [org.datanucleus.api.jakarta.JakartaEntityTransaction](https://github.com/datanucleus/datanucleus-api-jakarta/blob/master/src/main/java/org/datanucleus/api/jakarta/JakartaEntityTransaction.java).  
 
 This is built using Maven, by executing `mvn clean install` which installs the built jar in your local Maven repository.
 
