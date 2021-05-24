@@ -17,7 +17,7 @@
     </description>
 
     <properties>
-        <dn.jakarta.persistence.version>3.0.0-SNAPSHOT</dn.jakarta.persistence.version>
+        <dn.jakarta.persistence.version>3.0.0</dn.jakarta.persistence.version>
         <dn.core.version>5.9</dn.core.version>
     </properties>
 
