@@ -71,7 +71,7 @@ public class JakartaEntityTransaction implements EntityTransaction
         }
         catch (NucleusException ne)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne);
         }
     }
 
@@ -104,7 +104,7 @@ public class JakartaEntityTransaction implements EntityTransaction
             Throwable pe = null;
             if (cause instanceof NucleusException)
             {
-                pe = NucleusJakartaHelper.getJakartaExceptionForNucleusException((NucleusException)cause);
+                pe = DataNucleusHelperJakarta.getJakartaExceptionForNucleusException((NucleusException)cause);
             }
             else
             {
@@ -114,7 +114,7 @@ public class JakartaEntityTransaction implements EntityTransaction
         }
         catch (NucleusException ne)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne);
         }
     }
 
@@ -133,7 +133,7 @@ public class JakartaEntityTransaction implements EntityTransaction
         }
         catch (NucleusException ne)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne);
         }
     }
 

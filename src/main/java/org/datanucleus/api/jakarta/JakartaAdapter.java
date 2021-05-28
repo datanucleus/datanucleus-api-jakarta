@@ -411,6 +411,6 @@ public class JakartaAdapter implements ApiAdapter
      */
     public RuntimeException getApiExceptionForNucleusException(NucleusException ne)
     {
-        return NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
+        return DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne);
     }
 }

@@ -157,7 +157,7 @@ public class JakartaFetchPlan implements Serializable
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
         }
         return this;
     }
@@ -202,7 +202,7 @@ public class JakartaFetchPlan implements Serializable
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
         }
         return this;
     }
@@ -220,7 +220,7 @@ public class JakartaFetchPlan implements Serializable
         }
         catch (NucleusException jpe)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(jpe);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
         }
         return this;
     }

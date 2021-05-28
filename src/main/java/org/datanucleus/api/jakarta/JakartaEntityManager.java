@@ -192,7 +192,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne);
         }
 
         fetchPlan = null;
@@ -515,7 +515,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusObjectNotFoundException ne)
         {
-            throw NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne);
+            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne);
         }
     }
 
@@ -622,7 +622,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -650,7 +650,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -692,7 +692,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
         return null;
     }
@@ -720,7 +720,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
         return null;
     }
@@ -760,7 +760,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -777,7 +777,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -843,7 +843,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -887,7 +887,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -915,7 +915,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
@@ -935,7 +935,7 @@ public class JakartaEntityManager implements EntityManager
         }
         catch (NucleusException ne)
         {
-            throwException(NucleusJakartaHelper.getJakartaExceptionForNucleusException(ne));
+            throwException(DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(ne));
         }
     }
 
