@@ -164,7 +164,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
         }
         catch (NucleusException jpe)
         {
-            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
+            throw JakartaAdapter.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
@@ -217,7 +217,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
         }
         catch (NucleusException jpe)
         {
-            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
+            throw JakartaAdapter.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
@@ -275,7 +275,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
         }
         catch (NucleusException jpe)
         {
-            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
+            throw JakartaAdapter.getJakartaExceptionForNucleusException(jpe);
         }
     }
 

@@ -21,25 +21,15 @@ import java.lang.reflect.Field;
 
 import org.datanucleus.ExecutionContext;
 import org.datanucleus.enhancement.Persistable;
-import org.datanucleus.exceptions.NucleusCanRetryException;
-import org.datanucleus.exceptions.NucleusDataStoreException;
 import org.datanucleus.exceptions.NucleusException;
-import org.datanucleus.exceptions.NucleusObjectNotFoundException;
-import org.datanucleus.exceptions.NucleusOptimisticException;
-import org.datanucleus.exceptions.NucleusUserException;
-import org.datanucleus.exceptions.ReachableObjectNotCascadedException;
 import org.datanucleus.identity.DatastoreId;
 import org.datanucleus.state.ObjectProvider;
-import org.datanucleus.store.query.QueryTimeoutException;
 import org.datanucleus.util.ClassUtils;
 
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.EntityNotFoundException;
-import jakarta.persistence.OptimisticLockException;
-import jakarta.persistence.PersistenceException;
 
 /**
- * Helper class for accessing DataNucleus internals from a JDO environment.
+ * Helper class for accessing DataNucleus internals from a Jakarta environment.
  * This is a supplement to the wrap() methods on EntityManagerFactory and EntityManager.
  */
 public class DataNucleusHelperJakarta
@@ -287,75 +277,5 @@ public class DataNucleusHelperJakarta
         ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
         ObjectProvider op = ec.findObjectProvider(pc);
         return op == null ? null : op.getLoadedFieldNames();
-    }
-
-    /**
-     * Convenience method to convert a Nucleus exception into a Jakarta Persistence exception.
-     * If the incoming exception has a "failed object" then create the new exception with
-     * a failed object. Otherwise if the incoming exception has nested exceptions then
-     * create this exception with those nested exceptions. Else create this exception with
-     * the incoming exception as its nested exception.
-     * @param ne NucleusException
-     * @return The JakartaException
-     */
-    public static PersistenceException getJakartaExceptionForNucleusException(NucleusException ne)
-    {
-        if (ne instanceof ReachableObjectNotCascadedException)
-        {
-            // Reachable object not persistent but field doesn't allow cascade-persist
-            throw new IllegalStateException(ne.getMessage(), ne);
-        }
-        else if (ne instanceof QueryTimeoutException)
-        {
-            return new jakarta.persistence.QueryTimeoutException(ne.getMessage(), ne);
-        }
-        else if (ne instanceof NucleusDataStoreException)
-        {
-            // Jakarta Persistence doesn't have "datastore" exceptions so just give a PersistenceException
-            if (ne.getNestedExceptions() != null)
-            {
-                return new PersistenceException(ne.getMessage(), ne.getCause());
-            }
-            return new PersistenceException(ne.getMessage(), ne);
-        }
-        else if (ne instanceof NucleusCanRetryException)
-        {
-            // Jakarta Persistence doesn't have "retry" exceptions so just give a PersistenceException
-            if (ne.getNestedExceptions() != null)
-            {
-                return new PersistenceException(ne.getMessage(), ne.getCause());
-            }
-            return new PersistenceException(ne.getMessage(), ne);
-        }
-        else if (ne instanceof NucleusObjectNotFoundException)
-        {
-            return new EntityNotFoundException(ne.getMessage());
-        }
-        else if (ne instanceof NucleusUserException)
-        {
-            // Jakarta Persistence doesnt have "user" exceptions so just give a PersistenceException
-            if (ne.getNestedExceptions() != null)
-            {
-                return new PersistenceException(ne.getMessage(), ne.getCause());
-            }
-            return new PersistenceException(ne.getMessage(), ne);
-        }
-        else if (ne instanceof NucleusOptimisticException)
-        {
-            if (ne.getNestedExceptions() != null)
-            {
-                return new OptimisticLockException(ne.getMessage(), ne.getCause());
-            }
-            return new OptimisticLockException(ne.getMessage(), ne);
-        }
-        else
-        {
-            // Jakarta Persistence doesnt have "internal" exceptions so just give a PersistenceException
-            if (ne.getNestedExceptions() != null)
-            {
-                return new PersistenceException(ne.getMessage(), ne.getCause());
-            }
-            return new PersistenceException(ne.getMessage(), ne);
-        }
     }
 }

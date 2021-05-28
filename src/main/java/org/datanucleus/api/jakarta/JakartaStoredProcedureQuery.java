@@ -264,7 +264,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
         }
         catch (NucleusException jpe)
         {
-            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
+            throw JakartaAdapter.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
@@ -302,7 +302,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
         }
         catch (NucleusException jpe)
         {
-            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
+            throw JakartaAdapter.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
@@ -342,7 +342,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
         }
         catch (NucleusException jpe)
         {
-            throw DataNucleusHelperJakarta.getJakartaExceptionForNucleusException(jpe);
+            throw JakartaAdapter.getJakartaExceptionForNucleusException(jpe);
         }
     }
 
