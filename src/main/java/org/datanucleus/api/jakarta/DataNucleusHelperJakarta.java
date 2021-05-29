@@ -87,7 +87,7 @@ public class DataNucleusHelperJakarta
     {
         if (obj instanceof Persistable)
         {
-            return (JakartaEntityManager) ((Persistable)obj).dnGetExecutionContext().getOwner();
+            return (EntityManager) ((Persistable)obj).dnGetExecutionContext().getOwner();
         }
         return null;
     }
@@ -226,8 +226,8 @@ public class DataNucleusHelperJakarta
         {
             return null;
         }
-        Persistable pc = (Persistable)obj;
 
+        Persistable pc = (Persistable)obj;
         if (isDetached(pc))
         {
             ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
@@ -242,7 +242,7 @@ public class DataNucleusHelperJakarta
             return dirtyFieldNames;
         }
 
-        ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
+        ExecutionContext ec = (ExecutionContext) pc.dnGetExecutionContext();
         ObjectProvider op = ec.findObjectProvider(pc);
         return op == null ? null : op.getDirtyFieldNames();
     }
@@ -259,8 +259,8 @@ public class DataNucleusHelperJakarta
         {
             return null;
         }
-        Persistable pc = (Persistable)obj;
 
+        Persistable pc = (Persistable)obj;
         if (isDetached(pc))
         {
             // Temporarily attach a StateManager to access the detached field information
@@ -274,7 +274,7 @@ public class DataNucleusHelperJakarta
             return loadedFieldNames;
         }
 
-        ExecutionContext ec = ((JakartaEntityManager)em).getExecutionContext();
+        ExecutionContext ec = (ExecutionContext) pc.dnGetExecutionContext();
         ObjectProvider op = ec.findObjectProvider(pc);
         return op == null ? null : op.getLoadedFieldNames();
     }
@@ -331,8 +331,8 @@ public class DataNucleusHelperJakarta
         {
             return null;
         }
-        Persistable pc = (Persistable)obj;
 
+        Persistable pc = (Persistable)obj;
         if (pc.dnIsDetached())
         {
             // Temporarily attach a StateManager to access the detached field information
