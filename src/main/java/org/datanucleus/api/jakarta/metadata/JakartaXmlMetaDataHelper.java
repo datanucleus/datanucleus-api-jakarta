@@ -32,9 +32,9 @@ import org.datanucleus.util.StringUtils;
  * Helper class that can convert internal metadata into (Jakarta Persistence) orm.xml metadata.
  * TODO Make this complete. Much is lacking currently
  */
-public class JakartaMetaDataHelper
+public class JakartaXmlMetaDataHelper
 {
-    public JakartaMetaDataHelper()
+    public JakartaXmlMetaDataHelper()
     {
     }
 
