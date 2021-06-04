@@ -125,7 +125,7 @@ Contributors:
 
     <!-- METADATA HANDLER -->
     <extension point="org.datanucleus.metadata_handler">
-        <handler name="Jakarta" class-name="org.datanucleus.api.jakarta.metadata.JakartaMetaDataHandler"/>
+        <handler name="Jakarta" class-name="org.datanucleus.api.jakarta.metadata.JakartaXmlMetaDataHandler"/>
     </extension>
 
     <!-- METADATA ENTITY RESOLVERS -->
