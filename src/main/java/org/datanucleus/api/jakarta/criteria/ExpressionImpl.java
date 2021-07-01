@@ -25,6 +25,7 @@ import jakarta.persistence.criteria.Expression;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Selection;
 
+import org.datanucleus.store.query.JPQLQueryHelper;
 import org.datanucleus.store.query.expression.DyadicExpression;
 import org.datanucleus.store.query.expression.Literal;
 
@@ -172,6 +173,6 @@ public class ExpressionImpl<T> implements Expression<T>, Serializable
      */
     public String toString()
     {
-        return JPQLHelper.getJPQLForExpression(queryExpr);
+        return JPQLQueryHelper.getJPQLForExpression(queryExpr);
     }
 }
