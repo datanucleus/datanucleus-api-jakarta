@@ -22,6 +22,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.GenerationType;
 
 /**
@@ -49,5 +50,10 @@ public @interface DatastoreId
      */
     String column() default "";
 
-    // TODO Allow specification of Column
+    /**
+     * Column definition(s) to use for the datastore identity surrogate.
+     * TODO Should be single value but annotations dont allow default null.
+     * @return The surrogate column definition(s)
+     */
+    Column[] columns() default {};
 }
