@@ -52,7 +52,7 @@ public @interface DatastoreId
 
     /**
      * Column definition(s) to use for the datastore identity surrogate.
-     * TODO Should be single value but annotations dont allow default null.
+     * Only processes a single column, but annotations cant have a default of null.
      * @return The surrogate column definition(s)
      */
     Column[] columns() default {};
