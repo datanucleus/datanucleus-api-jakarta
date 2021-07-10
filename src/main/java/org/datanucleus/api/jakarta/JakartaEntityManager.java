@@ -46,7 +46,6 @@ import jakarta.persistence.criteria.CriteriaUpdate;
 import jakarta.persistence.metamodel.EntityType;
 import jakarta.persistence.metamodel.Metamodel;
 
-import org.datanucleus.BeanValidationHandler;
 import org.datanucleus.ClassConstants;
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.ExecutionContext;
@@ -134,12 +133,6 @@ public class JakartaEntityManager implements EntityManager
         {
             // Using ResourceLocal transaction so allocate a transaction
             tx = new JakartaEntityTransaction(ec);
-        }
-
-        BeanValidationHandler beanValidator = nucleusCtx.getBeanValidationHandler(ec);
-        if (beanValidator != null)
-        {
-            ec.getCallbackHandler().setBeanValidationHandler(beanValidator);
         }
 
         fetchPlan = new JakartaFetchPlan(ec.getFetchPlan());
