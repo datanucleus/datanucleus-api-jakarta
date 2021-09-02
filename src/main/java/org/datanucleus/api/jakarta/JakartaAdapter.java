@@ -314,7 +314,7 @@ public class JakartaAdapter implements ApiAdapter
      * @see org.datanucleus.api.ApiAdapter#getDefaultCascadeUpdateForField()
      */
     @Override
-    public boolean getDefaultCascadeUpdateForField()
+    public boolean getDefaultCascadeAttachForField()
     {
         return false;
     }

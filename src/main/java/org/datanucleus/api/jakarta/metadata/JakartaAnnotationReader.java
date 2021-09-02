@@ -2953,7 +2953,7 @@ public class JakartaAnnotationReader extends AbstractAnnotationReader
                 if (cascades[i] == CascadeType.ALL)
                 {
                     mmd.setCascadePersist(true);
-                    mmd.setCascadeUpdate(true);
+                    mmd.setCascadeAttach(true);
                     mmd.setCascadeDelete(true);
                     mmd.setCascadeDetach(true);
                     mmd.setCascadeRefresh(true);
@@ -2964,7 +2964,7 @@ public class JakartaAnnotationReader extends AbstractAnnotationReader
                 }
                 else if (cascades[i] == CascadeType.MERGE)
                 {
-                    mmd.setCascadeUpdate(true);
+                    mmd.setCascadeAttach(true);
                 }
                 else if (cascades[i] == CascadeType.REMOVE)
                 {

@@ -1166,7 +1166,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                 mmd.setEmbedded(true);
                 mmd.setCascadePersist(true);
                 mmd.setCascadeDelete(true);
-                mmd.setCascadeUpdate(true);
+                mmd.setCascadeAttach(true);
 
                 pushStack(mmd);
             }
@@ -1263,7 +1263,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                 JoinMetaData joinmd = new JoinMetaData();
                 mmd.setJoinMetaData(joinmd);
                 mmd.setCascadePersist(true);
-                mmd.setCascadeUpdate(true);
+                mmd.setCascadeAttach(true);
                 mmd.setCascadeDelete(true);
                 mmd.setCascadeDetach(true);
                 mmd.setCascadeRefresh(true);
@@ -1617,7 +1617,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
             {
                 AbstractMemberMetaData mmd = (AbstractMemberMetaData)getStack();
                 mmd.setCascadePersist(true);
-                mmd.setCascadeUpdate(true);
+                mmd.setCascadeAttach(true);
                 mmd.setCascadeDelete(true);
                 mmd.setCascadeDetach(true);
                 mmd.setCascadeRefresh(true);
@@ -1639,7 +1639,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
             else if (localName.equals("cascade-merge"))
             {
                 AbstractMemberMetaData mmd = (AbstractMemberMetaData)getStack();
-                mmd.setCascadeUpdate(true);
+                mmd.setCascadeAttach(true);
             }
             else if (localName.equals("cascade-remove"))
             {
