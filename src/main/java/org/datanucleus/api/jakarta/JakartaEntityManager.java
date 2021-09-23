@@ -563,7 +563,7 @@ public class JakartaEntityManager implements EntityManager
         if (lock != null && lock != LockModeType.NONE)
         {
             // For pessimistic modes this will do a "SELECT ... FOR UPDATE" on the object.
-            // For optimistic modes this will just mark the lock type in the ObjectProvider for later handling
+            // For optimistic modes this will just mark the lock type in StateManager for later handling
             ec.getLockManager().lock(ec.findObjectProvider(entity), getLockModeForJakartaLockModeType(lock));
         }
     }
