@@ -365,8 +365,7 @@ public class JakartaEntityManager implements EntityManager
                 if (pc != null && fetchGraphSpecified)
                 {
                     // Force loading of FetchPlan fields of primary object since entity graph specified
-                    ObjectProvider op = ec.findObjectProvider(pc);
-                    op.loadUnloadedFieldsInFetchPlan();
+                    ec.findObjectProvider(pc).loadUnloadedFieldsInFetchPlan();
                 }
             }
             catch (NucleusObjectNotFoundException ex)

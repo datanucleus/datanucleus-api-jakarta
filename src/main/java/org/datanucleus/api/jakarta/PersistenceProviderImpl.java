@@ -159,13 +159,13 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
             return LoadState.UNKNOWN;
         }
 
-        ObjectProvider op = ec.findObjectProvider(entity);
-        if (op == null)
+        ObjectProvider sm = ec.findObjectProvider(entity);
+        if (sm == null)
         {
             return LoadState.UNKNOWN;
         }
 
-        String[] loadedFields = op.getLoadedFieldNames();
+        String[] loadedFields = sm.getLoadedFieldNames();
         if (loadedFields != null)
         {
             for (int i=0;i<loadedFields.length;i++)
@@ -225,8 +225,8 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
             return LoadState.UNKNOWN;
         }
 
-        ObjectProvider op = ec.findObjectProvider(entity);
-        if (op == null)
+        ObjectProvider sm = ec.findObjectProvider(entity);
+        if (sm == null)
         {
             return LoadState.UNKNOWN;
         }
@@ -237,7 +237,7 @@ public class PersistenceProviderImpl implements PersistenceProvider, ProviderUti
         for (int i=0;i<dfgFieldNumbers.length;i++)
         {
             AbstractMemberMetaData mmd= cmd.getMetaDataForManagedMemberAtAbsolutePosition(dfgFieldNumbers[i]);
-            String[] loadedFields = op.getLoadedFieldNames();
+            String[] loadedFields = sm.getLoadedFieldNames();
 
             boolean memberLoaded = false;
             if (loadedFields != null)
