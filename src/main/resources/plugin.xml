@@ -131,6 +131,7 @@ Contributors:
     <!-- METADATA ENTITY RESOLVERS -->
     <extension point="org.datanucleus.metadata_entityresolver">
         <!-- Jakarta Persistence ORM XML -->
+        <entityresolver identity="https://jakarta.ee/xml/ns/persistence/orm/orm_3_1.xsd" type="SYSTEM" url="/org/datanucleus/api/jakarta/jakarta_orm_3_0.xsd"/>
         <entityresolver identity="https://jakarta.ee/xml/ns/persistence/orm/orm_3_0.xsd" type="SYSTEM" url="/org/datanucleus/api/jakarta/jakarta_orm_3_0.xsd"/>
         <entityresolver identity="http://www.datanucleus.org/xsd/jakarta/orm_3_0.xsd" type="SYSTEM" url="/org/datanucleus/api/jakarta/jakarta_orm_3_0.xsd"/> <!-- DN variant -->
         <entityresolver url="/org/datanucleus/api/jakarta/jakarta_orm_3_0.xsd"/>
