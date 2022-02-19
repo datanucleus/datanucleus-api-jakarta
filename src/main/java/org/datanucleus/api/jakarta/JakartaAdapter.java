@@ -226,9 +226,9 @@ public class JakartaAdapter implements ApiAdapter
     }
 
     @Override
-    public Map getDefaultFactoryProperties()
+    public Map<String, Object> getDefaultFactoryProperties()
     {
-        Map<String, String> props = new HashMap<String, String>();
+        Map<String, Object> props = new HashMap<>();
         props.put(PropertyNames.PROPERTY_DETACH_ALL_ON_COMMIT, "true"); // detachAllOnCommit in Jakarta
         props.put(PropertyNames.PROPERTY_DETACH_ALL_ON_ROLLBACK, "true"); // detachAllOnRollback in Jakarta
         props.put(PropertyNames.PROPERTY_COPY_ON_ATTACH, "true"); // Jakarta Persistence spec 3.2.7.1 attach onto copy
