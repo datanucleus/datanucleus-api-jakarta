@@ -52,9 +52,6 @@ public class SimpleCaseExpressionImpl<C, R> extends ExpressionImpl<R> implements
         return caseWhenBaseExpr;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder.SimpleCase#when(java.lang.Object, java.lang.Object)
-     */
     @Override
     public SimpleCase<C, R> when(C condition, R result)
     {
@@ -65,11 +62,28 @@ public class SimpleCaseExpressionImpl<C, R> extends ExpressionImpl<R> implements
         return this;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder.SimpleCase#when(java.lang.Object, jakarta.persistence.criteria.Expression)
-     */
     @Override
     public SimpleCase<C, R> when(C condition, Expression<? extends R> result)
+    {
+        org.datanucleus.store.query.expression.Expression whenBaseQueryExpr = caseWhenBaseExpr.getQueryExpression();
+        org.datanucleus.store.query.expression.Expression whenEqQueryExpr = (org.datanucleus.store.query.expression.Expression)condition;
+        org.datanucleus.store.query.expression.Expression condQueryExpr = new DyadicExpression(whenBaseQueryExpr, org.datanucleus.store.query.expression.Expression.OP_EQ, whenEqQueryExpr);
+        ((CaseExpression)queryExpr).addCondition(condQueryExpr, new Literal(result));
+        return this;
+    }
+
+    @Override
+    public SimpleCase<C, R> when(Expression<? extends C> condition, R result)
+    {
+        org.datanucleus.store.query.expression.Expression whenBaseQueryExpr = caseWhenBaseExpr.getQueryExpression();
+        org.datanucleus.store.query.expression.Expression whenEqQueryExpr = (org.datanucleus.store.query.expression.Expression)condition;
+        org.datanucleus.store.query.expression.Expression condQueryExpr = new DyadicExpression(whenBaseQueryExpr, org.datanucleus.store.query.expression.Expression.OP_EQ, whenEqQueryExpr);
+        ((CaseExpression)queryExpr).addCondition(condQueryExpr, new Literal(result));
+        return this;
+    }
+
+    @Override
+    public SimpleCase<C, R> when(Expression<? extends C> condition, Expression<? extends R> result)
     {
         org.datanucleus.store.query.expression.Expression whenBaseQueryExpr = caseWhenBaseExpr.getQueryExpression();
         org.datanucleus.store.query.expression.Expression whenEqQueryExpr = (org.datanucleus.store.query.expression.Expression)condition;
