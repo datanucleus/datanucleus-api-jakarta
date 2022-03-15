@@ -23,16 +23,16 @@ import java.lang.reflect.Constructor;
 import java.security.ProtectionDomain;
 import java.util.Map;
 
-import jakarta.persistence.spi.ClassTransformer;
+import jakarta.persistence.spi.Transformer;
+import jakarta.persistence.spi.TransformerException;
 
 /**
  * ClassTransformer for runtime enhancement of classes to the Jakarta Persistence interface.
- * A persistence provider supplies an instance of this interface to the
- * PersistenceUnitInfo.addTransformer method. The supplied transformer instance
- * will get called to transform entity class files when they are loaded or
- * redefined. The transformation occurs before the class is defined by the JVM.
+ * A persistence provider supplies an instance of this interface to the PersistenceUnitInfo.addTransformer method.
+ * The supplied transformer instance will get called to transform entity class files when they are loaded or redefined.
+ * The transformation occurs before the class is defined by the JVM.
  */
-public class JakartaClassTransformer implements ClassTransformer
+public class JakartaClassTransformer implements Transformer
 {
     final ClassFileTransformer transformer;
 
@@ -50,10 +50,16 @@ public class JakartaClassTransformer implements ClassTransformer
         }
     }
 
-    public byte[] transform(ClassLoader loader, String className, Class classBeingRedefined, 
-            ProtectionDomain protectionDomain, byte[] classfileBuffer)
-        throws IllegalClassFormatException
+    public byte[] transform(String className, ClassLoader loader, Class classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer)
+        throws TransformerException
     {
-        return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+        try
+        {
+            return transformer.transform(loader, className, classBeingRedefined, protectionDomain, classfileBuffer);
+        }
+        catch (IllegalClassFormatException icfe)
+        {
+            throw new TransformerException(icfe);
+        }
     }
 }
