@@ -1327,9 +1327,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return pred;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder#neg(jakarta.persistence.criteria.Expression)
-     */
+    @Override
     public <N extends Number> Expression<N> neg(Expression<N> expr)
     {
         ExpressionImpl<N> negExpr = new ExpressionImpl<N>(this, (Class<N>) expr.getJavaType());
@@ -1337,9 +1335,15 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return negExpr;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder#not(jakarta.persistence.criteria.Expression)
-     */
+    @Override
+    public Expression<Integer> sign(Expression<? extends Number> expr)
+    {
+        ExpressionImpl<Integer> signExpr = new ExpressionImpl(this, Integer.class);
+        signExpr.queryExpr = new InvokeExpression(((ExpressionImpl)expr).getQueryExpression(), "sign", null);
+        return signExpr;
+    }
+
+    @Override
     public Predicate not(Expression<Boolean> expr)
     {
         PredicateImpl pred = new PredicateImpl(this);
@@ -1347,9 +1351,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return pred;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder#notLike(jakarta.persistence.criteria.Expression, jakarta.persistence.criteria.Expression)
-     */
+    @Override
     public Predicate notLike(Expression<String> expr, Expression<String> expr1)
     {
         return like(expr, expr1).not();
@@ -1851,9 +1853,38 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return select;
     }
 
-    public Expression<Number> round(Expression<Number> expr, Integer digits)
+    @Override
+    public Expression<Double> power(Expression<? extends Number> expr, Expression<? extends Number> pow)
     {
-        ExpressionImpl<Number> roundedExpr = new ExpressionImpl(this, expr.getJavaType());
+        ExpressionImpl<Double> powerExpr = new ExpressionImpl(this, Double.class);
+        List<org.datanucleus.store.query.expression.Expression> args = null;
+        if (pow != null)
+        {
+            args = new ArrayList(1);
+            args.add(new Literal(pow));
+        }
+        powerExpr.queryExpr = new InvokeExpression(((ExpressionImpl)expr).getQueryExpression(), "power", args);
+        return powerExpr;
+    }
+
+    @Override
+    public Expression<Double> power(Expression<? extends Number> expr, Number pow)
+    {
+        ExpressionImpl<Double> powerExpr = new ExpressionImpl(this, Double.class);
+        List<org.datanucleus.store.query.expression.Expression> args = null;
+        if (pow != null)
+        {
+            args = new ArrayList(1);
+            args.add(new Literal(pow));
+        }
+        powerExpr.queryExpr = new InvokeExpression(((ExpressionImpl)expr).getQueryExpression(), "power", args);
+        return powerExpr;
+    }
+
+    @Override
+    public <T extends Number> Expression<T> round(Expression<T> expr, Integer digits)
+    {
+        ExpressionImpl<T> roundedExpr = new ExpressionImpl(this, expr.getJavaType());
         List<org.datanucleus.store.query.expression.Expression> args = null;
         if (digits != null)
         {
@@ -1899,6 +1930,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return asinExpr;
     }
 
+    @Override
     public Expression<Number> atan(Expression<Number> expr)
     {
         ExpressionImpl<Number> atanExpr = new ExpressionImpl(this, Number.class);
@@ -1906,6 +1938,15 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return atanExpr;
     }
 
+    @Override
+    public Expression<Double> ln(Expression<? extends Number> expr)
+    {
+        ExpressionImpl<Double> lnExpr = new ExpressionImpl(this, Double.class);
+        lnExpr.queryExpr = new InvokeExpression(((ExpressionImpl)expr).getQueryExpression(), "ln", null);
+        return lnExpr;
+    }
+
+    // DN extension
     public Expression<Number> log(Expression<Number> expr)
     {
         ExpressionImpl<Number> logExpr = new ExpressionImpl(this, Number.class);
@@ -1913,23 +1954,26 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return logExpr;
     }
 
-    public Expression<Number> exp(Expression<Number> expr)
+    @Override
+    public Expression<Double> exp(Expression<? extends Number> expr)
     {
-        ExpressionImpl<Number> expExpr = new ExpressionImpl(this, Number.class);
+        ExpressionImpl<Double> expExpr = new ExpressionImpl(this, Double.class);
         expExpr.queryExpr = new InvokeExpression(((ExpressionImpl)expr).getQueryExpression(), "exp", null);
         return expExpr;
     }
 
-    public Expression<Integer> ceil(Expression<Number> expr)
+    @Override
+    public <N extends Number> Expression<N> ceiling(Expression<N> expr)
     {
-        ExpressionImpl<Integer> ceilExpr = new ExpressionImpl(this, Integer.class);
+        ExpressionImpl<N> ceilExpr = new ExpressionImpl(this, Integer.class);
         ceilExpr.queryExpr = new InvokeExpression(((ExpressionImpl)expr).getQueryExpression(), "ceil", null);
         return ceilExpr;
     }
 
-    public Expression<Integer> floor(Expression<Number> expr)
+    @Override
+    public <N extends Number> Expression<N> floor(Expression<N> expr)
     {
-        ExpressionImpl<Integer> floorExpr = new ExpressionImpl(this, Integer.class);
+        ExpressionImpl<N> floorExpr = new ExpressionImpl(this, Integer.class);
         floorExpr.queryExpr = new InvokeExpression(((ExpressionImpl)expr).getQueryExpression(), "floor", null);
         return floorExpr;
     }
