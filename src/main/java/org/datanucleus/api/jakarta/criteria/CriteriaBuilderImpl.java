@@ -987,7 +987,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
     public Expression<java.time.LocalDate> localDate()
     {
         ExpressionImpl<LocalDate> select = new ExpressionImpl(this, LocalDate.class);
-        select.queryExpr = new InvokeExpression(null, "CURRENT_DATE", null);
+        select.queryExpr = new InvokeExpression(null, "LOCAL_DATE", null);
         return select;
     }
 
@@ -995,7 +995,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
     public Expression<java.time.LocalDateTime> localDateTime()
     {
         ExpressionImpl<LocalDateTime> select = new ExpressionImpl(this, LocalDateTime.class);
-        select.queryExpr = new InvokeExpression(null, "CURRENT_DATE", null);
+        select.queryExpr = new InvokeExpression(null, "LOCAL_DATETIME", null);
         return select;
     }
 
@@ -1003,7 +1003,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
     public Expression<java.time.LocalTime> localTime()
     {
         ExpressionImpl<LocalTime> select = new ExpressionImpl(this, LocalTime.class);
-        select.queryExpr = new InvokeExpression(null, "CURRENT_TIME", null);
+        select.queryExpr = new InvokeExpression(null, "LOCAL_TIME", null);
         return select;
     }
 
