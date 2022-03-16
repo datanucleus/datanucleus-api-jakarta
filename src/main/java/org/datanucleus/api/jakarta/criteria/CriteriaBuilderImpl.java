@@ -23,6 +23,9 @@ import java.math.BigInteger;
 import java.sql.Date;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -956,9 +959,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return select;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder#currentDate()
-     */
+    @Override
     public Expression<Date> currentDate()
     {
         ExpressionImpl<Date> select = new ExpressionImpl(this, Date.class);
@@ -966,9 +967,7 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return select;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder#currentTime()
-     */
+    @Override
     public Expression<Time> currentTime()
     {
         ExpressionImpl<Time> select = new ExpressionImpl(this, Time.class);
@@ -976,13 +975,35 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return select;
     }
 
-    /* (non-Javadoc)
-     * @see jakarta.persistence.criteria.CriteriaBuilder#currentTimestamp()
-     */
+    @Override
     public Expression<Timestamp> currentTimestamp()
     {
         ExpressionImpl<Timestamp> select = new ExpressionImpl(this, Timestamp.class);
         select.queryExpr = new InvokeExpression(null, "CURRENT_TIMESTAMP", null);
+        return select;
+    }
+
+    @Override
+    public Expression<java.time.LocalDate> localDate()
+    {
+        ExpressionImpl<LocalDate> select = new ExpressionImpl(this, LocalDate.class);
+        select.queryExpr = new InvokeExpression(null, "CURRENT_DATE", null);
+        return select;
+    }
+
+    @Override
+    public Expression<java.time.LocalDateTime> localDateTime()
+    {
+        ExpressionImpl<LocalDateTime> select = new ExpressionImpl(this, LocalDateTime.class);
+        select.queryExpr = new InvokeExpression(null, "CURRENT_DATE", null);
+        return select;
+    }
+
+    @Override
+    public Expression<java.time.LocalTime> localTime()
+    {
+        ExpressionImpl<LocalTime> select = new ExpressionImpl(this, LocalTime.class);
+        select.queryExpr = new InvokeExpression(null, "CURRENT_TIME", null);
         return select;
     }
 
