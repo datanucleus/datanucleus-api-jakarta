@@ -17,15 +17,17 @@ Contributors:
 **********************************************************************/
 package org.datanucleus.api.jakarta;
 
+import java.util.Locale;
+
 /**
  * Utility providing convenience naming of Jakarta Persistence persistence properties.
  */
 public class JakartaPropertyNames
 {
-    public static final String PROPERTY_JAKARTA_ADD_CLASS_TRANSFORMER = "datanucleus.jakarta.addClassTransformer";
-    public static final String PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE = "datanucleus.jakarta.persistenceContextType";
-    public static final String PROPERTY_JAKARTA_TRANSACTION_ROLLBACK_ON_EXCEPTION = "datanucleus.jakarta.txnMarkForRollbackOnException";
-    public static final String PROPERTY_JAKARTA_SINGLETON_EMF_FOR_NAME = "datanucleus.singletonEMFForName";
+    public static final String PROPERTY_JAKARTA_ADD_CLASS_TRANSFORMER = "datanucleus.jakarta.addClassTransformer".toLowerCase(Locale.ENGLISH);
+    public static final String PROPERTY_JAKARTA_PERSISTENCE_CONTEXT_TYPE = "datanucleus.jakarta.persistenceContextType".toLowerCase(Locale.ENGLISH);
+    public static final String PROPERTY_JAKARTA_TRANSACTION_ROLLBACK_ON_EXCEPTION = "datanucleus.jakarta.txnMarkForRollbackOnException".toLowerCase(Locale.ENGLISH);
+    public static final String PROPERTY_JAKARTA_SINGLETON_EMF_FOR_NAME = "datanucleus.singletonEMFForName".toLowerCase(Locale.ENGLISH);
 
     public static final String PROPERTY_JAKARTA_STANDARD_JDBC_URL = "jakarta.persistence.jdbc.url";
     public static final String PROPERTY_JAKARTA_STANDARD_JDBC_DRIVER = "jakarta.persistence.jdbc.driver";
@@ -46,9 +48,9 @@ public class JakartaPropertyNames
     public static final String PROPERTY_JAKARTA_STANDARD_SQL_LOAD_SCRIPT_SRC = "jakarta.persistence.sql-load-script-source";
 
     // Override properties for elements of the persistence.xml
-    public static final String PROPERTY_JAKARTA_STANDARD_JTA_DATASOURCE = "jakarta.persistence.jtaDataSource";
-    public static final String PROPERTY_JAKARTA_STANDARD_NONJTA_DATASOURCE = "jakarta.persistence.nonJtaDataSource";
-    public static final String PROPERTY_JAKARTA_STANDARD_TRANSACTION_TYPE = "jakarta.persistence.transactionType";
-    public static final String PROPERTY_JAKARTA_STANDARD_SHAREDCACHE_MODE = "jakarta.persistence.sharedCache.mode";
+    public static final String PROPERTY_JAKARTA_STANDARD_JTA_DATASOURCE = "jakarta.persistence.jtaDataSource".toLowerCase(Locale.ENGLISH);
+    public static final String PROPERTY_JAKARTA_STANDARD_NONJTA_DATASOURCE = "jakarta.persistence.nonJtaDataSource".toLowerCase(Locale.ENGLISH);
+    public static final String PROPERTY_JAKARTA_STANDARD_TRANSACTION_TYPE = "jakarta.persistence.transactionType".toLowerCase(Locale.ENGLISH);
+    public static final String PROPERTY_JAKARTA_STANDARD_SHAREDCACHE_MODE = "jakarta.persistence.sharedCache.mode".toLowerCase(Locale.ENGLISH);
     public static final String PROPERTY_JAKARTA_STANDARD_VALIDATION_MODE = "jakarta.persistence.validation.mode";
 }
