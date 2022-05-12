@@ -19,9 +19,10 @@ package org.datanucleus.api.jakarta;
 
 import java.lang.instrument.ClassFileTransformer;
 import java.lang.instrument.IllegalClassFormatException;
-import java.lang.reflect.Constructor;
 import java.security.ProtectionDomain;
 import java.util.Map;
+
+import org.datanucleus.util.ClassUtils;
 
 import jakarta.persistence.spi.Transformer;
 import jakarta.persistence.spi.TransformerException;
@@ -41,8 +42,7 @@ public class JakartaClassTransformer implements Transformer
         try
         {
             Class cls = Class.forName("org.datanucleus.enhancer.DataNucleusClassFileTransformer");
-            Constructor ctr = cls.getConstructor(new Class[]{String.class, Map.class});
-            transformer = (ClassFileTransformer) ctr.newInstance(new Object[]{"-api=Jakarta"}, contextProps);
+            transformer = (ClassFileTransformer)ClassUtils.newInstance(cls, new Class[]{String.class, Map.class}, new Object[]{"-api=Jakarta", contextProps});
         }
         catch (Exception e)
         {
