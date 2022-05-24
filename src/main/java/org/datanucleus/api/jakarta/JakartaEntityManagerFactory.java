@@ -650,7 +650,7 @@ public class JakartaEntityManagerFactory implements EntityManagerFactory, Persis
 
         org.datanucleus.store.query.Query intQuery = ((JakartaQuery)query).getInternalQuery();
         QueryMetaData qmd = new QueryMetaData(name);
-        qmd.setLanguage(QueryLanguage.JPQL.toString());
+        qmd.setLanguage(QueryLanguage.JPQL.name());
         qmd.setQuery(intQuery.toString());
         qmd.setResultClass(intQuery.getResultClassName());
         qmd.setUnique(intQuery.isUnique());
