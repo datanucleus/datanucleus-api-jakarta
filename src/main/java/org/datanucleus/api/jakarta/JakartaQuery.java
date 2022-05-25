@@ -391,12 +391,13 @@ public class JakartaQuery<X> implements TypedQuery<X>
         {
             return this;
         }
+        hintName = hintName.toLowerCase();
 
-        if (hintName.equalsIgnoreCase(QUERY_HINT_TIMEOUT))
+        if (hintName.equals(QUERY_HINT_TIMEOUT))
         {
             query.setDatastoreReadTimeoutMillis((Integer)value);
         }
-        else if (hintName.equalsIgnoreCase(JakartaEntityGraph.FETCHGRAPH_PROPERTY))
+        else if (hintName.equals(JakartaEntityGraph.FETCHGRAPH_PROPERTY))
         {
             JakartaEntityGraph eg = (JakartaEntityGraph) value;
             String egName = eg.getName();
@@ -410,7 +411,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
             query.getFetchPlan().setGroup(egName);
             // TODO Need to deregister any temporary EntityGraph
         }
-        else if (hintName.equalsIgnoreCase(JakartaEntityGraph.LOADGRAPH_PROPERTY))
+        else if (hintName.equals(JakartaEntityGraph.LOADGRAPH_PROPERTY))
         {
             JakartaEntityGraph eg = (JakartaEntityGraph) value;
             String egName = eg.getName();
@@ -424,7 +425,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
             query.getFetchPlan().addGroup(egName);
             // TODO Need to deregister any temporary EntityGraph
         }
-        else if (hintName.equalsIgnoreCase(QUERY_HINT_FETCH_SIZE))
+        else if (hintName.equals(QUERY_HINT_FETCH_SIZE))
         {
             if (value instanceof Integer)
             {
@@ -435,7 +436,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
                 query.getFetchPlan().setFetchSize(((Long)value).intValue());
             }
         }
-        else if (hintName.equalsIgnoreCase(QUERY_HINT_IGNORE_CACHE))
+        else if (hintName.equals(QUERY_HINT_IGNORE_CACHE))
         {
             if (value instanceof String)
             {
