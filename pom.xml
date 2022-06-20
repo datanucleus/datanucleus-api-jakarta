@@ -9,7 +9,7 @@
     </parent>
 
     <artifactId>datanucleus-api-jakarta</artifactId>
-    <version>6.0.0-m6-SNAPSHOT</version>
+    <version>6.0.0-release-SNAPSHOT</version>
 
     <name>DataNucleus Jakarta Persistence API plugin</name>
     <description>
@@ -18,7 +18,7 @@
 
     <properties>
         <dn.jakarta.persistence.version>3.1.0</dn.jakarta.persistence.version>
-        <dn.core.version>5.9</dn.core.version>
+        <dn.core.version>6.0.0-m1</dn.core.version>
     </properties>
 
     <scm>
