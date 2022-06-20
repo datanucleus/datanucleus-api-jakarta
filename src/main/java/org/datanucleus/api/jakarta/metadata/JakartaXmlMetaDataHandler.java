@@ -29,7 +29,6 @@ import jakarta.persistence.AttributeConverter;
 import org.xml.sax.Attributes;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.SAXException;
-import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.PropertyNames;
 import org.datanucleus.api.jakarta.AbstractJakartaGraph;
 import org.datanucleus.api.jakarta.JakartaEntityGraph;
@@ -709,7 +708,6 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                     {
                         ctrTypeColumns = new ArrayList<ConstructorTypeColumn>();
                     }
-                    ClassLoaderResolver clr = mmgr.getNucleusContext().getClassLoaderResolver(null);
                     String colClsName = getAttr(attrs, "class");
                     Class ctrColCls = colClsName!=null ? clr.classForName(colClsName) : null;
                     ctrTypeColumns.add(new ConstructorTypeColumn(getAttr(attrs, "name"), ctrColCls));
@@ -1088,7 +1086,6 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                         {
                             // Not yet cached an instance of this converter so create one
                             // TODO Support injectable AttributeConverters
-                            ClassLoaderResolver clr = mmgr.getNucleusContext().getClassLoaderResolver(null);
                             Class entityConvCls = clr.classForName(converterClassName);
                             AttributeConverter entityConv = JakartaTypeConverterUtils.createAttributeConverterInstance(mmgr.getNucleusContext(), entityConvCls);
 
@@ -1113,7 +1110,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                     Boolean autoApply = Boolean.valueOf(getAttr(attrs, "auto-apply"));
 
                     TypeManager typeMgr = mmgr.getNucleusContext().getTypeManager();
-                    Class entityConvCls = mmgr.getNucleusContext().getClassLoaderResolver(null).classForName(converterClassName);
+                    Class entityConvCls = clr.classForName(converterClassName);
                     Class attrType = JakartaTypeConverterUtils.getAttributeTypeForAttributeConverter(entityConvCls, null);
                     Class dbType = JakartaTypeConverterUtils.getDatabaseTypeForAttributeConverter(entityConvCls, attrType, null);
 
@@ -2091,7 +2088,6 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                 if (md instanceof AbstractClassMetaData)
                 {
                     AbstractClassMetaData cmd = (AbstractClassMetaData)md;
-                    ClassLoaderResolver clr = mmgr.getNucleusContext().getClassLoaderResolver(null);
                     JakartaEntityGraph entityGraph = new JakartaEntityGraph(mmgr, getAttr(attrs, "name"), clr.classForName(cmd.getFullClassName()));
                     GraphHolder graphHolder = new GraphHolder();
                     graphHolder.graph = entityGraph;
@@ -2137,7 +2133,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                 Class cls = null;
                 if (!StringUtils.isWhitespace(subgraphClassName))
                 {
-                    cls = mmgr.getNucleusContext().getClassLoaderResolver(null).classForName(subgraphClassName);
+                    cls = clr.classForName(subgraphClassName);
                 }
                 JakartaSubgraph subgraph = (cls == null ? (JakartaSubgraph) parentGraph.addSubgraph(attributeName) : (JakartaSubgraph)parentGraph.addSubgraph(attributeName, cls));
                 GraphHolder graphHolder = new GraphHolder();
@@ -2149,7 +2145,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                 GraphHolder parentGraphHolder = graphHolderStack.peek();
                 JakartaEntityGraph parentGraph = (JakartaEntityGraph) parentGraphHolder.graph;
                 String subgraphClassName = getAttr(attrs, "class");
-                Class subclass = mmgr.getNucleusContext().getClassLoaderResolver(null).classForName(subgraphClassName);
+                Class subclass = clr.classForName(subgraphClassName);
                 JakartaSubgraph subgraph = (JakartaSubgraph) parentGraph.addSubclassSubgraph(subclass);
                 GraphHolder graphHolder = new GraphHolder();
                 graphHolder.graph = subgraph;
