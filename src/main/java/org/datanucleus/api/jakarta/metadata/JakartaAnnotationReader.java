@@ -1129,6 +1129,16 @@ public class JakartaAnnotationReader extends AbstractAnnotationReader
                     }
                 }
             }
+            else if (annName.equals(JakartaAnnotationUtils.CONVERT))
+            {
+                // TODO Implement this
+                NucleusLogger.METADATA.warn(">> Don't currently support @Convert specified on a type. Define it globally via @Converter or on the individual field(s).");
+            }
+            else if (annName.equals(JakartaAnnotationUtils.CONVERTS))
+            {
+                // TODO Implement this
+                NucleusLogger.METADATA.warn(">> Don't currently support @Converts specified on a type. Define them globally via @Converter or on the individual field(s).");
+            }
             else if (annName.equals(JakartaAnnotationUtils.EXTENSION))
             {
                 cmd.addExtension((String)annotationValues.get("key"), (String)annotationValues.get("value"));
