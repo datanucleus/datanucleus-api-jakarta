@@ -22,21 +22,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import jakarta.persistence.AttributeNode;
-import jakarta.persistence.Subgraph;
-import jakarta.persistence.metamodel.Attribute;
-import jakarta.persistence.metamodel.MapAttribute;
-
 import org.datanucleus.ClassLoaderResolver;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.AbstractMemberMetaData;
 import org.datanucleus.metadata.MetaDataManager;
 
+import jakarta.persistence.AttributeNode;
+import jakarta.persistence.Subgraph;
+import jakarta.persistence.metamodel.Attribute;
+import jakarta.persistence.metamodel.MapAttribute;
+
 /**
  * Base for JakartaEntityGraph and JakartaSubgraph.
  * @param <T> Type of the entity
  */
-public abstract class AbstractJakartaGraph<T>
+public abstract class AbstractJakartaGraph<T> implements Subgraph<T>
 {
     MetaDataManager mmgr;
 
@@ -77,6 +77,7 @@ public abstract class AbstractJakartaGraph<T>
         return attributeNodes;
     }
 
+    @Override
     public void addAttributeNodes(String... attributeNames)
     {
         if (!mutable)
@@ -95,7 +96,8 @@ public abstract class AbstractJakartaGraph<T>
         }
     }
 
-    public void addAttributeNodes(Attribute<? super T, ?>... attributes)
+    @Override
+    public void addAttributeNodes(Attribute<T, ?>... attributes)
     {
         if (!mutable)
         {
@@ -113,7 +115,8 @@ public abstract class AbstractJakartaGraph<T>
         }
     }
 
-    public <X> Subgraph<X> addSubgraph(Attribute<? super T, X> attribute)
+    @Override
+    public <X> Subgraph<X> addSubgraph(Attribute< T, X> attribute)
     {
         if (!mutable)
         {
@@ -124,7 +127,8 @@ public abstract class AbstractJakartaGraph<T>
         return (Subgraph<X>) addSubgraph(attribute, type);
     }
 
-    public <X> Subgraph<? extends X> addSubgraph(Attribute<? super T, X> attribute, Class<? extends X> type)
+    @Override
+    public <X> Subgraph<? extends X> addSubgraph(Attribute<T, X> attribute, Class<? extends X> type)
     {
         if (!mutable)
         {
@@ -198,7 +202,8 @@ public abstract class AbstractJakartaGraph<T>
         return subgraph;
     }
 
-    public <X> Subgraph<X> addKeySubgraph(Attribute<? super T, X> attribute)
+    @Override
+    public <X> Subgraph<X> addKeySubgraph(Attribute<T, X> attribute)
     {
         if (!mutable)
         {
@@ -215,7 +220,8 @@ public abstract class AbstractJakartaGraph<T>
         return addKeySubgraph(attribute, type);
     }
 
-    public <X> Subgraph<? extends X> addKeySubgraph(Attribute<? super T, X> attribute, Class<? extends X> type)
+    @Override
+    public <X> Subgraph<? extends X> addKeySubgraph(Attribute<T, X> attribute, Class<? extends X> type)
     {
         if (!mutable)
         {

@@ -1951,7 +1951,6 @@ public class CriteriaBuilderImpl implements CriteriaBuilder, Serializable
         return asinExpr;
     }
 
-    @Override
     public Expression<Number> atan(Expression<Number> expr)
     {
         ExpressionImpl<Number> atanExpr = new ExpressionImpl(this, Number.class);

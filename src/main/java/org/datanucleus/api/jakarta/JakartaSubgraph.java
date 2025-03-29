@@ -19,16 +19,16 @@ package org.datanucleus.api.jakarta;
 
 import java.util.Map;
 
-import jakarta.persistence.AttributeNode;
-import jakarta.persistence.Subgraph;
-
 import org.datanucleus.metadata.MetaDataManager;
 import org.datanucleus.util.StringUtils;
+
+import jakarta.persistence.AttributeNode;
+import jakarta.persistence.Subgraph;
 
 /**
  * Implementation of Jakarta Persistence Subgraph
  */
-public class JakartaSubgraph<T> extends AbstractJakartaGraph<T> implements Subgraph<T>
+public class JakartaSubgraph<T> extends AbstractJakartaGraph<T> 
 {
     public JakartaSubgraph(MetaDataManager mmgr, Class<T> clsType)
     {
