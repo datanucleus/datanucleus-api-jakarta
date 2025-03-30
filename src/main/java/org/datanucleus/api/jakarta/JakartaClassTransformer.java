@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.datanucleus.util.ClassUtils;
 
-import jakarta.persistence.spi.Transformer;
+import jakarta.persistence.spi.ClassTransformer;
 import jakarta.persistence.spi.TransformerException;
 
 /**
@@ -33,7 +33,7 @@ import jakarta.persistence.spi.TransformerException;
  * The supplied transformer instance will get called to transform entity class files when they are loaded or redefined.
  * The transformation occurs before the class is defined by the JVM.
  */
-public class JakartaClassTransformer implements Transformer
+public class JakartaClassTransformer implements ClassTransformer
 {
     final ClassFileTransformer transformer;
 
@@ -50,7 +50,8 @@ public class JakartaClassTransformer implements Transformer
         }
     }
 
-    public byte[] transform(String className, ClassLoader loader, Class classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer)
+    @Override
+    public byte[] transform(ClassLoader loader, String className, Class<?> classBeingRedefined, ProtectionDomain protectionDomain, byte[] classfileBuffer)
         throws TransformerException
     {
         try

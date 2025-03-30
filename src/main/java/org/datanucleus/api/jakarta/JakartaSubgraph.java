@@ -28,7 +28,7 @@ import org.datanucleus.util.StringUtils;
 /**
  * Implementation of Jakarta Persistence Subgraph
  */
-public class JakartaSubgraph<T> extends AbstractJakartaGraph<T> implements Subgraph<T>
+public class JakartaSubgraph<T> extends AbstractJakartaGraph<T>
 {
     public JakartaSubgraph(MetaDataManager mmgr, Class<T> clsType)
     {
