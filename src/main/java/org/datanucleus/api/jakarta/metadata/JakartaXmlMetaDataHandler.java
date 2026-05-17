@@ -423,6 +423,10 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                 FileMetaData filemd = (FileMetaData)getStack();
                 filemd.setType(MetaDataFileType.JPA_MAPPING_FILE);
             }
+            else if (localName.equals("delimited-identifiers"))
+            {
+            	//TODO just added to stop breaking metadata parsing. Not functional yet.
+            }
             else if (localName.equals("description"))
             {
                 // Of no practical use so ignored
