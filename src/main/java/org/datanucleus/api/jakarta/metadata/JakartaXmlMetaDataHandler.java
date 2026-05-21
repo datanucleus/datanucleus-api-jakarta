@@ -625,7 +625,8 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                     pushStack(spqmd);
                 }
             }
-            else if (localName.equals("stored-procedure-parameter"))
+            else if (localName.equals("stored-procedure-parameter") 
+            		|| (localName.equals("parameter") && getStack() instanceof StoredProcQueryMetaData))
             {
                 // Stored Procedure parameter
                 MetaData md = getStack();
@@ -697,7 +698,8 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
                 QueryResultMetaData qrmd = (QueryResultMetaData)getStack();
                 qrmd.addMappingForPersistentTypeMapping(queryResultEntityName, getAttr(attrs, "name"), getAttr(attrs, "column"));
             }
-            else if (localName.equals("column-result"))
+            else if (localName.equals("column-result")
+            			|| (localName.equals("column") && getStack() instanceof QueryResultMetaData))
             {
                 if (ctrTypeClassName == null)
                 {
