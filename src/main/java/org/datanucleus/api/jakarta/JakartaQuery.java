@@ -1121,7 +1121,8 @@ public class JakartaQuery<X> implements TypedQuery<X>
     public boolean isBound(Parameter<?> param)
     {
         assertIsOpen();
-        if (parameters == null)
+        if (parameters == null
+        		|| query.getImplicitParameters() == null)
         {
             return false;
         }
