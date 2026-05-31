@@ -161,7 +161,7 @@ public class JakartaEntityManager implements EntityManager
      */
     public boolean isOpen()
     {
-        return !closed;
+        return !closed && emf.isOpen();
     }
 
     public ExecutionContext getExecutionContext()
@@ -1543,7 +1543,7 @@ public class JakartaEntityManager implements EntityManager
      */
     private void assertIsOpen()
     {
-        if (closed)
+        if (closed || !emf.isOpen())
         {
             throw new IllegalStateException(Localiser.msg("EM.IsClosed"));
         }

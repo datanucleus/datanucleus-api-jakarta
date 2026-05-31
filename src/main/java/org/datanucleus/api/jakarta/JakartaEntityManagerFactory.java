@@ -116,7 +116,7 @@ public class JakartaEntityManagerFactory implements EntityManagerFactory, Persis
 
     private PersistenceContextType persistenceContextType = PersistenceContextType.EXTENDED;
 
-    private boolean closed = false;
+    private volatile boolean closed = false;
 
     private transient Cache datastoreCache = null;
 
