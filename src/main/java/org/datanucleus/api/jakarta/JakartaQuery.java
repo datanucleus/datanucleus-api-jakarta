@@ -521,7 +521,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
 
          try
          {
-             if (isNativeQuery())
+             if (isNativeQuery() || isStoredProcedure())
              {
                  query.setImplicitParameter(param.getPosition(), value);
              }
@@ -571,7 +571,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
         assertIsOpen();
         try
         {
-            if (isNativeQuery())
+            if (isNativeQuery() || isStoredProcedure())
             {
                 query.setImplicitParameter(position, value);
             }
@@ -684,7 +684,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
 
         try
         {
-            if (isNativeQuery())
+            if (isNativeQuery() || isStoredProcedure())
             {
                 query.setImplicitParameter(position, paramValue);
             }
@@ -730,7 +730,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
 
         try
         {
-            if (isNativeQuery())
+            if (isNativeQuery() || isStoredProcedure())
             {
                 query.setImplicitParameter(position, paramValue);
             }
@@ -754,10 +754,12 @@ public class JakartaQuery<X> implements TypedQuery<X>
         assertIsOpen();
         if (param.getName() != null)
         {
+        	getParameter(param.getName());
             setParameter(param.getName(), cal, type);
         }
         else
         {
+        	getParameter(param.getPosition());
             setParameter(param.getPosition(), cal, type);
         }
         return this;
@@ -771,10 +773,12 @@ public class JakartaQuery<X> implements TypedQuery<X>
         assertIsOpen();
         if (param.getName() != null)
         {
+        	getParameter(param.getName());
             setParameter(param.getName(), date, type);
         }
         else
         {
+        	getParameter(param.getPosition());
             setParameter(param.getPosition(), date, type);
         }
         return this;
@@ -843,10 +847,10 @@ public class JakartaQuery<X> implements TypedQuery<X>
 
     protected void loadParameters()
     {
-        if (parametersLoaded)
-        {
-            return;
-        }
+	        if (parametersLoaded)
+	        {
+	            return;
+	        }
 
         // Load up parameters by (generic) compiling the query
         if (query.getCompilation() == null)
@@ -1135,7 +1139,7 @@ public class JakartaQuery<X> implements TypedQuery<X>
         }
         else
         {
-            if (isNativeQuery())
+            if (isNativeQuery() || isStoredProcedure())
             {
                 if (query.getImplicitParameters().containsKey(param.getPosition()))
                 {
@@ -1230,6 +1234,10 @@ public class JakartaQuery<X> implements TypedQuery<X>
         return language.equals(em.getExecutionContext().getStoreManager().getNativeQueryLanguage());
     }
 
+    protected boolean isStoredProcedure()
+    {
+        return language.equals(QueryLanguage.STOREDPROC.name());
+    }
     /**
      * Assert if the EntityManager is closed.
      * @throws IllegalStateException When the EntityManaged is closed

@@ -1330,8 +1330,17 @@ public class JakartaEntityManager implements EntityManager
             {
                 for (StoredProcQueryParameterMetaData parammd : qmd.getParameters())
                 {
-                    Class type = clr.classForName(parammd.getType());
-                    internalQuery.registerParameter(parammd.getName(), type, parammd.getMode());
+                    Class type = (parammd.getType() ==  "void") 
+                    		? void.class
+                    		: clr.classForName(parammd.getType());
+                    if (!StringUtils.isWhitespace(parammd.getName()))
+                    {
+                        internalQuery.registerParameter(parammd.getName(), type, parammd.getMode());
+                    }
+                    else
+                    {
+                        internalQuery.registerParameter(parammd.getPosition(), type, parammd.getMode());
+                    }
                 }
             }
             if (qmd.getResultClasses() != null)
