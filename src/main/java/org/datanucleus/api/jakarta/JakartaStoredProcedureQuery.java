@@ -30,6 +30,7 @@ import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TemporalType;
 
 import org.datanucleus.exceptions.NucleusException;
+import org.datanucleus.exceptions.TransactionNotActiveException;
 import org.datanucleus.metadata.StoredProcQueryParameterMode;
 import org.datanucleus.store.query.AbstractStoredProcedureQuery;
 import org.datanucleus.store.query.NoQueryResultsException;
@@ -246,7 +247,12 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
             {
                 em.flush();
             }
-
+            
+            if (!em.getTransaction().isActive())
+            {
+            	throw new TransactionNotActiveException();
+            }
+            
             Boolean hasResultSet = (Boolean)query.execute();
             if (hasResultSet)
             {
