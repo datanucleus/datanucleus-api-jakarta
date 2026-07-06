@@ -19,7 +19,19 @@ package org.datanucleus.api.jakarta;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+
+import org.datanucleus.exceptions.NucleusException;
+import org.datanucleus.exceptions.TransactionNotActiveException;
+import org.datanucleus.metadata.QueryLanguage;
+import org.datanucleus.metadata.StoredProcQueryParameterMode;
+import org.datanucleus.store.query.AbstractStoredProcedureQuery;
+import org.datanucleus.store.query.AbstractStoredProcedureQuery.StoredProcedureParameter;
+import org.datanucleus.store.query.NoQueryResultsException;
+import org.datanucleus.util.ClassUtils;
+import org.datanucleus.util.StringUtils;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.FlushModeType;
@@ -29,11 +41,6 @@ import jakarta.persistence.QueryTimeoutException;
 import jakarta.persistence.StoredProcedureQuery;
 import jakarta.persistence.TemporalType;
 
-import org.datanucleus.exceptions.NucleusException;
-import org.datanucleus.metadata.StoredProcQueryParameterMode;
-import org.datanucleus.store.query.AbstractStoredProcedureQuery;
-import org.datanucleus.store.query.NoQueryResultsException;
-
 /**
  * Implementation of a StoredProcedureQuery.
  * Wraps an internal query.
@@ -42,7 +49,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
 {
     public JakartaStoredProcedureQuery(EntityManager em, org.datanucleus.store.query.Query query)
     {
-        super((JakartaEntityManager)em, query, "STOREDPROCEDURE");
+        super((JakartaEntityManager)em, query, QueryLanguage.STOREDPROC.name());
     }
 
     private AbstractStoredProcedureQuery getStoredProcQuery()
@@ -56,6 +63,9 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
     @Override
     public JakartaStoredProcedureQuery setParameter(Parameter param, Object value)
     {
+    	assertStoredProcedureParameterValid(
+    			assertParameterValid(param),
+    			value);
         super.setParameter(param, value);
         return this;
     }
@@ -66,6 +76,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
     @Override
     public JakartaStoredProcedureQuery setParameter(Parameter param, Calendar cal, TemporalType type)
     {
+    	assertParameterValid(param);
         super.setParameter(param, cal, type);
         return this;
     }
@@ -76,12 +87,16 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
     @Override
     public JakartaStoredProcedureQuery setParameter(Parameter param, Date date, TemporalType type)
     {
+    	assertParameterValid(param);
         super.setParameter(param, date, type);
         return this;
     }
 
     public JakartaStoredProcedureQuery setParameter(String name, Object value)
     {
+    	assertStoredProcedureParameterValid(		
+    			assertParameterNameValid(name),
+    			value);
         super.setParameter(name, value);
         return this;
     }
@@ -91,6 +106,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
      */
     public JakartaStoredProcedureQuery setParameter(String name, Calendar value, TemporalType temporalType)
     {
+    	assertParameterNameValid(name);
         super.setParameter(name, value, temporalType);
         return this;
     }
@@ -100,6 +116,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
      */
     public JakartaStoredProcedureQuery setParameter(String name, Date date, TemporalType type)
     {
+    	assertParameterNameValid(name);
         super.setParameter(name, date, type);
         return this;
     }
@@ -109,6 +126,9 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
      */
     public JakartaStoredProcedureQuery setParameter(int position, Object value)
     {
+    	assertStoredProcedureParameterValid(
+    			assertParameterPositionValid(position),
+    			value);
         super.setParameter(position, value);
         return this;
     }
@@ -118,6 +138,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
      */
     public JakartaStoredProcedureQuery setParameter(int position, Calendar value, TemporalType temporalType)
     {
+    	assertParameterPositionValid(position);
         super.setParameter(position, value, temporalType);
         return this;
     }
@@ -127,6 +148,7 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
      */
     public JakartaStoredProcedureQuery setParameter(int position, Date value, TemporalType temporalType)
     {
+    	assertParameterPositionValid(position);
         super.setParameter(position, value, temporalType);
         return this;
     }
@@ -246,7 +268,12 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
             {
                 em.flush();
             }
-
+            
+            if (!em.getTransaction().isActive())
+            {
+            	throw new TransactionNotActiveException();
+            }
+            
             Boolean hasResultSet = (Boolean)query.execute();
             if (hasResultSet)
             {
@@ -332,14 +359,6 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
             }
             return getStoredProcQuery().getNextResults();
         }
-        catch (NoQueryResultsException nqre)
-        {
-            return null;
-        }
-        catch (org.datanucleus.store.query.QueryTimeoutException qte)
-        {
-            throw new QueryTimeoutException();
-        }
         catch (NucleusException jpe)
         {
             throw JakartaAdapter.getJakartaExceptionForNucleusException(jpe);
@@ -359,4 +378,152 @@ public class JakartaStoredProcedureQuery extends JakartaQuery implements StoredP
     {
         return (JakartaStoredProcedureQuery) super.setHint(hintName, value);
     }
+    
+    public Set<Parameter<?>> getParameters()
+    {
+    	Set<Parameter<?>> parameters = new HashSet<>();
+		for (StoredProcedureParameter spp : getStoredProcQuery().getStoredProcedureParameters())
+		{
+			parameters.add(!StringUtils.isWhitespace(spp.getName()) 
+					? new JakartaQueryParameter<>(spp.getName(), spp.getType())
+					: new JakartaQueryParameter<>(spp.getPosition(), spp.getType()));
+		}
+		return parameters;
+    }
+    
+   @Override
+    protected void loadParameters()
+    {
+        if (parametersLoaded)
+        {
+            return;
+        }
+
+		this.parameters = getParameters();
+		parametersLoaded = true;
+    }
+    
+    @Override
+    public Object getParameterValue(Parameter param)
+    {
+    	assertParameterValid(param);
+    	
+    	if (!StringUtils.isWhitespace(param.getName()))
+    	{
+    		return getParameterValue(param.getName());
+    	}
+    	else
+    	{
+    		return getParameterValue(param.getPosition());
+    	}
+    }
+
+	protected StoredProcedureParameter assertParameterValid(Parameter param) 
+	{
+		loadParameters();
+
+		for (Parameter p : (Set<Parameter>) this.parameters)
+    	{
+    		if (p == param)
+    		{
+    			for (StoredProcedureParameter spp : getStoredProcQuery().getStoredProcedureParameters())
+    			{ 
+    				if ((!StringUtils.isWhitespace(param.getName())
+    								&& param.getName().equals(spp.getName()))
+    						||	
+    					(StringUtils.isWhitespace(param.getName())
+    								&& param.getPosition() == spp.getPosition()))
+    				{
+    					return spp;
+    				}
+
+    			}
+    		}
+    	}
+    		
+		throw new IllegalArgumentException("Invalid parameter");
+	}  
+	
+    @Override
+    public Object getParameterValue(int position)
+    {
+    	assertParameterPositionValid(position);
+		
+        if (query.getImplicitParameters() == null)
+        {
+            throw new IllegalStateException("No parameter at position " + position);
+        }
+
+        if (query.getImplicitParameters().containsKey(position))
+        {
+            return query.getImplicitParameters().get(position);
+        }
+
+        throw new IllegalStateException("No parameter at position " + position);
+    }
+
+	protected StoredProcedureParameter assertParameterPositionValid(int position)
+	{
+		for (StoredProcedureParameter spp : getStoredProcQuery().getStoredProcedureParameters())
+		{                    
+			if (spp.getPosition() == position)
+			{
+				return spp;
+			}
+		}
+		
+        throw new IllegalArgumentException("No parameter at position " + position);
+	}
+	
+    @Override
+    public Object getParameterValue(String name)
+    {
+    	assertParameterNameValid(name);
+		
+        if (query.getImplicitParameters() == null)
+        {
+            throw new IllegalStateException("No parameter with name " + name);
+        }
+
+        if (query.getImplicitParameters().containsKey(name))
+        {
+            return query.getImplicitParameters().get(name);
+        }
+        throw new IllegalStateException("No parameter with name " + name);
+    }
+
+	protected StoredProcedureParameter assertParameterNameValid(String name) 
+	{
+		for (StoredProcedureParameter spp : getStoredProcQuery().getStoredProcedureParameters())
+		{
+			if (spp.getName().equals(name))
+			{
+				return spp;
+			}
+		}
+
+		throw new IllegalArgumentException("No parameter with name " + name);
+	}
+	
+	private void assertStoredProcedureParameterValid(StoredProcedureParameter spp, Object value)
+	{
+		if (!(spp.getMode() == StoredProcQueryParameterMode.IN
+				|| spp.getMode() == StoredProcQueryParameterMode.INOUT))
+		{
+            throw new IllegalArgumentException("The parameter "
+            		+ (StringUtils.isWhitespace(spp.getName()) 
+        					? "at position " + spp.getPosition() 
+        					: "with name " + spp.getName())
+            		+ " is not input parameter.");
+		}
+		if (!ClassUtils.typesAreCompatible(spp.getType(), value.getClass()))
+		{
+            throw new IllegalArgumentException("The parameter "
+            		+ (StringUtils.isWhitespace(spp.getName()) 
+        					? "at position " + spp.getPosition() 
+        					: "with name " + spp.getName())
+            		+ " has type " + spp.getType()
+            		+ " , which is not assignable from " + value.getClass());
+		}
+	}
 }

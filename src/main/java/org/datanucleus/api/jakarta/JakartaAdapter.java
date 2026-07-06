@@ -39,14 +39,20 @@ import org.datanucleus.exceptions.NucleusObjectNotFoundException;
 import org.datanucleus.exceptions.NucleusOptimisticException;
 import org.datanucleus.exceptions.NucleusUserException;
 import org.datanucleus.exceptions.ReachableObjectNotCascadedException;
+import org.datanucleus.exceptions.TransactionNotActiveException;
 import org.datanucleus.metadata.AbstractClassMetaData;
 import org.datanucleus.metadata.MetaDataManager;
 import org.datanucleus.state.LifeCycleState;
+import org.datanucleus.store.query.NoQueryResultsException;
+import org.datanucleus.store.query.QueryNotUniqueException;
 import org.datanucleus.store.query.QueryTimeoutException;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.persistence.NoResultException;
+import jakarta.persistence.NonUniqueResultException;
 import jakarta.persistence.OptimisticLockException;
 import jakarta.persistence.PersistenceException;
+import jakarta.persistence.TransactionRequiredException;
 
 /**
  * Adapter for the Jakarta Persistence API, to allow the DataNucleus core runtime to expose multiple APIs to clients.
@@ -295,9 +301,21 @@ public class JakartaAdapter implements ApiAdapter
             // Reachable object not persistent but field doesn't allow cascade-persist
             throw new IllegalStateException(ne.getMessage(), ne);
         }
+        else if (ne instanceof QueryNotUniqueException)
+        {
+        	throw new NonUniqueResultException(ne);
+        }
+        else if (ne instanceof NoQueryResultsException)
+        {
+        	throw new NoResultException();
+        }
         else if (ne instanceof QueryTimeoutException)
         {
             return new jakarta.persistence.QueryTimeoutException(ne.getMessage(), ne);
+        }
+        else if (ne instanceof TransactionNotActiveException)
+        {
+        	return new TransactionRequiredException();
         }
         else if (ne instanceof NucleusDataStoreException)
         {

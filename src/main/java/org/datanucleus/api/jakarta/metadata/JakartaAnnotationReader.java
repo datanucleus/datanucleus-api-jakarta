@@ -1355,7 +1355,7 @@ public class JakartaAnnotationReader extends AbstractAnnotationReader
                         StoredProcedureParameter[] params = procs[j].parameters();
                         for (int k=0;k<params.length;k++)
                         {
-                            StoredProcQueryParameterMetaData parammd = getMetaDataForStoredProcParameter(params[k]);
+                            StoredProcQueryParameterMetaData parammd = getMetaDataForStoredProcParameter(params[k], k+1);
                             spqmd.addParameter(parammd);
                         }
                     }
@@ -1394,7 +1394,7 @@ public class JakartaAnnotationReader extends AbstractAnnotationReader
                 {
                     for (int j=0;j<params.length;j++)
                     {
-                        StoredProcQueryParameterMetaData parammd = getMetaDataForStoredProcParameter(params[j]);
+                        StoredProcQueryParameterMetaData parammd = getMetaDataForStoredProcParameter(params[j],j+1);
                         spqmd.addParameter(parammd);
                     }
                 }
@@ -1405,11 +1405,12 @@ public class JakartaAnnotationReader extends AbstractAnnotationReader
         }
     }
 
-    protected StoredProcQueryParameterMetaData getMetaDataForStoredProcParameter(StoredProcedureParameter param)
+    protected StoredProcQueryParameterMetaData getMetaDataForStoredProcParameter(StoredProcedureParameter param, int position)
     {
         StoredProcQueryParameterMetaData pmd = new StoredProcQueryParameterMetaData();
         pmd.setName(param.name());
         pmd.setType(param.type().getName());
+        pmd.setPosition(position);
         if (param.mode() == ParameterMode.IN)
         {
             pmd.setMode(StoredProcQueryParameterMode.IN);
