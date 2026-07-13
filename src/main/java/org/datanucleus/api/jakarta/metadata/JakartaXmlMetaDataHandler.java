@@ -425,7 +425,7 @@ public class JakartaXmlMetaDataHandler extends AbstractXmlMetaDataHandler
             }
             else if (localName.equals("delimited-identifiers"))
             {
-            	//TODO just added to stop breaking metadata parsing. Not functional yet.
+            	super.mmgr.getNucleusContext().getConfiguration().setProperty("datanucleus.identifierfactory.jakarta.quote", Boolean.TRUE);
             }
             else if (localName.equals("description"))
             {
